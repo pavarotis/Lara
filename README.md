@@ -2,6 +2,10 @@
 
 Μοντέρνα full-stack πλατφόρμα βασισμένη στο Laravel, σχεδιασμένη για modular αρχιτεκτονική, καθαρή δομή και ταχύτατη ανάπτυξη web εφαρμογών.
 
+
+
+
+
 🚀 Features
 
 Modular & scalable αρχιτεκτονική
@@ -18,15 +22,22 @@ Modern frontend με Vite
 
 Docker/Sail για τοπική ανάπτυξη
 
+
+
+
 🏗 Tech Stack
 
 Backend: Laravel
 
 Frontend: Vite + Components
 
-Database: MySQL/PostgreSQL
+Database: MySQL / PostgreSQL
 
 DevOps: Docker, GitHub Actions
+
+
+
+
 
 📦 Installation
 git clone https://github.com/username/lara.git
@@ -37,22 +48,68 @@ php artisan key:generate
 npm install && npm run dev
 php artisan migrate
 
+
+
+
+
 📚 Documentation
+![Laravel Version](https://img.shields.io/badge/laravel-10.x-red)
+![PHP Version](https://img.shields.io/badge/php-8.2-blue)
+Setup Guide
+ (Δημιουργήστε αρχείο setup.md)
 
-Setup guide
+Architecture & Modules
+ (Δημιουργήστε αρχείο architecture.md)
 
-Αρχιτεκτονική & modules
+Coding Conventions
+ (Δημιουργήστε αρχείο coding-standards.md)
 
-Coding conventions
+Branching Strategy
+ (Δημιουργήστε αρχείο branching.md)
 
-Branching strategy
-(Μπορούμε να τα δημιουργήσουμε αν θέλεις.)
+![Build Status](https://img.shields.io/github/workflow/status/username/lara/CI)
+
+
+
 
 🤝 Contributing
 
-Pull requests και συζητήσεις είναι ευπρόσδεκτες.
-Ακολούθησε τα coding standards του project.
+Δείτε το CONTRIBUTING.md
+ για οδηγίες σχετικά με:
+
+Αναφορά bugs / feature requests
+
+Fork & branch workflow
+
+Commit messages
+
+Pull requests & review process
+
+Pull requests και συζητήσεις είναι ευπρόσδεκτες. Ακολουθήστε τα coding standards του project.
+
+
+
+
+
+🧾 Issue & Pull Request Templates
+![Issues](https://img.shields.io/github/issues/username/lara)
+ISSUE_TEMPLATE.md
+
+PULL_REQUEST_TEMPLATE.md
+
+
+
+
+🛡️ Security
+
+Αναφορά ευπαθειών: SECURITY.md
+
+Ακολουθήστε τις οδηγίες για ασφαλή χειρισμό sensitive δεδομένων.
+
+
 
 📜 License
-
+![License](https://img.shields.io/github/license/username/lara)
 Το project διανέμεται υπό την MIT License.
+Δείτε το LICENSE
+ για λεπτομέρειες.
