@@ -3,3 +3,9 @@ contact_links:
   - name: Security
     url: SECURITY.md
     about: Αναφορά ευπαθειών
+  - name: Bug Report
+    url: .github/ISSUE_TEMPLATE/bug_report.md
+    about: Αναφορά σφαλμάτων
+  - name: Feature Request
+    url: .github/ISSUE_TEMPLATE/feature_request.md
+    about: Προτάσεις για νέα features
