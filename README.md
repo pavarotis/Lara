@@ -1,8 +1,8 @@
 # 🟣 Lara
 
 ![Build Status](https://img.shields.io/github/workflow/status/username/lara/CI)
-![Issues](https://img.shields.io/github/issues/username/lara)
-![License](https://img.shields.io/github/license/username/lara)
+![Issues](https://img.shields.io/github/issues/pavarotis/lara)
+![License](https://img.shields.io/github/license/pavarotis/lara)
 ![PHP Version](https://img.shields.io/badge/php-8.2-blue)
 ![Laravel Version](https://img.shields.io/badge/laravel-10.x-red)
 
