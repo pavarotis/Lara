@@ -37,13 +37,14 @@
 
                     <!-- Cart & Auth -->
                     <div class="flex items-center gap-4">
-                        <!-- Cart Button -->
-                        <button type="button" class="relative p-2 text-gray-600 hover:text-primary transition-colors">
+                        <!-- Cart Link -->
+                        <a href="{{ url('/cart') }}" class="relative p-2 text-gray-600 hover:text-primary transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            <span class="absolute -top-1 -right-1 bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
-                        </button>
+                            @php $cartCount = count(session('cart', [])); @endphp
+                            <span class="absolute -top-1 -right-1 bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" id="cart-count">{{ $cartCount }}</span>
+                        </a>
 
                         <!-- Mobile Menu Button -->
                         <button type="button" class="md:hidden p-2 text-gray-600" id="mobile-menu-btn">
@@ -58,6 +59,7 @@
                 <div class="hidden md:hidden pb-4" id="mobile-menu">
                     <a href="{{ url('/') }}" class="block py-2 text-gray-600 hover:text-primary">Home</a>
                     <a href="{{ url('/menu') }}" class="block py-2 text-gray-600 hover:text-primary">Menu</a>
+                    <a href="{{ url('/cart') }}" class="block py-2 text-gray-600 hover:text-primary">Cart</a>
                     <a href="{{ url('/about') }}" class="block py-2 text-gray-600 hover:text-primary">About</a>
                     <a href="{{ url('/contact') }}" class="block py-2 text-gray-600 hover:text-primary">Contact</a>
                 </div>

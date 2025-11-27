@@ -180,24 +180,113 @@
 
 ---
 
-## Sprint 3 — Ordering System
+## Sprint 3 — Ordering System ✅
 
-**Status**: Ready to start
+> **Status**: COMPLETED (2024-11-27)
+> **Review**: Master DEV approved — all deliverables met
 
-### Planned Tasks
-- Dev A: CartController, CheckoutController
-- Dev B: Orders/Customers migrations, CreateOrderService
-- Dev C: Cart views, checkout flow UI
+### Dev A
+- [x] CartController (2024-11-27)
+  - `App\Http\Controllers\CartController`
+  - Session-based cart (add, update, remove, clear)
+  - AJAX endpoints for cart data
+  - Tax calculation (24% VAT)
+- [x] CheckoutController (2024-11-27)
+  - `App\Http\Controllers\CheckoutController`
+  - Checkout form with validation
+  - Order creation via CreateOrderService
+  - Success/confirmation page
+- [x] Admin OrderController (2024-11-27)
+  - `App\Http\Controllers\Admin\OrderController`
+  - Orders list with status filter
+  - Order detail view
+  - Status update functionality
+- [x] Routes setup (2024-11-27)
+  - `/cart` — cart page
+  - `/cart/add`, `/cart/update`, `/cart/remove`, `/cart/clear` — AJAX
+  - `/checkout`, `/checkout/success/{orderNumber}`
+  - `/admin/orders`, `/admin/orders/{order}`
+
+### Dev B
+- [x] Migrations (2024-11-27)
+  - `create_customers_table` — customer data με optional user_id
+  - `create_orders_table` — orders με status enum, type enum
+  - `create_order_items_table` — product snapshots
+- [x] Models (2024-11-27)
+  - `App\Domain\Customers\Models\Customer`
+  - `App\Domain\Orders\Models\Order` — με scopes (status, pending)
+  - `App\Domain\Orders\Models\OrderItem`
+- [x] Services (2024-11-27)
+  - `CalculateOrderTotalService` — subtotal, tax (24%), total
+  - `CreateOrderService` — full order creation με transaction
+  - `ValidateBusinessOperatingHoursService` — ώρες λειτουργίας
+  - `ValidateOrderService` — business rules validation
+
+### Dev C
+- [x] Cart page (2024-11-27)
+  - `cart/index.blade.php` — Full cart με quantity controls
+  - Order summary sidebar
+  - AJAX cart updates
+  - Clear cart functionality
+- [x] Checkout page (2024-11-27)
+  - `checkout/index.blade.php` — Contact form, order type selection
+  - Pickup/Delivery toggle με address field
+  - Order notes
+  - Validation error display
+- [x] Order confirmation (2024-11-27)
+  - `checkout/success.blade.php` — Order summary, status badge
+  - Order items list, totals
+- [x] Admin Orders views (2024-11-27)
+  - `admin/orders/index.blade.php` — Orders list με status filter
+  - `admin/orders/show.blade.php` — Order details, status update
+
+### Sprint 3 Deliverables ✅
+- [x] Cart functionality (add, update, remove, clear)
+- [x] Checkout flow (form, validation, order creation)
+- [x] Order confirmation page
+- [x] Admin order management (list, view, status update)
+- [x] Customer creation on checkout
+- [x] Business rules validation (operating hours, delivery, min order)
+
+### Sprint 3 Review Notes (Master DEV)
+- Dev A: Bug fix (ValidateOrderService call signature)
+- Dev B: No issues found
+- Dev C: 2 bug fixes (route name, property name in view)
+
+---
+
+## Pre-Sprint 4 Fixes (Master DEV)
+
+### Fixes (2024-11-27)
+- [x] Cart button στο header → link στο `/cart` με dynamic count
+- [x] Mobile menu → added Cart link
+- [x] About page → created placeholder (`about.blade.php`)
+- [x] Contact page → created placeholder (`contact.blade.php`)
+- [x] Routes → added `/about` και `/contact`
 
 ---
 
 ## Sprint 4 — Multi-Business & Theming
 
-*Pending...*
+**Status**: Ready to start
+
+### Planned Tasks
+- Dev A: Business selection middleware, theme routes
+- Dev B: Multi-business logic, theme settings
+- Dev C: Theme switcher, business-specific styling
+
+### Additional Tasks (from UI/UX Review)
+- [ ] **Dev C**: Hero image — replace placeholder SVG with real image
+- [ ] **Dev B**: Image upload functionality for products/categories
+- [ ] **Dev C**: Add to cart button στο product-card (AJAX integration)
 
 ---
 
 ## Sprint 5 — Testing & Deployment
 
-*Pending...*
+**Status**: Pending
+
+### Additional Tasks (from UI/UX Review)
+- [ ] **Dev C**: Mobile menu — upgrade to slide-in drawer
+- [ ] **Dev C**: Contact form functionality
 

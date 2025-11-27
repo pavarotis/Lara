@@ -230,3 +230,42 @@ class UpdateProductService
 
 > **Lesson Learned**: Constructor injection = IDE autocomplete + explicit dependencies + easier testing.
 
+---
+
+## 12. Service Integration Checklist
+
+Πριν καλέσεις ένα service:
+
+- [ ] Διάβασε το method signature (parameters & types)
+- [ ] Επιβεβαίωσε τη σειρά των arguments
+- [ ] Έλεγξε τον return type
+
+> **Lesson Learned**: Ποτέ μην υποθέτεις τα arguments ενός service. Πάντα διάβαζε το signature.
+
+---
+
+## 13. Cross-File Reference Checklist (Dev C)
+
+Πριν χρησιμοποιήσεις routes ή model columns σε views:
+
+### Routes
+- [ ] Διάβασε το `routes/web.php` για το exact route name
+- [ ] Τρέξε `php artisan route:list` για verification
+- [ ] Πρόσεξε: camelCase vs kebab-case (`updateStatus` vs `update-status`)
+
+### Model Columns
+- [ ] Διάβασε το model ή migration για τα exact column names
+- [ ] Μην υποθέτεις: `unit_price` vs `product_price` κλπ.
+
+### Verification Commands
+```bash
+# List all routes with names
+php artisan route:list --name=admin
+
+# Check model columns
+php artisan tinker
+>>> Schema::getColumnListing('order_items')
+```
+
+> **Lesson Learned**: Assumptions = Bugs. Πάντα verify πριν χρησιμοποιήσεις routes/columns από άλλους devs.
+
