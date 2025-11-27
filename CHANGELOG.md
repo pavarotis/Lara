@@ -114,20 +114,80 @@
 
 ---
 
-## Sprint 2 — Admin Panel
+## Sprint 2 — Admin Panel ✅
 
-**Status**: Ready to start
+> **Status**: COMPLETED (2024-11-27)
+> **Review**: Master DEV approved — all deliverables met
 
-### Planned Tasks
-- Dev A: Admin routes, AdminAuthMiddleware
-- Dev B: CRUD Services, Policies, FormRequests
-- Dev C: Admin views (list, create, edit forms)
+### Dev A
+- [x] AdminMiddleware (2024-11-27)
+  - `App\Http\Middleware\AdminMiddleware`
+  - Registered as 'admin' alias in bootstrap/app.php
+- [x] Migration: add_is_admin_to_users_table (2024-11-27)
+  - Added `is_admin` boolean column to users
+- [x] Admin routes (2024-11-27)
+  - `/admin/products` — full CRUD resource
+  - `/admin/categories` — full CRUD resource
+  - Protected by `auth` + `admin` middleware
+- [x] Admin ProductController (2024-11-27)
+  - `App\Http\Controllers\Admin\ProductController`
+  - index, create, store, edit, update, destroy
+- [x] Admin CategoryController (2024-11-27)
+  - `App\Http\Controllers\Admin\CategoryController`
+  - index, create, store, edit, update, destroy
+
+### Dev B
+- [x] CRUD Services (2024-11-27)
+  - `CreateProductService`, `UpdateProductService`, `DeleteProductService`
+  - `CreateCategoryService`, `UpdateCategoryService`, `DeleteCategoryService`
+  - Auto cache invalidation on update/delete
+- [x] Policies (2024-11-27)
+  - `App\Domain\Catalog\Policies\ProductPolicy`
+  - `App\Domain\Catalog\Policies\CategoryPolicy`
+  - RBAC based on `is_admin` flag
+- [x] FormRequests (2024-11-27)
+  - `StoreProductRequest`, `UpdateProductRequest`
+  - `StoreCategoryRequest`, `UpdateCategoryRequest`
+  - Greek validation messages
+
+### Dev C
+- [x] Admin Products views (2024-11-27)
+  - `admin/products/index.blade.php` — List με pagination, status badges
+  - `admin/products/create.blade.php` — Form με validation errors
+  - `admin/products/edit.blade.php` — Edit form με pre-filled values
+- [x] Admin Categories views (2024-11-27)
+  - `admin/categories/index.blade.php` — List με product count
+  - `admin/categories/create.blade.php` — Create form
+  - `admin/categories/edit.blade.php` — Edit form
+- [x] UI Features
+  - Flash messages (success/error)
+  - Breadcrumb navigation
+  - Responsive tables
+  - Delete confirmation dialogs
+- [ ] Image upload form (deferred to Sprint 4)
+
+### Sprint 2 Deliverables ✅
+- [x] Full admin catalog management
+- [x] CRUD for products & categories
+- [x] Safe validation & policies
+- [x] Clean admin UI
+- [x] Ready for demo to client
+
+### Sprint 2 Review Notes (Master DEV)
+- Dev A: Minor fix (added `is_admin` cast to User model)
+- Dev B: Bug fix (added missing `use` statement in services)
+- Dev C: No issues found
 
 ---
 
 ## Sprint 3 — Ordering System
 
-*Pending...*
+**Status**: Ready to start
+
+### Planned Tasks
+- Dev A: CartController, CheckoutController
+- Dev B: Orders/Customers migrations, CreateOrderService
+- Dev C: Cart views, checkout flow UI
 
 ---
 

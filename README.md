@@ -14,8 +14,8 @@ Modular Laravel πλατφόρμα για **multi-business e-commerce**. Σχε�
 |--------|--------|
 | Sprint 0 — Setup | ✅ Complete |
 | Sprint 1 — Catalog & Menu | ✅ Complete |
-| Sprint 2 — Admin Panel | 🔄 Ready |
-| Sprint 3 — Ordering | ⏳ Pending |
+| Sprint 2 — Admin Panel | ✅ Complete |
+| Sprint 3 — Ordering | 🔄 Ready |
 
 ---
 
@@ -24,7 +24,7 @@ Modular Laravel πλατφόρμα για **multi-business e-commerce**. Σχε�
 - **Multi-business support** — Μία εγκατάσταση, πολλές επιχειρήσεις
 - **Modular architecture** — Domain-driven design με καθαρά boundaries
 - **Public catalog** ✅ — Responsive menu με κατηγορίες & προϊόντα
-- **Admin panel** 🔄 — Διαχείριση προϊόντων, τιμών, παραγγελιών
+- **Admin panel** ✅ — Full CRUD για προϊόντα & κατηγορίες
 - **Ordering system** ⏳ — Cart, checkout, order management
 - **Theming** ⏳ — Διαφορετικό theme ανά επιχείρηση
 - **Authentication** — Laravel Breeze με role-based access
@@ -86,6 +86,11 @@ app/
     Controllers/
       MenuController.php      # Public menu display
       CategoryController.php  # Category products
+      Admin/
+        ProductController.php   # Admin CRUD products
+        CategoryController.php  # Admin CRUD categories
+    Middleware/
+      AdminMiddleware.php     # Admin access control
 resources/
   views/
     layouts/
@@ -93,6 +98,9 @@ resources/
       admin.blade.php    # Admin panel layout
     components/
       product-card.blade.php  # Product card component
+    admin/
+      products/          # Product CRUD views
+      categories/        # Category CRUD views
     home.blade.php       # Homepage
     menu.blade.php       # Menu categories page
     category.blade.php   # Single category products

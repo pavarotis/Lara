@@ -147,7 +147,20 @@ tests/
 
 ---
 
-## 10. Testing Before Delivery
+## 10. New Column Checklist
+
+Όταν προσθέτεις νέο column στη βάση:
+
+- [ ] Migration με σωστό type & default value
+- [ ] Fillable στο model
+- [ ] Cast (boolean, array, datetime, decimal, etc.)
+- [ ] Accessor/Mutator αν χρειάζεται
+
+> **Lesson Learned**: Ποτέ μην ξεχνάς το cast — χωρίς αυτό, booleans επιστρέφουν 0/1 αντί true/false.
+
+---
+
+## 11. Testing Before Delivery
 
 ### Κανόνας
 **Κάθε feature πρέπει να τεστάρεται στο browser πριν το mark ως complete.**
@@ -174,4 +187,46 @@ class PublicLayout extends Component {
 ```
 
 > **Lesson Learned**: Ποτέ assumptions χωρίς verification. Always test!
+
+---
+
+## 11. Dependency Injection
+
+### Κανόνας
+**Χρήση Constructor Injection αντί για `app()` helper για services.**
+
+### Γιατί;
+- Το `app(ClassName::class)` δεν ενεργοποιεί IDE autocomplete
+- Εύκολο να ξεχάσεις το `use` statement
+- Constructor injection = explicit dependencies + testable code
+
+```php
+// ❌ ΛΑΘΟΣ - app() helper χωρίς IDE support
+class UpdateProductService
+{
+    public function execute(Product $product, array $data): Product
+    {
+        $product->update($data);
+        app(GetMenuForBusinessService::class)->clearCache($product->business);
+        return $product;
+    }
+}
+
+// ✅ ΣΩΣΤΟ - Constructor Injection
+class UpdateProductService
+{
+    public function __construct(
+        private GetMenuForBusinessService $menuService
+    ) {}
+
+    public function execute(Product $product, array $data): Product
+    {
+        $product->update($data);
+        $this->menuService->clearCache($product->business);
+        return $product;
+    }
+}
+```
+
+> **Lesson Learned**: Constructor injection = IDE autocomplete + explicit dependencies + easier testing.
 
