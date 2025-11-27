@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
+
+// Public Menu Routes
+Route::get('/menu', [MenuController::class, 'show'])->name('menu');
+Route::get('/menu/{slug}', [CategoryController::class, 'show'])->name('category.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

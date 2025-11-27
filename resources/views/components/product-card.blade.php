@@ -1,0 +1,58 @@
+@props(['product'])
+
+<div class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+    <!-- Product Image -->
+    <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-50 relative overflow-hidden">
+        @if($product->image)
+            <img src="{{ asset('storage/' . $product->image) }}" 
+                 alt="{{ $product->name }}"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        @else
+            <div class="absolute inset-0 flex items-center justify-center">
+                <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+        @endif
+
+        <!-- Featured Badge -->
+        @if($product->is_featured)
+            <div class="absolute top-2 left-2 bg-accent text-white text-xs font-medium px-2 py-1 rounded-full">
+                Featured
+            </div>
+        @endif
+
+        <!-- Unavailable Overlay -->
+        @if(!$product->is_available)
+            <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <span class="bg-white text-gray-900 px-3 py-1 rounded-full text-sm font-medium">Unavailable</span>
+            </div>
+        @endif
+    </div>
+
+    <!-- Product Info -->
+    <div class="p-4 flex-1 flex flex-col">
+        <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors">
+            {{ $product->name }}
+        </h3>
+        
+        @if($product->description)
+            <p class="mt-1 text-gray-500 text-sm line-clamp-2 flex-1">{{ $product->description }}</p>
+        @endif
+
+        <div class="mt-3 flex items-center justify-between">
+            <span class="text-lg font-bold text-primary">€{{ number_format($product->price, 2) }}</span>
+            
+            @if($product->is_available)
+                <button type="button" 
+                        class="p-2 bg-primary-100 text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
+                        title="Add to cart">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </button>
+            @endif
+        </div>
+    </div>
+</div>
+

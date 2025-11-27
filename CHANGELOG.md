@@ -1,0 +1,143 @@
+# 📋 Changelog
+
+Όλες οι αλλαγές του project καταγράφονται εδώ.
+
+---
+
+## [Unreleased]
+
+---
+
+## Sprint 0 — Review & Fixes (Master DEV)
+
+### Fixes (2024-11-27)
+- [x] **BUG FIX**: Component wrappers (`public-layout.blade.php`, `admin-layout.blade.php`) χρησιμοποιούσαν `@include` αντί για proper Blade component classes
+  - Δημιουργήθηκαν `app/View/Components/PublicLayout.php` και `AdminLayout.php`
+  - Διαγράφηκαν τα λανθασμένα blade wrapper files
+  - Τώρα το `<x-public-layout>` και `<x-admin-layout>` δουλεύουν σωστά με `$slot`
+
+---
+
+## Sprint 0 — Προετοιμασία
+
+### Dev A (Implementer)
+- [x] Laravel 12 project setup (2024-11-27)
+- [x] Git repository initialization (2024-11-27)
+- [x] Laravel Breeze installation (2024-11-27)
+- [x] Domain folder structure (2024-11-27)
+  - `app/Domain/Catalog/`
+  - `app/Domain/Orders/`
+  - `app/Domain/Customers/`
+  - `app/Domain/Businesses/`
+  - `app/Domain/CMS/`
+  - `app/Domain/Auth/`
+
+### Dev B (Architect)
+- [x] Database schema design (2024-11-27)
+  - `project-docs/database-schema.md`
+  - Tables: businesses, categories, products, customers, orders, order_items, users, pages
+- [x] Conventions document (2024-11-27)
+  - `project-docs/conventions.md`
+  - Services vs Actions, naming conventions, code style
+- [x] Domain boundaries definition (2024-11-27)
+  - Catalog, Orders, Customers, Businesses, CMS, Auth
+
+### Dev C (Frontend)
+- [x] Base layouts (2024-11-27)
+  - `resources/views/layouts/public.blade.php` — Public site layout με header, footer, mobile menu
+  - `resources/views/layouts/admin.blade.php` — Admin panel layout με sidebar navigation
+- [x] TailwindCSS configuration (2024-11-27)
+  - Custom color palette (primary: amber, accent: teal)
+  - Outfit font family
+  - Surface & content semantic colors
+- [x] Demo homepage (2024-11-27)
+  - `resources/views/home.blade.php` — Hero section, features, CTA
+  - Route updated to serve home view
+
+---
+
+## Sprint 1 — Catalog & Public Menu ✅
+
+> **Status**: COMPLETED (2024-11-27)
+> **Review**: Master DEV approved — all deliverables met
+
+### Dev A
+- [x] MenuController (2024-11-27)
+  - `App\Http\Controllers\MenuController@show`
+  - Χρησιμοποιεί `GetMenuForBusinessService`
+- [x] CategoryController (2024-11-27)
+  - `App\Http\Controllers\CategoryController@show`
+  - Χρησιμοποιεί `GetActiveProductsService`
+- [x] Routes setup (2024-11-27)
+  - `/menu` → MenuController@show
+  - `/menu/{slug}` → CategoryController@show
+- [x] Basic caching — ήδη υλοποιημένο στο GetMenuForBusinessService (30 min)
+
+### Dev B
+- [x] Migrations (2024-11-27)
+  - `create_businesses_table` — businesses με type, settings JSON
+  - `create_categories_table` — categories με business_id FK
+  - `create_products_table` — products με category_id FK
+- [x] Models (2024-11-27)
+  - `App\Domain\Businesses\Models\Business`
+  - `App\Domain\Catalog\Models\Category`
+  - `App\Domain\Catalog\Models\Product`
+- [x] Seeders (2024-11-27)
+  - `BusinessSeeder` — Demo Cafe
+  - `CategorySeeder` — Καφέδες, Ροφήματα, Σνακ, Γλυκά
+  - `ProductSeeder` — 15 demo products
+- [x] Services (2024-11-27)
+  - `GetMenuForBusinessService` — Full menu με caching
+  - `GetActiveProductsService` — Products by business/category/featured
+
+### Dev C
+- [x] menu.blade.php (2024-11-27)
+  - Categories grid με hover effects
+  - Featured products section
+  - Empty state handling
+- [x] product-card.blade.php (2024-11-27)
+  - Reusable component με props
+  - Featured badge, unavailable overlay
+  - Add to cart button placeholder
+- [x] category.blade.php (2024-11-27)
+  - Products grid για single category
+  - Breadcrumb navigation
+  - Back to menu link
+- [x] Responsive grid layout — mobile-first με Tailwind breakpoints
+
+### Sprint 1 Deliverables ✅
+- [x] Public menu fully working
+- [x] Real categories + products from DB
+- [x] Responsive UI (mobile-first)
+- [x] Basic caching (30 min TTL)
+- [x] Generic naming (products, not coffees)
+
+---
+
+## Sprint 2 — Admin Panel
+
+**Status**: Ready to start
+
+### Planned Tasks
+- Dev A: Admin routes, AdminAuthMiddleware
+- Dev B: CRUD Services, Policies, FormRequests
+- Dev C: Admin views (list, create, edit forms)
+
+---
+
+## Sprint 3 — Ordering System
+
+*Pending...*
+
+---
+
+## Sprint 4 — Multi-Business & Theming
+
+*Pending...*
+
+---
+
+## Sprint 5 — Testing & Deployment
+
+*Pending...*
+
