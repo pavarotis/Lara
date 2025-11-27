@@ -14,7 +14,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('admin.products.store') }}" method="POST" class="max-w-2xl">
+    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="max-w-2xl">
         @csrf
 
         <div class="bg-white rounded-xl shadow-sm p-6 space-y-6">
@@ -80,13 +80,12 @@
                 @enderror
             </div>
 
-            <!-- Image URL -->
+            <!-- Image Upload -->
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image Path</label>
-                <input type="text" name="image" id="image" value="{{ old('image') }}"
-                       class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary"
-                       placeholder="products/image.jpg">
-                <p class="mt-1 text-xs text-gray-500">Path relative to storage/app/public</p>
+                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                <input type="file" name="image" id="image" accept="image/*"
+                       class="w-full rounded-lg border border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary hover:file:bg-primary-100">
+                <p class="mt-1 text-xs text-gray-500">Max 2MB. Formats: JPG, PNG, GIF, WebP</p>
                 @error('image')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

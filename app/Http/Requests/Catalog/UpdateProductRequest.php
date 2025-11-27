@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Catalog;
 
+use App\Domain\Catalog\Services\ImageUploadService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +25,7 @@ class UpdateProductRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('products')->ignore($productId)],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => ImageUploadService::getValidationRules(false),
             'is_available' => ['boolean'],
             'is_featured' => ['boolean'],
             'sort_order' => ['integer', 'min:0'],

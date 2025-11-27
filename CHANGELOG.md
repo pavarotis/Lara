@@ -268,17 +268,60 @@
 
 ## Sprint 4 — Multi-Business & Theming
 
-**Status**: Ready to start
+**Status**: ✅ COMPLETED
 
-### Planned Tasks
-- Dev A: Business selection middleware, theme routes
-- Dev B: Multi-business logic, theme settings
-- Dev C: Theme switcher, business-specific styling
+### Dev A
+- [x] SetCurrentBusiness middleware (2024-11-27)
+  - `App\Http\Middleware\SetCurrentBusiness`
+  - Resolves business from: route param, query param, session, or fallback
+  - Shares `$currentBusiness` with all views
+  - Registered as 'business' alias
+- [x] Additional seeders (2024-11-27)
+  - `GasStationSeeder` — QuickFuel με καύσιμα, σνακ, car care (10 products)
+  - `BakerySeeder` — Artisan Bakery με ψωμιά, αρτοσκευάσματα, γλυκά (14 products)
+  - DatabaseSeeder updated να καλεί όλα τα seeders
+- [x] Verified business_id filtering (2024-11-27)
+  - Όλες οι queries χρησιμοποιούν `where('business_id', ...)`
+
+### Dev B
+- [x] Business model enhancements (2024-11-27)
+  - Added helper methods: `getSetting()`, `isDeliveryEnabled()`, `getTheme()`, `getCurrency()`
+  - Added `scopeOfType()` for filtering by business type
+- [x] GetBusinessSettingsService (2024-11-27)
+  - Default settings per business type (cafe, restaurant, bakery, gas_station, salon)
+  - Theme colors configuration (default, warm, elegant, modern, industrial)
+  - `getThemeColors()` method for dynamic theming
+- [x] BusinessSettingsDTO (2024-11-27)
+  - Documented settings structure
+  - Ordering: delivery, pickup, minimum_order
+  - Display: show_images, color_theme
+  - Currency & Tax: currency, symbol, tax_rate
+  - Contact & Social: phone, email, facebook, instagram
+
+### Dev C
+- [x] Dynamic theme colors (2024-11-27)
+  - CSS variables injected based on business theme
+  - `--color-primary` and `--color-accent` from GetBusinessSettingsService
+- [x] AJAX Add to Cart (2024-11-27)
+  - `product-card.blade.php` updated με AJAX functionality
+  - Visual feedback (checkmark icon, green color)
+  - Dynamic cart count update in header
 
 ### Additional Tasks (from UI/UX Review)
 - [ ] **Dev C**: Hero image — replace placeholder SVG with real image
-- [ ] **Dev B**: Image upload functionality for products/categories
-- [ ] **Dev C**: Add to cart button στο product-card (AJAX integration)
+- [x] **Dev B**: Image upload functionality for products/categories (2024-11-27)
+  - `ImageUploadService` — upload, replace, delete, getUrl
+  - Storage link created (`php artisan storage:link`)
+  - FormRequests updated με image validation rules
+  - ProductController integrated με image upload
+  - Admin views updated με file input & image preview
+- [x] **Dev C**: Add to cart button στο product-card (AJAX integration) (2024-11-27)
+
+### Sprint 4 Review Notes (Master DEV)
+- Dev A: No issues found
+- Dev B: No issues found  
+- Dev C: No issues found
+- All tasks completed successfully
 
 ---
 

@@ -45,14 +45,74 @@
             
             @if($product->is_available)
                 <button type="button" 
-                        class="p-2 bg-primary-100 text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
+                        class="add-to-cart-btn p-2 bg-primary-100 text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
+                        data-product-id="{{ $product->id }}"
                         title="Add to cart">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 add-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <svg class="w-5 h-5 check-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </button>
             @endif
         </div>
     </div>
 </div>
+
+@once
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            const button = this;
+            const addIcon = button.querySelector('.add-icon');
+            const checkIcon = button.querySelector('.check-icon');
+            
+            // Disable button during request
+            button.disabled = true;
+            
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ product_id: productId, quantity: 1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Update cart count in header
+                    const cartCount = document.getElementById('cart-count');
+                    if (cartCount) cartCount.textContent = data.cart_count;
+                    
+                    // Show success feedback
+                    addIcon.classList.add('hidden');
+                    checkIcon.classList.remove('hidden');
+                    button.classList.add('bg-green-500', 'text-white');
+                    button.classList.remove('bg-primary-100', 'text-primary');
+                    
+                    // Reset after 1.5s
+                    setTimeout(() => {
+                        addIcon.classList.remove('hidden');
+                        checkIcon.classList.add('hidden');
+                        button.classList.remove('bg-green-500', 'text-white');
+                        button.classList.add('bg-primary-100', 'text-primary');
+                        button.disabled = false;
+                    }, 1500);
+                }
+            })
+            .catch(() => {
+                button.disabled = false;
+            });
+        });
+    });
+});
+</script>
+@endpush
+@endonce
 

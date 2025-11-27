@@ -21,9 +21,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            // Demo Cafe (default)
             BusinessSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
+            // Additional businesses
+            GasStationSeeder::class,
+            BakerySeeder::class,
         ]);
     }
 }

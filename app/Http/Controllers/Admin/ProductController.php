@@ -7,13 +7,19 @@ namespace App\Http\Controllers\Admin;
 use App\Domain\Businesses\Models\Business;
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Product;
+use App\Domain\Catalog\Services\ImageUploadService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Catalog\StoreProductRequest;
+use App\Http\Requests\Catalog\UpdateProductRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        private ImageUploadService $imageService
+    ) {}
     /**
      * Display a listing of products
      */
@@ -52,21 +58,15 @@ class ProductController extends Controller
     /**
      * Store a newly created product
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreProductRequest $request): RedirectResponse
     {
         $business = Business::active()->first();
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:products,slug',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'image' => 'nullable|string|max:255',
-            'is_available' => 'boolean',
-            'is_featured' => 'boolean',
-            'sort_order' => 'integer|min:0',
-        ]);
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $validated['image'] = $this->imageService->uploadProductImage($request->file('image'));
+        }
 
         $validated['business_id'] = $business->id;
         $validated['is_available'] = $request->boolean('is_available', true);
@@ -100,19 +100,18 @@ class ProductController extends Controller
     /**
      * Update the specified product
      */
-    public function update(Request $request, Product $product): RedirectResponse
+    public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:products,slug,' . $product->id,
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'image' => 'nullable|string|max:255',
-            'is_available' => 'boolean',
-            'is_featured' => 'boolean',
-            'sort_order' => 'integer|min:0',
-        ]);
+        $validated = $request->validated();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $validated['image'] = $this->imageService->replace(
+                $product->image,
+                $request->file('image'),
+                'products'
+            );
+        }
 
         $validated['is_available'] = $request->boolean('is_available', true);
         $validated['is_featured'] = $request->boolean('is_featured', false);
@@ -128,6 +127,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
+        // Delete image if exists
+        $this->imageService->delete($product->image);
+
         $product->delete();
 
         return redirect()->route('admin.products.index')

@@ -14,7 +14,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('admin.products.update', $product) }}" method="POST" class="max-w-2xl">
+    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="max-w-2xl">
         @csrf
         @method('PUT')
 
@@ -77,12 +77,19 @@
                 @enderror
             </div>
 
-            <!-- Image URL -->
+            <!-- Image Upload -->
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image Path</label>
-                <input type="text" name="image" id="image" value="{{ old('image', $product->image) }}"
-                       class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary">
-                <p class="mt-1 text-xs text-gray-500">Path relative to storage/app/public</p>
+                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                @if($product->image)
+                    <div class="mb-3 flex items-center gap-4">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
+                             class="w-24 h-24 object-cover rounded-lg border">
+                        <span class="text-sm text-gray-500">Current image</span>
+                    </div>
+                @endif
+                <input type="file" name="image" id="image" accept="image/*"
+                       class="w-full rounded-lg border border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary hover:file:bg-primary-100">
+                <p class="mt-1 text-xs text-gray-500">Leave empty to keep current image. Max 2MB. Formats: JPG, PNG, GIF, WebP</p>
                 @error('image')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

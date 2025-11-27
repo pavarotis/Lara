@@ -14,9 +14,23 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        <!-- Dynamic Theme Colors -->
+        @php
+            $business = $currentBusiness ?? null;
+            $themeColors = $business ? app(\App\Domain\Businesses\Services\GetBusinessSettingsService::class)->getThemeColors($business) : null;
+        @endphp
+        @if($themeColors)
+        <style>
+            :root {
+                --color-primary: {{ $themeColors['primary'] }};
+                --color-accent: {{ $themeColors['accent'] }};
+            }
+        </style>
+        @endif
+
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-surface text-content">
+    <body class="font-sans antialiased bg-surface text-content" style="{{ $themeColors ? '--tw-primary: ' . $themeColors['primary'] . ';' : '' }}">
         <!-- Header -->
         <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
