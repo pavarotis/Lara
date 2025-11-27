@@ -17,7 +17,7 @@ Modular Laravel πλατφόρμα για **multi-business e-commerce**. Σχε�
 | Sprint 2 — Admin Panel | ✅ Complete |
 | Sprint 3 — Ordering | ✅ Complete |
 | Sprint 4 — Multi-Business | ✅ Complete |
-| Sprint 5 — Testing | ⏳ Pending |
+| Sprint 5 — Testing | ✅ Complete |
 
 ---
 
@@ -127,6 +127,7 @@ routes/
 - [Development Steps](project-docs/steps.md)
 - [Database Schema](project-docs/database-schema.md)
 - [Conventions & Guidelines](project-docs/conventions.md)
+- [Architecture](project-docs/architecture.md)
 
 ---
 

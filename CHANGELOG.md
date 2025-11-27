@@ -325,11 +325,52 @@
 
 ---
 
-## Sprint 5 — Testing & Deployment
+## Sprint 5 — Testing & Deployment ✅
 
-**Status**: Pending
+> **Status**: ✅ COMPLETED (2024-11-27)
+> **Review**: ✅ Approved by Master DEV
 
-### Additional Tasks (from UI/UX Review)
-- [ ] **Dev C**: Mobile menu — upgrade to slide-in drawer
-- [ ] **Dev C**: Contact form functionality
+### Dev A
+- [x] Feature Tests (2024-11-27)
+  - `tests/Feature/Catalog/ViewMenuTest.php` — 5 tests (menu load, categories, products, unavailable, 404)
+  - `tests/Feature/Orders/CreateOrderTest.php` — 12 tests (cart CRUD, checkout, orders)
+  - `tests/Feature/Admin/ProductCrudTest.php` — 10 tests (auth, CRUD, validation)
+- [x] Performance Optimization (2024-11-27)
+  - `app:optimize-production` artisan command
+  - Config, route, view caching
+  - Composer autoloader optimization
+
+### Dev B
+- [x] Refactoring & code review (2024-11-27)
+  - Verified all services follow single-responsibility principle
+  - Domain boundaries are clean and well-defined
+  - No significant code duplication found
+- [x] Architecture documentation (2024-11-27)
+  - `project-docs/architecture.md` created
+  - Domain structure overview
+  - Data flow diagrams
+  - How to add new business types
+  - How to add new modules
+  - Deployment checklist
+
+### Dev C
+- [x] Mobile menu — slide-in drawer (2024-11-27)
+  - Full-screen overlay με backdrop blur
+  - Animated drawer από δεξιά
+  - Icons για κάθε menu item
+  - Cart badge στο mobile menu
+- [x] Contact form functionality (2024-11-27)
+  - Form με name, email, subject, message
+  - Client-side validation
+  - Loading state με spinner
+  - Success message feedback
+- [x] UX polish (2024-11-27)
+  - Smooth scroll (`scroll-behavior: smooth`)
+  - Fade-in-up animations για page elements
+  - Animation delay utilities
+
+### Sprint 5 Review Notes (Master DEV)
+- Dev A: No issues found — 27 tests total
+- Dev B: No issues found — excellent documentation
+- Dev C: No issues found — polished UX
 
