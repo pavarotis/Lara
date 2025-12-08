@@ -16,6 +16,7 @@ class CreateOrderTest extends TestCase
     use RefreshDatabase;
 
     private Business $business;
+
     private Product $product;
 
     protected function setUp(): void
@@ -251,4 +252,3 @@ class CreateOrderTest extends TestCase
         ]);
     }
 }
-

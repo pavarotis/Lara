@@ -65,6 +65,7 @@ class ImageUploadService
     public function replace(?string $oldPath, UploadedFile $newFile, string $folder = 'images'): string
     {
         $this->delete($oldPath);
+
         return $this->upload($newFile, $folder);
     }
 
@@ -119,7 +120,7 @@ class ImageUploadService
     {
         $rules = [
             'image',
-            'mimes:' . implode(',', self::getAllowedExtensions()),
+            'mimes:'.implode(',', self::getAllowedExtensions()),
             'max:2048', // 2MB max
         ];
 
@@ -132,4 +133,3 @@ class ImageUploadService
         return $rules;
     }
 }
-

@@ -85,4 +85,3 @@ class Business extends Model
         return (float) $this->getSetting('minimum_order', 0);
     }
 }
-

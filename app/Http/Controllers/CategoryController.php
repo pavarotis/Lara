@@ -22,7 +22,7 @@ class CategoryController extends Controller
     {
         $business = Business::active()->first();
 
-        if (!$business) {
+        if (! $business) {
             abort(404, 'No active business found');
         }
 
@@ -40,4 +40,3 @@ class CategoryController extends Controller
         ]);
     }
 }
-

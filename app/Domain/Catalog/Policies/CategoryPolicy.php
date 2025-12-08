@@ -49,4 +49,3 @@ class CategoryPolicy
         return $user->is_admin;
     }
 }
-

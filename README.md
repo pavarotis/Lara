@@ -4,12 +4,15 @@
 ![Laravel Version](https://img.shields.io/badge/laravel-12.x-red)
 ![License](https://img.shields.io/github/license/pavarotis/larashop)
 
-Modular Laravel πλατφόρμα για **multi-business e-commerce**. Σχεδιασμένη για καφετέριες, βενζινάδικα, κομμωτήρια και κάθε τύπο επιχείρησης με κατάλογο προϊόντων και online παραγγελίες.
+Modular Laravel πλατφόρμα για **multi-business e-commerce & CMS**. Σχεδιασμένη για καφετέριες, βενζινάδικα, κομμωτήρια και κάθε τύπο επιχείρησης με κατάλογο προϊόντων, online παραγγελίες, και block-based content management.
+
+> **🚧 v2.0 Migration in Progress**: Μετατροπή σε CMS-first πλατφόρμα με content editor, media library, RBAC, και plugin system. [Δείτε το overview →](project-docs/v2/v2_overview.md)
 
 ---
 
 ## 📊 Current Status
 
+### v1.0 (Completed)
 | Sprint | Status |
 |--------|--------|
 | Sprint 0 — Setup | ✅ Complete |
@@ -19,18 +22,43 @@ Modular Laravel πλατφόρμα για **multi-business e-commerce**. Σχε�
 | Sprint 4 — Multi-Business | ✅ Complete |
 | Sprint 5 — Testing | ✅ Complete |
 
+### v2.0 (In Progress)
+| Sprint | Status |
+|--------|--------|
+| Sprint 0 — Infrastructure & Foundation | ✅ Complete |
+| Sprint 1 — Content Module | ⏳ Pending |
+| Sprint 2 — Media Library | ⏳ Pending |
+| Sprint 3 — Content Rendering & Theming | ⏳ Pending |
+| Sprint 4 — RBAC & Permissions | ⏳ Pending |
+| Sprint 5 — API & Headless Support | ⏳ Pending |
+| Sprint 6 — Plugins & Polish | ⏳ Pending |
+
 ---
 
 ## 🚀 Features
 
-- **Multi-business support** — Μία εγκατάσταση, πολλές επιχειρήσεις
-- **Modular architecture** — Domain-driven design με καθαρά boundaries
+### v1.0 (Current)
+- **Multi-business support** ✅ — Μία εγκατάσταση, πολλές επιχειρήσεις
+- **Modular architecture** ✅ — Domain-driven design με καθαρά boundaries
 - **Public catalog** ✅ — Responsive menu με κατηγορίες & προϊόντα
 - **Admin panel** ✅ — Full CRUD για προϊόντα & κατηγορίες
 - **Ordering system** ✅ — Cart, checkout, order management
 - **Theming** ✅ — Διαφορετικό theme ανά επιχείρηση
-- **Authentication** — Laravel Breeze με role-based access
-- **Modern frontend** — TailwindCSS + Vite
+- **Authentication** ✅ — Laravel Breeze με admin flag
+- **Modern frontend** ✅ — TailwindCSS + Vite
+
+### v2.0 (In Progress)
+- **RBAC** ✅ — Roles & Permissions system (custom implementation)
+- **Settings System** ✅ — Global settings with caching
+- **API Foundation** ✅ — REST API structure with versioning
+- **Admin Panel (Hybrid)** ✅ — Filament + Blade integration
+- **User Management** ✅ — Filament UserResource with role assignment
+- **CMS Content Editor** 🚧 — Block-based page builder (Sprint 1)
+- **Media Library** 🚧 — File management με folders & variants (Sprint 2)
+- **Content Versioning** 🚧 — Revisions & rollback (Sprint 1)
+- **Headless API** 🚧 — REST API for mobile apps / third-party (Sprint 5)
+- **Plugin System** 🚧 — Extensible architecture (Sprint 6)
+- **Theme System** 🚧 — Enhanced per-business theming (Sprint 3)
 
 ---
 
@@ -40,8 +68,9 @@ Modular Laravel πλατφόρμα για **multi-business e-commerce**. Σχε�
 |-------|------------|
 | Backend | Laravel 12.x |
 | Frontend | Blade + TailwindCSS + Vite |
+| Admin Panel | Filament v4.0 (Hybrid with Blade) |
 | Database | MySQL / SQLite |
-| Auth | Laravel Breeze |
+| Auth | Laravel Breeze + RBAC (Custom) |
 
 ---
 
@@ -123,11 +152,19 @@ routes/
 
 ## 📚 Documentation
 
-- [Sprint Plan](project-docs/sprints.md)
-- [Development Steps](project-docs/steps.md)
+### v1.0
+- [Development Steps (v1)](project-docs/steps_versions/v1_steps.md)
 - [Database Schema](project-docs/database-schema.md)
-- [Conventions & Guidelines](project-docs/conventions.md)
 - [Architecture](project-docs/architecture.md)
+- [Dev Commands](project-docs/dev-commands.md)
+
+### v2.0 (Migration)
+- [**v2 Overview**](project-docs/v2/v2_overview.md) — Architecture, strategy & technical specs
+- [**v2 Migration Guide**](project-docs/v2/v2_migration_guide.md) — Step-by-step migration instructions
+- [**v2 API Specification**](project-docs/v2/v2_api_spec.md) — REST API documentation
+- [**v2 Plugin Guide**](project-docs/v2/v2_plugin_guide.md) — Plugin development
+- [**v2 Content Model**](project-docs/v2/v2_content_model.md) — Content structure & blocks
+- [**v2 Documentation Index**](project-docs/v2/README.md) — All v2 docs
 
 ---
 

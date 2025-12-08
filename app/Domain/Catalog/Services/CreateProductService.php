@@ -22,4 +22,3 @@ class CreateProductService
         return Product::create($data);
     }
 }
-

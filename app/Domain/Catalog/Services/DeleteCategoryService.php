@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Catalog\Services;
 
 use App\Domain\Catalog\Models\Category;
-use App\Domain\Catalog\Services\GetMenuForBusinessService;
 
 class DeleteCategoryService
 {
@@ -23,4 +22,3 @@ class DeleteCategoryService
         return $deleted;
     }
 }
-

@@ -15,11 +15,15 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user() || !$request->user()->is_admin) {
+        if (! $request->user()) {
+            abort(401, 'Unauthenticated');
+        }
+
+        // Use RBAC if available, fallback to legacy is_admin
+        if (! $request->user()->hasRole('admin') && ! $request->user()->isAdmin()) {
             abort(403, 'Access denied. Admin privileges required.');
         }
 
         return $next($request);
     }
 }
-

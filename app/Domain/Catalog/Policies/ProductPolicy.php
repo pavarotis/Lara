@@ -49,4 +49,3 @@ class ProductPolicy
         return $user->is_admin;
     }
 }
-

@@ -22,7 +22,7 @@ class MenuController extends Controller
         // Get the first active business (for now, single-business mode)
         $business = Business::active()->first();
 
-        if (!$business) {
+        if (! $business) {
             abort(404, 'No active business found');
         }
 
@@ -34,4 +34,3 @@ class MenuController extends Controller
         ]);
     }
 }
-

@@ -25,4 +25,3 @@ class BusinessSeeder extends Seeder
         ]);
     }
 }
-

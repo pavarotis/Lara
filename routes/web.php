@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
@@ -52,13 +54,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Routes
+// Admin Routes (Blade - Custom Pages)
+// Note: Filament handles /admin for main dashboard and resources
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Removed /admin/ route - Filament dashboard handles this
+    // Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', AdminProductController::class);
     Route::resource('categories', AdminCategoryController::class);
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__.'/auth.php';

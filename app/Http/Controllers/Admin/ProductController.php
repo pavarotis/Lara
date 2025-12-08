@@ -20,13 +20,14 @@ class ProductController extends Controller
     public function __construct(
         private ImageUploadService $imageService
     ) {}
+
     /**
      * Display a listing of products
      */
     public function index(Request $request): View
     {
         $business = Business::active()->first();
-        
+
         $products = Product::where('business_id', $business->id)
             ->with('category')
             ->orderBy('sort_order')
@@ -136,4 +137,3 @@ class ProductController extends Controller
             ->with('success', 'Product deleted successfully.');
     }
 }
-

@@ -14,6 +14,7 @@ class ValidateOrderService
 
     /**
      * Validate if order can be placed
+     *
      * @return array ['valid' => bool, 'errors' => []]
      */
     public function execute(Business $business, array $data, array $items): array
@@ -22,13 +23,13 @@ class ValidateOrderService
         $settings = $business->settings ?? [];
 
         // Check if business is open
-        if (!$this->operatingHours->execute($business)) {
+        if (! $this->operatingHours->execute($business)) {
             $errors[] = 'Η επιχείρηση είναι κλειστή αυτή τη στιγμή.';
         }
 
         // Check if delivery is enabled (if delivery type selected)
         if (($data['type'] ?? 'pickup') === 'delivery') {
-            if (!($settings['delivery_enabled'] ?? false)) {
+            if (! ($settings['delivery_enabled'] ?? false)) {
                 $errors[] = 'Η παράδοση δεν είναι διαθέσιμη.';
             }
 
@@ -40,8 +41,7 @@ class ValidateOrderService
         // Check minimum order amount
         $minAmount = $settings['minimum_order'] ?? 0;
         if ($minAmount > 0) {
-            $total = array_sum(array_map(fn($item) => 
-                ($item['price'] ?? 0) * ($item['quantity'] ?? 1), $items
+            $total = array_sum(array_map(fn ($item) => ($item['price'] ?? 0) * ($item['quantity'] ?? 1), $items
             ));
 
             if ($total < $minAmount) {
@@ -60,4 +60,3 @@ class ValidateOrderService
         ];
     }
 }
-

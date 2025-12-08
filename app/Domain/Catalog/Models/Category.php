@@ -46,4 +46,3 @@ class Category extends Model
         return $query->orderBy('sort_order');
     }
 }
-

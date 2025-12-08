@@ -19,7 +19,7 @@ class CategoryController extends Controller
     public function index(): View
     {
         $business = Business::active()->first();
-        
+
         $categories = Category::where('business_id', $business->id)
             ->withCount('products')
             ->orderBy('sort_order')
@@ -82,7 +82,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:categories,slug,' . $category->id,
+            'slug' => 'required|string|max:255|unique:categories,slug,'.$category->id,
             'description' => 'nullable|string',
             'image' => 'nullable|string|max:255',
             'is_active' => 'boolean',
@@ -113,4 +113,3 @@ class CategoryController extends Controller
             ->with('success', 'Category deleted successfully.');
     }
 }
-

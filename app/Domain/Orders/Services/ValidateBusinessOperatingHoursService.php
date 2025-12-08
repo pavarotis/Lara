@@ -27,7 +27,7 @@ class ValidateBusinessOperatingHoursService
         $hours = $settings['operating_hours'][$dayOfWeek] ?? null;
 
         // Closed this day
-        if (!$hours || ($hours['closed'] ?? false)) {
+        if (! $hours || ($hours['closed'] ?? false)) {
             return false;
         }
 
@@ -49,4 +49,3 @@ class ValidateBusinessOperatingHoursService
         return 'Αυτή τη στιγμή δεν δεχόμαστε παραγγελίες';
     }
 }
-

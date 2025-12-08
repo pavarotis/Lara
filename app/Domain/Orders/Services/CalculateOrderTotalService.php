@@ -10,7 +10,8 @@ class CalculateOrderTotalService
 
     /**
      * Calculate totals from cart items
-     * @param array $items [['product_id' => x, 'price' => x, 'quantity' => x], ...]
+     *
+     * @param  array  $items  [['product_id' => x, 'price' => x, 'quantity' => x], ...]
      */
     public function execute(array $items): array
     {
@@ -33,7 +34,7 @@ class CalculateOrderTotalService
     public function setTaxRate(float $rate): self
     {
         $this->taxRate = $rate;
+
         return $this;
     }
 }
-

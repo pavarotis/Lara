@@ -42,4 +42,3 @@ class UpdateProductRequest extends FormRequest
         ];
     }
 }
-

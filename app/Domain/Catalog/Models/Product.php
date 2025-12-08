@@ -55,4 +55,3 @@ class Product extends Model
         return $query->orderBy('sort_order');
     }
 }
-

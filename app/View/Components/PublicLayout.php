@@ -15,4 +15,3 @@ class PublicLayout extends Component
         return view('layouts.public');
     }
 }
-

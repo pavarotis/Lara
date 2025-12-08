@@ -205,4 +205,3 @@ class BakerySeeder extends Seeder
         ]);
     }
 }
-

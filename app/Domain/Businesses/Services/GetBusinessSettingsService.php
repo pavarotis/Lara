@@ -25,6 +25,7 @@ class GetBusinessSettingsService
     public function get(Business $business, string $key, mixed $default = null): mixed
     {
         $settings = $this->execute($business);
+
         return data_get($settings, $key, $default);
     }
 
@@ -119,4 +120,3 @@ class GetBusinessSettingsService
         return $themes[$themeName] ?? $themes['default'];
     }
 }
-

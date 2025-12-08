@@ -37,4 +37,3 @@ class GetMenuForBusinessService
         Cache::forget("menu_business_{$business->id}");
     }
 }
-

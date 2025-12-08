@@ -15,7 +15,7 @@ class ProductSeeder extends Seeder
     {
         $business = Business::where('slug', 'demo-cafe')->first();
 
-        if (!$business) {
+        if (! $business) {
             return;
         }
 
@@ -68,4 +68,3 @@ class ProductSeeder extends Seeder
             ->update(['is_featured' => true]);
     }
 }
-

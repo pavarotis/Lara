@@ -6,6 +6,253 @@
 
 ## [Unreleased]
 
+### v2.0 — CMS-First Platform (In Progress)
+
+#### Sprint 0 — Infrastructure & Foundation ✅ **COMPLETE**
+
+##### Dev A (Backend/Infrastructure) — ✅ REVIEWED & APPROVED
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ 5 bugs found and fixed:
+  1. SettingsController method name mismatch
+  2. Setting model incorrect cast
+  3. Cache tags inconsistency
+  4. Value casting improvement
+  5. API routes Sanctum handling
+- ⚠️ Minor: Migration naming inconsistency (documented for cleanup)
+- **Status**: Approved — Ready for next sprint
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_0_review.md`
+
+##### Dev A (Backend/Infrastructure)
+- [x] **Task A1: Architecture Documentation** (2024-11-27)
+  - Updated `project-docs/architecture.md` with v2 specifics
+  - Created `project-docs/v2/domain-structure.md` — Complete domain structure
+  - Created `project-docs/v2/cms-core-concepts.md` — CMS core concepts & blocks
+- [x] **Task A2: Laravel Project Setup & Configuration** (2024-11-27)
+  - Created `config/cms.php` with `CMS_ENABLED` feature flag
+  - Added exception handling (validation, auth, authorization, 404)
+  - Added response macros (success, error, paginated) in AppServiceProvider
+- [x] **Task A3: RBAC Implementation** (2024-11-27)
+  - Migrations: `roles`, `permissions`, `role_user`, `permission_role`
+  - Data migration: `migrate_is_admin_to_roles`
+  - Models: `Role`, `Permission` with relationships
+  - Services: `AssignRoleService`, `RevokeRoleService`, `CheckPermissionService`, `MigrateAdminToRolesService`
+  - Middleware: `CheckPermission` for route protection
+  - User model: Added RBAC methods (`hasRole()`, `hasPermission()`, etc.)
+  - Seeders: `RoleSeeder`, `PermissionSeeder` with default roles/permissions
+- [x] **Task A4: Settings Module** (2024-11-27)
+  - Migration: `settings` table (key-value storage)
+  - Model: `Setting` with type casting
+  - Services: `GetSettingsService`, `UpdateSettingsService`, `ClearSettingsCacheService`
+  - Caching: 1 hour TTL with proper invalidation
+  - Seeder: `SettingsSeeder` with default settings
+- [x] **Task A5: API Foundation** (2024-11-27)
+  - Created `routes/api.php` with `/api/v1/` prefix
+  - Base controller: `Api\BaseController` with standard response methods
+  - Settings API: `Api\V1\SettingsController` (CRUD)
+  - API routes: Public (GET) and Protected (POST/PUT/DELETE)
+  - Exception handling: JSON error responses
+  - API middleware: Throttling configured
+  - ⚠️ Note: Sanctum package needs installation (next phase)
+
+##### Dev C (Frontend/UI) — ✅ REVIEWED & APPROVED
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ 1 bug found and fixed:
+  1. Settings view boolean checkbox label logic error
+- ⚠️ Minor: Mobile menu overlay content empty (can be completed in Sprint 1)
+- **Status**: Approved — Ready for next sprint
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_0_review_devc.md`
+
+---
+
+### Sprint 0 Final Check (2024-11-27)
+
+**Status**: ✅ **COMPLETE** — All issues resolved
+
+**Final Fixes Applied**:
+1. ✅ **AdminMiddleware**: Updated to use RBAC (`hasRole('admin')`) with backward compatibility
+2. ✅ **Filament Authorization**: Added `canAccessUsing()` to restrict panel access to admin role
+3. ✅ **Route Conflict**: Removed conflicting Blade `/admin/` route (Filament dashboard handles this)
+
+**Admin Panel Access**:
+- ✅ `/admin` → Filament Dashboard (requires admin role)
+- ✅ `/admin/login` → Filament Login Page
+- ✅ `/admin/users` → Filament UserResource
+- ✅ `/admin/roles` → Filament RoleResource
+- ✅ `/admin/settings` → Blade Settings Page
+
+**Ready for Sprint 1**: ✅ **YES**
+
+**See**: `project-docs/v2/sprints/sprint_0_final_check.md` for detailed final check
+
+##### Dev B (Architecture/Domain) — ✅ REVIEWED & APPROVED
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ 1 bug found and fixed:
+  1. MediaFolder migration missing `created_by` field
+- **Status**: Approved — Ready for next sprint
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_0_review_devb.md`
+
+##### Dev C (Frontend/UI)
+- [x] **Task C1: Admin Panel Base (Hybrid Filament/Blade)** (2024-11-27)
+  - Installed Filament v4.0 with AdminPanelProvider
+  - Created `UserResource` (Filament) with role assignment
+  - Created `RoleResource` (Filament) with permission management
+  - Created Blade admin layout (`resources/views/layouts/admin.blade.php`)
+  - Created admin dashboard (`resources/views/admin/dashboard/index.blade.php`)
+  - Added navigation links for Users, Roles, Settings
+  - Integrated Filament routes with Blade routes
+- [x] **Task C2: Settings UI** (2024-11-27)
+  - Created `SettingsController` with index & update methods
+  - Created settings view with group-based organization
+  - Integrated with `UpdateSettingsService`
+  - Form validation and success notifications
+- [x] **Task C3: User Management UI (Filament)** (2024-11-27)
+  - UserResource fully functional (list, create, edit, delete)
+  - Role assignment (multi-select) in user form
+  - Filters & search functionality
+  - RoleResource fully functional with permission assignment
+  - Customized forms & tables with badges and icons
+- [x] **Task C4: Dev Workflow Setup** (2024-11-27)
+  - Created `project-docs/git-workflow.md` — Git branching model (simplified GitFlow)
+  - Created `project-docs/pr-template.md` — Pull Request template
+  - Created `.git/hooks/pre-commit` — Pre-commit hook for Laravel Pint
+  - Updated conventions documentation
+
+##### Dev B (Architecture/Domain)
+- [x] **Task B1: CMS Database Structure** (2024-11-27)
+  - Migrations (v2_ prefix):
+    - `v2_create_content_types_table` — Content type definitions
+    - `v2_create_contents_table` — Main content entries (body_json, meta, status)
+    - `v2_create_content_revisions_table` — Version history
+    - `v2_create_media_folders_table` — Folder hierarchy
+    - `v2_create_media_table` — Media files with metadata
+  - Foreign keys, indexes configured
+  - Multi-business support (business_id on all tables)
+- [x] **Task B2: Domain Folder Setup** (2024-11-27)
+  - `app/Domain/Content/` — Models (Content, ContentType, ContentRevision) + README
+  - `app/Domain/Media/` — Models (Media, MediaFolder) + README
+  - `app/Domain/Settings/` — Models (Setting) + Services (GetSettingsService, UpdateSettingsService)
+  - Skeleton structure ready for Sprint 1-2 implementation
+- [x] **Task B3: Base Content API** (2024-11-27)
+  - Placeholder endpoint: `/api/v1/content/test`
+  - Returns skeleton response confirming API readiness
+  - Full implementation in Sprint 1
+- [x] **Task B4: Media Library Skeleton** (2024-11-27)
+  - Media & MediaFolder models (skeleton)
+  - Domain structure ready
+  - Full implementation in Sprint 2
+- [x] **Task B5: Services Structure** (2024-11-27)
+  - Service Layer Pattern documented in `architecture.md`
+  - Constructor injection pattern established
+  - Single-responsibility principle enforced
+
+---
+
+## v1.0 — E-Commerce Platform
+
+**Στόχος**: Μετατροπή σε CMS-first πλατφόρμα με block-based content editor, media library, RBAC, και plugin system.
+
+**Overview**: `project-docs/v2/v2_overview.md` — Architecture, strategy & technical specs  
+**Migration Guide**: `project-docs/v2/v2_migration_guide.md` — Step-by-step migration  
+**Detailed Sprints**: `project-docs/v2/sprints/` — Individual sprint files with detailed tasks
+
+**Documentation Created** (2024-11-27):
+- ✅ `project-docs/v2/v2_migration_guide.md` — Step-by-step migration guide
+- ✅ `project-docs/v2/v2_api_spec.md` — API specification
+- ✅ `project-docs/v2/v2_plugin_guide.md` — Plugin development guide
+- ✅ `project-docs/v2/v2_content_model.md` — Content model specification
+- ✅ `project-docs/v2/sprints/` — Sprint files (0-6) for detailed tracking
+- ✅ `project-docs/v2/dev-responsibilities.md` — Developer guide for quality & best practices
+
+**Documentation Reorganization** (2024-11-27):
+- ✅ Created `project-docs/v2/v2_overview.md` — Consolidated overview with architecture, strategy, technical specs, and checklists
+- ✅ Moved content from `project-docs/steps_versions/v2_steps.md` → `v2/v2_overview.md` (refactored)
+- ✅ Updated all references in README.md, CHANGELOG.md, and sprint files
+- ✅ Deleted `project-docs/steps_versions/v2_steps.md` (replaced by v2_overview.md)
+
+**Architecture Decision: Hybrid Admin Panel** (2024-11-27):
+- ✅ **Decision**: Hybrid Filament/Blade approach for admin panel
+  - **Filament** for standard CRUD (Products, Categories, Orders, Users, Roles)
+  - **Blade** for custom features (Content Editor, Media Library, Plugins, Dashboard)
+- ✅ Updated `project-docs/conventions.md` — Added Hybrid Admin Panel rules (Section 14)
+- ✅ Updated `project-docs/architecture.md` — Added Admin Panel Architecture section
+- ✅ Updated `project-docs/v2/v2_overview.md` — Added Core Decision for Hybrid approach
+- ✅ Updated `project-docs/v2/sprints/sprint_0.md` — Task C1 & C3 now use Filament
+- **Rationale**: Filament = fast CRUD development, Blade = full control for custom features
+
+**Dev B Questions Answered** (2024-11-27):
+- ✅ Updated `project-docs/v2/decisions.md` with Dev B answers:
+  - **CMS Folder**: Don't fill it — create `Content/` instead, delete CMS in Sprint 1
+  - **ImageUploadService**: Refactor in Sprint 2 (use Media model, don't create new)
+  - **Migration Naming**: Use `v2_` prefix for all v2 migrations, remove in final cleanup
+  - **Feature Flag**: `config/cms.php` + check in middleware/services/controllers
+- ✅ Updated `sprint_0.md` with clarifications:
+  - Migration naming with `v2_` prefix
+  - CMS folder handling (don't fill, create Content/ instead)
+  - Feature flag implementation details
+- ✅ Updated `sprint_2.md` with ImageUploadService refactor details
+- **Purpose**: Clear answers for Dev B before starting Sprint 0 tasks
+
+**Architectural Decisions & Dev A Questions** (2024-11-27):
+- ✅ Created `project-docs/v2/decisions.md` — Centralized decisions log
+- ✅ Answered Dev A questions for Sprint 0:
+  - **Domain Structure**: Keep `app/Domain/` (singular) ✅
+  - **RBAC**: Custom implementation (not Spatie) ✅
+  - **Settings**: Separate modules (Business Settings vs Global Settings) ✅
+  - **Feature Flag**: `config/cms.php` with `CMS_ENABLED` from `.env` ✅
+  - **Existing Data**: Keep all existing data (products, orders, customers) ✅
+  - **CMS Folder**: Delete in Sprint 1 (not Sprint 0) ✅
+- ✅ Updated `sprint_0.md` with clarifications:
+  - Settings module = Global Settings (separate from Business Settings)
+  - RBAC = Custom implementation (Role & Permission models)
+  - Feature flag via config file
+- **Purpose**: Clear answers for developers before starting implementation
+
+**Technical Conventions & Architecture Details** (2024-11-27):
+- ✅ Added comprehensive technical conventions to `project-docs/conventions.md`:
+  - Section 15: Service Layer Pattern (detailed) — naming, structure, error handling, transactions
+  - Section 16: API Response Format — standard structure, status codes, pagination
+  - Section 17: Caching Conventions — key naming, TTL, invalidation patterns
+  - Section 18: File Storage Conventions — disks, naming, path structure
+  - Section 19: Database Conventions — soft deletes, timestamps, indexes, foreign keys
+  - Section 20: Events & Listeners — when to use, naming, structure, async
+  - Section 21: Jobs & Queues — when to use, naming, structure
+  - Section 22: Exception Handling — custom exceptions, logging, user-friendly messages
+  - Section 23: Block System Conventions — registration, validation, rendering
+  - Section 24: Testing Conventions — naming, structure, test data
+  - Section 25: Validation Conventions — form requests, custom rules, error messages
+- ✅ Enhanced `project-docs/architecture.md` with detailed sections:
+  - Service Layer Pattern (detailed) — principles, structure, error handling
+  - Caching Strategy (detailed) — keys, TTL, invalidation, tags
+  - File Storage Architecture — disks, naming, paths, variants
+  - Event-Driven Architecture — when to use, structure, async listeners
+- **Purpose**: Provide clear technical guidelines for all developers, prevent inconsistencies, ensure code quality
+
+**Sprint 0 Revised** (2024-11-27):
+- ✅ Updated `sprint_0.md` with REVISED hybrid approach
+- ✅ Enhanced `v2_steps.md` Sprint 0 with detailed tasks
+- ✅ Added: Architecture Documentation, User Management UI, Dev Workflow Setup
+- ✅ Corrections: `Domain` (singular), Service Layer Pattern (not Actions/Repositories)
+
+**Sprints**:
+- Sprint 0 — Infrastructure & Foundation (pending)
+- Sprint 1 — Content Module (pending)
+- Sprint 2 — Media Library (pending)
+- Sprint 3 — Content Rendering & Theming (pending)
+- Sprint 4 — RBAC & Permissions (pending)
+- Sprint 5 — API & Headless Support (pending)
+- Sprint 6 — Plugins & Polish (pending)
+
+**Cleanup Strategy**: Replace v1 code, don't keep legacy files. See cleanup tasks in [v2_overview.md](project-docs/v2/v2_overview.md) and individual sprint files.
+
 ---
 
 ## Sprint 0 — Review & Fixes (Master DEV)

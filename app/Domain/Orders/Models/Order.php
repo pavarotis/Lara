@@ -66,4 +66,3 @@ class Order extends Model
         return $this->type === 'delivery';
     }
 }
-

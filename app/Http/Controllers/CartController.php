@@ -19,7 +19,7 @@ class CartController extends Controller
     {
         $cart = session('cart', []);
         $business = Business::active()->first();
-        
+
         $cartItems = $this->getCartItems($cart);
         $totals = $this->calculateTotals($cartItems);
 
@@ -45,7 +45,7 @@ class CartController extends Controller
 
         $product = Product::findOrFail($productId);
 
-        if (!$product->is_available) {
+        if (! $product->is_available) {
             return response()->json(['error' => 'Product not available'], 422);
         }
 
@@ -183,4 +183,3 @@ class CartController extends Controller
         return array_sum(array_column($cart, 'quantity'));
     }
 }
-

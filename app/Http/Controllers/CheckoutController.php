@@ -66,8 +66,8 @@ class CheckoutController extends Controller
 
         // Validate order rules
         $validation = $this->validateOrderService->execute($business, $validated, array_values($cart));
-        
-        if (!$validation['valid']) {
+
+        if (! $validation['valid']) {
             return back()->withErrors(['order' => $validation['message']])->withInput();
         }
 
@@ -125,4 +125,3 @@ class CheckoutController extends Controller
         ];
     }
 }
-

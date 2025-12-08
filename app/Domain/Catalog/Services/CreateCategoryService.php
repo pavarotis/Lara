@@ -21,4 +21,3 @@ class CreateCategoryService
         return Category::create($data);
     }
 }
-

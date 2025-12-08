@@ -16,8 +16,11 @@ class ProductCrudTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $user;
+
     private Business $business;
+
     private Category $category;
 
     protected function setUp(): void
@@ -206,4 +209,3 @@ class ProductCrudTest extends TestCase
         $response->assertSessionHasErrors(['slug']);
     }
 }
-

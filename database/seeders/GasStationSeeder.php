@@ -171,4 +171,3 @@ class GasStationSeeder extends Seeder
         ]);
     }
 }
-

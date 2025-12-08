@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 class OptimizeForProduction extends Command
 {
     protected $signature = 'app:optimize-production';
+
     protected $description = 'Optimize the application for production deployment';
 
     public function handle(): int
@@ -36,7 +37,7 @@ class OptimizeForProduction extends Command
         // Optimize autoloader
         $this->info('Optimizing Composer autoloader...');
         exec('composer dump-autoload --optimize --no-dev 2>&1', $output, $returnCode);
-        
+
         if ($returnCode === 0) {
             $this->info('✓ Autoloader optimized');
         } else {
@@ -57,4 +58,3 @@ class OptimizeForProduction extends Command
         return Command::SUCCESS;
     }
 }
-

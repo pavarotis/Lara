@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            // v2 RBAC & Settings (run first)
+            RoleSeeder::class,
+            PermissionSeeder::class,
+            SettingsSeeder::class,
             // Demo Cafe (default)
             BusinessSeeder::class,
             CategorySeeder::class,

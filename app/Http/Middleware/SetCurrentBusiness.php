@@ -19,16 +19,16 @@ class SetCurrentBusiness
     {
         $business = $this->resolveBusiness($request);
 
-        if (!$business) {
+        if (! $business) {
             abort(404, 'Business not found');
         }
 
         // Share business with all views
         view()->share('currentBusiness', $business);
-        
+
         // Store in request for controllers
         $request->attributes->set('business', $business);
-        
+
         // Store in session for persistence
         session(['current_business_id' => $business->id]);
 
@@ -62,4 +62,3 @@ class SetCurrentBusiness
         return Business::active()->first();
     }
 }
-

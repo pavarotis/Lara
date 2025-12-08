@@ -18,8 +18,9 @@ class CreateOrderService
 
     /**
      * Create a new order
-     * @param array $data Order data (business_id, customer data, type, notes, delivery_address)
-     * @param array $items Cart items [['product_id' => x, 'name' => x, 'price' => x, 'quantity' => x], ...]
+     *
+     * @param  array  $data  Order data (business_id, customer data, type, notes, delivery_address)
+     * @param  array  $items  Cart items [['product_id' => x, 'name' => x, 'price' => x, 'quantity' => x], ...]
      */
     public function execute(array $data, array $items): Order
     {
@@ -63,7 +64,7 @@ class CreateOrderService
 
     private function getOrCreateCustomer(array $data): Customer
     {
-        if (!empty($data['customer_id'])) {
+        if (! empty($data['customer_id'])) {
             return Customer::findOrFail($data['customer_id']);
         }
 
@@ -80,7 +81,7 @@ class CreateOrderService
     {
         $prefix = date('Ymd');
         $random = strtoupper(Str::random(6));
+
         return "{$prefix}-{$random}";
     }
 }
-

@@ -14,7 +14,7 @@ class CategorySeeder extends Seeder
     {
         $business = Business::where('slug', 'demo-cafe')->first();
 
-        if (!$business) {
+        if (! $business) {
             return;
         }
 
@@ -36,4 +36,3 @@ class CategorySeeder extends Seeder
         }
     }
 }
-
