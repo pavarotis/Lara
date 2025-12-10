@@ -334,7 +334,41 @@ Before committing code, check:
 - [ ] Performance checks (no N+1, eager loading)
 - [ ] Error handling in place
 - [ ] Sprint notes updated (if significant change)
+- [ ] **Task Completion Verification** (see below) ⭐ **NEW**
 - [ ] **Consistency Check** (see below)
+
+### ✅ Task Completion Verification (Critical for All Devs) ⭐ **NEW**
+
+**Before marking task as complete:**
+
+1. **Re-read task description** (open sprint file)
+2. **List ALL deliverables** (every bullet point)
+3. **List ALL acceptance criteria**
+4. **For each deliverable:**
+   - [ ] File exists? (verify with `ls` or file search)
+   - [ ] Used in code? (verify with `grep` or code search)
+   - [ ] Follows conventions?
+5. **For each acceptance criteria:**
+   - [ ] Can I verify it? (test manually or automated)
+   - [ ] Is it actually met?
+
+**Example for API Task:**
+- [ ] Controller created
+- [ ] Routes registered
+- [ ] **API Resource created** (if mentioned in deliverables)
+- [ ] Controller uses API Resource (if required)
+- [ ] Error handling implemented
+- [ ] **Error codes documented** (if "documentation" mentioned)
+- [ ] Rate limiting configured
+- [ ] Tests written (if required)
+
+**Example for Documentation Task:**
+- [ ] **Separate file created** (not just comments)
+- [ ] Location follows pattern (`project-docs/v2/`)
+- [ ] Format follows existing docs (Markdown)
+- [ ] Content includes examples, solutions, implementation details
+
+**Key Rule**: If task says "documentation", it means **separate file**, not just comments!
 
 ### 🔍 Consistency Check (Critical for Dev B)
 

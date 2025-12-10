@@ -8,6 +8,254 @@
 
 ### v2.0 — CMS-First Platform (In Progress)
 
+#### Sprint 1 — Content Module (Core) — ✅ **COMPLETE**
+
+##### Dev A (Backend/Infrastructure) — ✅ **REVIEWED & APPROVED**
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ 2 missing deliverables found and fixed:
+  1. ContentResource (Task A2) — explicit deliverable
+  2. Error Codes Documentation (Task A4) — explicit deliverable
+- ✅ Code quality excellent
+- ✅ Lessons learned documented
+- **Status**: Approved — Ready for Dev B & Dev C
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_1/reviews/sprint_1_review_deva.md`
+
+##### Dev A (Backend/Infrastructure) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task A1: Admin Content Controllers** (2024-11-27)
+  - Created `Admin/ContentController` with full CRUD (index, create, store, show, edit, update, destroy)
+  - Added `publish()` method for content publishing
+  - Added `preview()` method for content preview
+  - Filters: type, status, search (title/slug)
+  - Pagination support
+  - Routes: `/admin/content/*` (resource + publish route)
+- [x] **Task A2: API Content Controllers** (2024-11-27)
+  - Created `Api/V1/ContentController` with show, index, byType methods
+  - Created `ContentResource` for consistent JSON format (explicit deliverable)
+  - All methods use ContentResource for API consistency
+  - Only published content accessible via API
+  - Filters: type, search
+  - Pagination support
+  - Routes: `/api/v1/businesses/{id}/content/*`
+- [x] **Task A3: Form Requests & Validation** (2024-11-27)
+  - Created `StoreContentRequest` with validation rules:
+    - title (required), slug (unique per business), type (required, in: page/article/block)
+    - body_json (required, array), block structure validation
+    - meta (nullable, array), status (nullable, in: draft/published/archived)
+  - Created `UpdateContentRequest` with same rules + unique slug check (ignore current)
+  - Greek error messages for all validation rules
+- [x] **Task A4: API Error Handling Enhancement** (2024-11-27)
+  - Enhanced exception handling in `bootstrap/app.php`
+  - Standardized API response format: `{ success, message, errors, data }`
+  - Handles: Validation (422), Authentication (401), Authorization (403), NotFound (404), MethodNotAllowed (405), Throttle (429), General (500)
+  - Debug mode: Shows exception details in development, generic messages in production
+  - Created `project-docs/v2/api_error_codes.md` with complete error codes documentation (explicit deliverable)
+  - Error codes documentation includes: HTTP status codes, examples, solutions, rate limiting, success response format
+
+**Services Created** (2024-11-27):
+- `GetContentService`: bySlug(), byType(), withRevisions()
+- `CreateContentService`: Creates content + initial revision in transaction
+- `UpdateContentService`: Auto-creates revision before update in transaction
+- `DeleteContentService`: Soft delete support
+- `PublishContentService`: Updates status to published + sets published_at timestamp
+
+**Policies Created** (2024-11-27):
+- `ContentPolicy`: viewAny, view, create, update, delete with RBAC support (fallback to is_admin)
+
+**Code Quality**:
+- ✅ All services use `declare(strict_types=1);`
+- ✅ Type hints & return types everywhere
+- ✅ Constructor injection for dependencies
+- ✅ DB transactions for multi-step operations
+- ✅ Follows Service Layer Pattern
+- ✅ No linting errors
+
+##### Dev B (Architecture/Domain) — ✅ **REVIEWED & APPROVED**
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ No missing deliverables found
+- ✅ Code quality excellent
+- ✅ All models, scopes, and helpers properly implemented
+- **Status**: Approved — Ready for Dev C
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_1/reviews/sprint_1_review_devb.md`
+
+##### Dev B (Architecture/Domain) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task B1: Content Migrations** (2024-11-27)
+  - Created `ContentTypeSeeder` with default content types (page, article, block)
+  - Added seeder to `DatabaseSeeder`
+  - Migrations already created by Dev A (verified correct)
+- [x] **Task B2: Content Models** (2024-11-27)
+  - **Content Model**:
+    - Added scopes: `forBusiness()`, `ofType()`, `archived()`
+    - Added helper methods: `isPublished()`, `isDraft()`, `publish()`, `archive()`
+    - Added relationship: `contentType()` (belongsTo ContentType via type → slug)
+    - All relationships: `business()`, `contentType()`, `revisions()`, `creator()`
+    - All casts: `body_json` → array, `meta` → array, `published_at` → datetime
+  - **ContentType Model**:
+    - Added relationship: `contents()`
+    - Added helper: `getFieldDefinitions()`
+  - **ContentRevision Model**:
+    - Added helper: `restore()` method
+- [x] **Task B3: Content Services** (2024-11-27)
+  - Verified existing services meet requirements (GetContentService, CreateContentService, UpdateContentService, DeleteContentService, PublishContentService)
+  - Created `CreateRevisionService` for manual revision creation
+  - Created `RenderContentService` skeleton/placeholder (full implementation in Sprint 3)
+
+**Code Quality**:
+- ✅ All models use `declare(strict_types=1);`
+- ✅ Type hints & return types everywhere
+- ✅ Proper relationships and scopes
+- ✅ Useful helper methods
+- ✅ Follows existing patterns from other domains
+- ✅ No linting errors
+
+**Next Steps** (Dev C):
+- Admin UI views for content management
+- Block editor UI components
+
+##### Dev C (Frontend/UI) — ✅ **REVIEWED & APPROVED**
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ 3 bugs found and fixed:
+  1. Body JSON Data Flow Issue — Frontend/backend data format misalignment
+  2. ContentType Dropdown Not Populated — Missing variable in controller
+  3. Content Type Selection Not Preserving — Incorrect comparison in dropdown
+- ✅ Code quality excellent
+- ✅ Dynamic block editor UI working perfectly
+- ✅ All acceptance criteria met
+- **Status**: Approved — Sprint 1 Complete, Ready for Sprint 2
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_1/reviews/sprint_1_review_devc.md`
+
+##### Dev C (Frontend/UI) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task C1: Content List Page** (2024-11-27)
+  - Created `admin/content/index.blade.php` with table/list view
+  - Columns: title, type, status, updated_at, actions
+  - Filters: type dropdown, status dropdown, search (title/slug)
+  - Status badges (draft, published, archived) — color-coded
+  - Quick actions: edit, view, delete
+  - Pagination support
+  - Empty state handling
+  - Flash messages (success/error)
+  - Responsive design
+- [x] **Task C2: Content Editor (Create/Edit)** (2024-11-27)
+  - Created `admin/content/create.blade.php` with block-based editor
+  - Created `admin/content/edit.blade.php` with block loading
+  - Created `admin/content/show.blade.php` for content details (bonus)
+  - Basic fields form:
+    - Title (required) with auto-slug generation
+    - Slug (editable, auto-populated from title)
+    - Content Type (dropdown from database)
+    - Status (draft/published/archived)
+  - Block builder UI:
+    - Add block button with dropdown (text, hero, gallery)
+    - Block list (dynamic rendering with Alpine.js)
+    - Block config forms (dynamic based on block type)
+    - Remove block button
+  - Save/Publish functionality
+  - Form validation errors display (inline)
+  - Form data persistence on validation errors
+  - Gallery images handling (newline-separated URLs converted to array)
+- [x] **Task C3: Block Components (Admin)** (2024-11-27)
+  - Created `components/admin/blocks/text.blade.php`:
+    - Content field (textarea, ready for WYSIWYG integration)
+    - Alignment selector (left/center/right)
+  - Created `components/admin/blocks/hero.blade.php`:
+    - Fields: title, subtitle, image URL (media picker → Sprint 2)
+    - CTA text and CTA link
+  - Created `components/admin/blocks/gallery.blade.php`:
+    - Images array (newline-separated URLs, media picker → Sprint 2)
+    - Columns selector (1-4)
+  - All blocks support props configuration
+- [x] **Task C4: Navigation Link** (2024-11-27)
+  - Added Content link to admin sidebar
+  - Positioned in navigation structure
+  - Consistent styling with other navigation items
+
+**Controller Enhancements** (2024-11-27):
+- Updated `ContentController` to pass `$contentTypes` to views
+- Enhanced `store()` and `update()` methods to handle `blocks` array input
+- Added gallery image conversion logic (newline-separated to array)
+
+**Form Request Updates** (2024-11-27):
+- Modified `StoreContentRequest` to accept `blocks` array as alternative input
+- Modified `UpdateContentRequest` to accept `blocks` array as alternative input
+- Made `body_json` conditionally required (`required_without:blocks`)
+
+**Code Quality**:
+- ✅ Clean, well-structured Blade views
+- ✅ Proper use of Alpine.js for dynamic UI
+- ✅ Reusable Blade components for blocks
+- ✅ Consistent styling with existing admin UI
+- ✅ Proper error handling and validation feedback
+- ✅ Responsive design
+- ✅ No linting errors
+
+**Bugs Fixed** (2024-11-27):
+- ✅ Body JSON data flow issue (frontend/backend format alignment)
+- ✅ ContentType dropdown not populated (missing controller variable)
+- ✅ Content type selection not preserving on validation error (incorrect comparison)
+
+**Minor Observations**:
+- ⚠️ WYSIWYG editor not integrated (within Sprint 1 scope — textarea used)
+- ⚠️ Block drag & drop reordering not implemented (can be added in Sprint 2)
+- ⚠️ Preview functionality not yet implemented (can use show page for now)
+
+---
+
+### Sprint 1 Final Check (2024-11-27)
+
+**Status**: ✅ **COMPLETE** — All issues resolved
+
+**Final Summary**:
+- ✅ **Dev A**: All tasks complete, 2 missing deliverables fixed
+- ✅ **Dev B**: All tasks complete, no issues found
+- ✅ **Dev C**: All tasks complete, 3 bugs fixed during review
+
+**Total Issues Found & Fixed**: **5**
+- Dev A: 2 missing deliverables (ContentResource, Error Codes Documentation)
+- Dev C: 3 bugs (body_json data flow, ContentType dropdown, form state preservation)
+
+**Content Management Features**:
+- ✅ Create Content → `/admin/content/create`
+- ✅ Edit Content → `/admin/content/{id}/edit`
+- ✅ View Content → `/admin/content/{id}`
+- ✅ List Content → `/admin/content` (with filters)
+- ✅ Publish Content → `POST /admin/content/{id}/publish`
+
+**API Endpoints**:
+- ✅ `GET /api/v1/businesses/{id}/content` — List published content
+- ✅ `GET /api/v1/businesses/{id}/content/{slug}` — Get content by slug
+- ✅ `GET /api/v1/businesses/{id}/content/type/{type}` — Get content by type
+
+**Block System**:
+- ✅ Text block (textarea with alignment)
+- ✅ Hero block (title, subtitle, image URL, CTA)
+- ✅ Gallery block (image URLs, columns)
+
+**Content Versioning**:
+- ✅ Initial revision created on content creation
+- ✅ Auto-revision created before content update
+- ✅ Manual revision creation via CreateRevisionService
+- ✅ Revision restore functionality
+
+**Ready for Sprint 2**: ✅ **YES**
+
+**See**: `project-docs/v2/sprints/sprint_1/reviews/sprint_1_final_check.md` for detailed final check
+
+---
+
 #### Sprint 0 — Infrastructure & Foundation ✅ **COMPLETE**
 
 ##### Dev A (Backend/Infrastructure) — ✅ REVIEWED & APPROVED
@@ -23,7 +271,7 @@
 - ⚠️ Minor: Migration naming inconsistency (documented for cleanup)
 - **Status**: Approved — Ready for next sprint
 
-**Detailed Review**: See `project-docs/v2/sprints/sprint_0_review.md`
+**Detailed Review**: See `project-docs/v2/sprints/sprint_0_review.md` and `project-docs/v2/sprints/sprint_0_review_deva.md`
 
 ##### Dev A (Backend/Infrastructure)
 - [x] **Task A1: Architecture Documentation** (2024-11-27)

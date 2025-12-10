@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Content Model (Skeleton)
+ * Content Model
  *
- * Full implementation will be in Sprint 1
+ * Represents content entries (pages, articles, blocks) with block-based structure.
  */
 class Content extends Model
 {
@@ -50,6 +50,11 @@ class Content extends Model
         return $this->hasMany(ContentRevision::class);
     }
 
+    public function contentType(): BelongsTo
+    {
+        return $this->belongsTo(ContentType::class, 'type', 'slug');
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', 'published')
@@ -59,5 +64,57 @@ class Content extends Model
     public function scopeDraft($query)
     {
         return $query->where('status', 'draft');
+    }
+
+    public function scopeForBusiness($query, int $businessId)
+    {
+        return $query->where('business_id', $businessId);
+    }
+
+    public function scopeOfType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    public function scopeArchived($query)
+    {
+        return $query->where('status', 'archived');
+    }
+
+    /**
+     * Check if content is published
+     */
+    public function isPublished(): bool
+    {
+        return $this->status === 'published' && $this->published_at !== null;
+    }
+
+    /**
+     * Check if content is draft
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    /**
+     * Publish the content
+     */
+    public function publish(): void
+    {
+        $this->update([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+    }
+
+    /**
+     * Archive the content
+     */
+    public function archive(): void
+    {
+        $this->update([
+            'status' => 'archived',
+        ]);
     }
 }

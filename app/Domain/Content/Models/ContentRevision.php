@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * ContentRevision Model (Skeleton)
+ * ContentRevision Model
  *
- * Full implementation will be in Sprint 1
+ * Represents version history for content entries.
  */
 class ContentRevision extends Model
 {
@@ -35,5 +35,22 @@ class ContentRevision extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Restore content to this revision state
+     */
+    public function restore(): bool
+    {
+        $content = $this->content;
+
+        if (! $content) {
+            return false;
+        }
+
+        return $content->update([
+            'body_json' => $this->body_json,
+            'meta' => $this->meta,
+        ]);
     }
 }

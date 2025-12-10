@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ContentController as ApiContentController;
 use App\Http\Controllers\Api\V1\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,14 +18,12 @@ Route::prefix('v1')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('api.v1.settings.index');
     Route::get('/settings/{key}', [SettingsController::class, 'show'])->name('api.v1.settings.show');
 
-    // Content API (placeholder - full implementation in Sprint 1)
-    Route::get('/content/test', function () {
-        return response()->json([
-            'message' => 'Content API is ready',
-            'status' => 'skeleton',
-            'sprint' => 0,
-        ]);
-    })->name('api.v1.content.test');
+    // Content API
+    Route::prefix('businesses/{businessId}/content')->group(function () {
+        Route::get('/', [ApiContentController::class, 'index'])->name('api.v1.content.index');
+        Route::get('/{slug}', [ApiContentController::class, 'show'])->name('api.v1.content.show');
+        Route::get('/type/{type}', [ApiContentController::class, 'byType'])->name('api.v1.content.byType');
+    });
 
     // Protected routes (require authentication)
     // ⚠️ Note: Sanctum package needs to be installed for auth:sanctum to work
