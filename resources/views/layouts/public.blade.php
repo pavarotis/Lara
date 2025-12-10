@@ -42,6 +42,7 @@
         </style>
 
         @stack('styles')
+        @stack('meta')
     </head>
     <body class="font-sans antialiased bg-surface text-content" style="{{ $themeColors ? '--tw-primary: ' . $themeColors['primary'] . ';' : '' }}">
         <!-- Header -->
@@ -147,7 +148,7 @@
 
         <!-- Main Content -->
         <main>
-            {{ $slot }}
+            @yield('content')
         </main>
 
         <!-- Footer -->

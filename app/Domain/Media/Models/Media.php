@@ -110,4 +110,48 @@ class Media extends Model
 
         return null;
     }
+
+    /**
+     * Get variant URL by name (thumb, small, medium, large)
+     */
+    public function getVariantUrl(string $variantName): ?string
+    {
+        if ($this->type !== 'image') {
+            return null;
+        }
+
+        $variants = $this->metadata['variants'] ?? [];
+        $variantPath = $variants[$variantName] ?? null;
+
+        if ($variantPath) {
+            return asset('storage/'.$variantPath);
+        }
+
+        // Fallback to original if variant doesn't exist
+        return $this->url;
+    }
+
+    /**
+     * Get small variant URL
+     */
+    public function getSmallUrlAttribute(): ?string
+    {
+        return $this->getVariantUrl('small');
+    }
+
+    /**
+     * Get medium variant URL
+     */
+    public function getMediumUrlAttribute(): ?string
+    {
+        return $this->getVariantUrl('medium');
+    }
+
+    /**
+     * Get large variant URL
+     */
+    public function getLargeUrlAttribute(): ?string
+    {
+        return $this->getVariantUrl('large');
+    }
 }

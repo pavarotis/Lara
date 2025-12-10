@@ -321,6 +321,42 @@
 
 ## 📝 Pre-Commit Checklist
 
+### Blade Views Syntax Check (NEW) ⭐ **CRITICAL**
+
+**Before committing ANY Blade view file:**
+
+- [ ] **Layout Files** (`layouts/*.blade.php`):
+  - [ ] Uses `@yield('section_name')` for content areas
+  - [ ] Does NOT use `{{ $slot }}` (that's for components)
+  - [ ] Can be extended with `@extends('layouts.name')`
+  
+- [ ] **Component Files** (`components/*.blade.php`):
+  - [ ] Uses `{{ $slot }}` for main content
+  - [ ] Does NOT use `@yield()` (that's for layouts)
+  - [ ] Can be used with `<x-component>` syntax
+  
+- [ ] **Pages/Views that extend layouts**:
+  - [ ] Uses `@extends('layouts.name')`
+  - [ ] Uses `@section('section_name')` to fill content
+  - [ ] Does NOT use `<x-layout>` syntax (unless layout is a component)
+
+**Quick Verification:**
+```bash
+# Check for mixed syntax in layouts
+grep -r "\$slot" resources/views/layouts/
+# Should return empty (layouts use @yield)
+
+# Check for @yield in components
+grep -r "@yield" resources/views/components/
+# Should return empty (components use $slot)
+```
+
+**Reference**: See `project-docs/v2/sprints/sprint_helper/blade_layout_component_guide.md`
+
+---
+
+## 📝 Pre-Commit Checklist (Original)
+
 Before committing code, check:
 
 - [ ] **Run Laravel Pint**: `./vendor/bin/pint app/Domain/{Domain}` (fixes formatting automatically)
@@ -330,7 +366,7 @@ Before committing code, check:
 - [ ] No debug code (`dd()`, `dump()`, etc.)
 - [ ] No commented code (unless explaining)
 - [ ] PHPDoc updated (if needed)
-- [ ] No hardcoded values
+- [ ] **No hardcoded values** (see Hardcoded Values Checklist below) ⭐ **ENHANCED**
 - [ ] Security checks (validation, sanitization)
 - [ ] Performance checks (no N+1, eager loading)
 - [ ] Error handling in place
@@ -338,6 +374,7 @@ Before committing code, check:
 - [ ] **Task Completion Verification** (see below) ⭐ **NEW**
 - [ ] **Consistency Check** (see below)
 - [ ] **Relationship Chain Verification** (if adding relationships) ⭐ **NEW**
+- [ ] **Blade Views Syntax Check** (if modifying Blade views) ⭐ **NEW** (see below)
 
 ### ✅ Task Completion Verification (Critical for All Devs) ⭐ **NEW**
 
@@ -534,6 +571,41 @@ Before pushing to repository:
 3. **Service** → Sets foreign key when creating?
 4. **Resource/Controller** → Uses relationship? (if yes, verify it exists)
 
+### 8. Data Flow Verification (Dev B Specific) ⭐ **NEW** (Sprint 3)
+
+**Before marking block views complete, verify data flow:**
+
+**For each block type:**
+1. **Admin Controller** → What props does it save? (prop names, format)
+2. **Block View** → What props does it expect? (must match controller)
+3. **Media Loading** → Does it handle controller format? (with fallbacks)
+4. **End-to-End Test** → Create test content, verify rendering works
+
+**Quick Verification**:
+```bash
+# 1. Check Admin Controller
+grep -A 10 "if.*{block}" app/Http/Controllers/Admin/ContentController.php
+
+# 2. Check block view props
+grep "\$" resources/views/themes/default/blocks/{block}.blade.php
+
+# 3. Test in tinker
+php artisan tinker
+>>> $content = Content::first();
+>>> $block = collect($content->body_json)->firstWhere('type', '{block}');
+>>> $block['props']; // Verify format matches view expectations
+```
+
+**Common Mistakes to Avoid**:
+- ❌ **Mistake**: Controller saves `image_id` but view uses `$image`
+- ✅ **Fix**: Use same prop name in both places
+- ❌ **Mistake**: Controller saves array of objects but view expects array of IDs
+- ✅ **Fix**: Handle both formats in view (with fallback)
+- ❌ **Mistake**: View doesn't check if media exists
+- ✅ **Fix**: Always check for null before accessing media properties
+
+**See**: `project-docs/v2/sprints/sprint_helper/data_flow_verification_guide.md` for detailed guide
+
 **Quick Verification Command:**
 ```bash
 # For a relationship like creator()
@@ -552,6 +624,70 @@ grep "creator" app/Http/Resources/MediaResource.php
 
 **If ANY step fails, the relationship is incomplete!**
 
+### 🚫 Hardcoded Values Prevention Checklist ⭐ **NEW**
+
+**Before committing code, check for hardcoded values:**
+
+**Common Hardcoded Values to Avoid:**
+- ❌ **User IDs**: `created_by => 1`, `user_id => 1`
+  - ✅ **Fix**: Use `auth()->id()`, `User::where('is_admin', true)->first()`, or get from database
+- ❌ **Business IDs**: `business_id => 1`
+  - ✅ **Fix**: Use `Business::active()->firstOrFail()`, or get from request/context
+- ❌ **Status Values**: `status => 'published'` (if should be dynamic)
+  - ✅ **Fix**: Use constants, enums, or get from request
+- ❌ **File Paths**: `'/storage/uploads'`
+  - ✅ **Fix**: Use `Storage::disk()`, `config()`, or `env()`
+- ❌ **URLs**: `'https://example.com'`
+  - ✅ **Fix**: Use `url()`, `route()`, `config('app.url')`
+- ❌ **Magic Numbers**: `->limit(10)` (if should be configurable)
+  - ✅ **Fix**: Use constants, config values, or request parameters
+
+**Verification Commands:**
+```bash
+# Check for hardcoded user IDs
+grep -r "created_by.*=>.*[0-9]" app/ --exclude-dir=vendor
+grep -r "user_id.*=>.*[0-9]" app/ --exclude-dir=vendor
+
+# Check for hardcoded business IDs
+grep -r "business_id.*=>.*[0-9]" app/ --exclude-dir=vendor
+
+# Check for hardcoded URLs
+grep -r "http://\|https://" app/ --exclude-dir=vendor | grep -v "config\|env\|url()"
+```
+
+**Pattern Recognition:**
+- **In Commands**: Always get user/business from database, not hardcoded
+- **In Services**: Use `auth()->id()` or get from context, not hardcoded
+- **In Controllers**: Get from request/context, not hardcoded
+- **In Migrations/Seeders**: Hardcoded values are OK (they're data, not logic)
+
+**Example - Wrong:**
+```php
+// ❌ DON'T DO THIS
+$this->createContentService->execute([
+    'created_by' => 1, // Hardcoded!
+]);
+```
+
+**Example - Correct:**
+```php
+// ✅ DO THIS
+$adminUser = User::where('is_admin', true)->first() 
+    ?? User::find(1); // Fallback only
+
+$this->createContentService->execute([
+    'created_by' => $adminUser->id, // Dynamic!
+]);
+```
+
+**Or:**
+```php
+// ✅ DO THIS (if in authenticated context)
+$this->createContentService->execute([
+    'created_by' => auth()->id(), // From authenticated user
+]);
+```
+
 ---
 
 ## 📚 Resources
@@ -562,6 +698,7 @@ grep "creator" app/Http/Resources/MediaResource.php
 - [Project Conventions](../conventions.md)
 - [Architecture Documentation](../architecture.md)
 - [Relationship Implementation Guide](./sprints/sprint_helper/relationship_implementation_guide.md) ⭐ **NEW** — Step-by-step guide for relationships
+- [Data Flow Verification Guide](./sprints/sprint_helper/data_flow_verification_guide.md) ⭐ **NEW** — Step-by-step guide for data flow verification
 
 ### External Resources
 - [Laravel Best Practices](https://laravel.com/docs)
@@ -595,6 +732,35 @@ For EVERY relationship in spec:
 ```
 
 **Checklist Added**: See "Relationship Implementation Checklist" above.
+
+---
+
+### Pattern 4: Hardcoded Values Prevention (Sprint 3)
+
+**Problem**: Hardcoded user ID (`created_by => 1`) in migration command.
+
+**Root Cause**: 
+- Didn't consider command runs in CLI (no auth context)
+- Used hardcoded value instead of database query
+- Didn't check for hardcoded values before commit
+
+**Prevention Pattern**:
+```
+For EVERY ID/value in code:
+1. Is it hardcoded? (check with grep)
+2. Can it be dynamic? (get from database/context)
+3. Is there a pattern? (check existing similar code)
+4. Use dynamic value (auth()->id(), query, or context)
+```
+
+**Checklist Added**: See "Hardcoded Values Prevention Checklist" above.
+
+**Verification Commands**:
+```bash
+# Before commit, run:
+grep -r "created_by.*=>.*[0-9]" app/
+grep -r "business_id.*=>.*[0-9]" app/
+```
 
 ---
 
@@ -639,6 +805,77 @@ Before marking model complete:
 
 ---
 
+### Pattern 5: Data Flow Verification (Sprint 3) ⭐ **NEW**
+
+**Problem**: Hero & Gallery block views had data flow mismatches with Admin Controller.
+
+**Root Cause**: 
+- Didn't verify how Admin Controller saves block props
+- Assumed view would receive props in expected format
+- Didn't do end-to-end test before commit
+
+**Prevention Pattern**:
+```
+For EVERY block view:
+1. Check Admin Controller: How does it save props? (prop names, format)
+2. Write Block View: Match controller format
+3. Add Fallbacks: Support legacy formats
+4. End-to-End Test: Create test content, verify rendering
+```
+
+**Checklist Added**: See "Data Flow Verification" section above.
+
+**Verification Commands**:
+```bash
+# Before commit, run:
+grep -A 10 "if.*hero\|if.*gallery" app/Http/Controllers/Admin/ContentController.php
+grep "\$" resources/views/themes/default/blocks/{block}.blade.php
+
+# Test in tinker:
+php artisan tinker
+>>> $content = Content::first();
+>>> $block = collect($content->body_json)->firstWhere('type', '{block}');
+>>> $block['props']; // Verify format
+```
+
+**See**: `project-docs/v2/sprints/sprint_helper/data_flow_verification_guide.md` for detailed guide
+
+---
+
+### Pattern 6: Blade Layout vs Component Syntax (Sprint 3)
+
+**Problem**: `Undefined variable $slot` error when using layout syntax with component syntax.
+
+**Root Cause**: 
+- Mixed `@yield()` (layout syntax) with `{{ $slot }}` (component syntax)
+- Didn't verify syntax matches file type (layout vs component)
+- Didn't check existing patterns in codebase
+
+**Prevention Pattern**:
+```
+For EVERY Blade view file:
+1. Is it a layout? (layouts/*.blade.php) → Use @yield('content')
+2. Is it a component? (components/*.blade.php) → Use {{ $slot }}
+3. Does it extend a layout? → Use @extends/@section
+4. Verify syntax matches file type (check existing similar files)
+```
+
+**Checklist Added**: See "Blade Views Syntax Check" in Pre-Commit Checklist above.
+
+**Verification Commands**:
+```bash
+# Before commit, run:
+grep -r "\$slot" resources/views/layouts/
+# Should return empty (layouts use @yield)
+
+grep -r "@yield" resources/views/components/
+# Should return empty (components use $slot)
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_helper/blade_layout_component_guide.md`
+
+---
+
 ## 📋 Quick Reference: Common Mistakes & Fixes
 
 | Mistake | Fix | Checklist Item |
@@ -649,4 +886,8 @@ Before marking model complete:
 | Service creates record but doesn't set foreign key | Add foreign key to create array | Relationship Checklist Step 4 |
 | Formatting issues (Pint violations) | Run `./vendor/bin/pint` | Pre-Commit Checklist |
 | Missing relationship in similar entities | Check pattern consistency | Consistency Check |
+| Data flow mismatch (block views) | Verify Admin Controller → Block View | Data Flow Verification |
+| Prop name mismatch | Use same prop names as controller | Data Flow Verification |
+| Format mismatch (array vs objects) | Handle both formats in view | Data Flow Verification |
+| Blade syntax mixing (`$slot` in layouts) | Use `@yield('content')` in layouts, `$slot` in components | Blade Views Syntax Check |
 

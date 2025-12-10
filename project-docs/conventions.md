@@ -562,6 +562,63 @@ public function execute(...)
 
 ---
 
+## 15.5. Hardcoded Values Prevention
+
+**⚠️ IMPORTANT**: Never use hardcoded values in business logic.
+
+### Common Hardcoded Values to Avoid
+
+**❌ Wrong:**
+```php
+// Hardcoded user ID
+'created_by' => 1
+
+// Hardcoded business ID
+'business_id' => 1
+
+// Hardcoded URLs
+'url' => 'https://example.com'
+
+// Hardcoded file paths
+$path = '/storage/uploads';
+```
+
+**✅ Correct:**
+```php
+// Dynamic user ID
+'created_by' => auth()->id()
+// Or: User::where('is_admin', true)->first()->id
+
+// Dynamic business ID
+'business_id' => Business::active()->firstOrFail()->id
+
+// Dynamic URLs
+'url' => url('/path')
+// Or: route('route.name')
+
+// Dynamic file paths
+$path = Storage::disk('public')->path('uploads');
+```
+
+### When Hardcoded Values Are OK
+
+- **Migrations/Seeders**: Data values can be hardcoded (they're data, not logic)
+- **Constants**: Use class constants for magic values
+- **Config Defaults**: Default values in config files
+
+### Verification Checklist
+
+Before committing:
+- [ ] No hardcoded user IDs (use `auth()->id()` or get from DB)
+- [ ] No hardcoded business IDs (get from context)
+- [ ] No hardcoded URLs (use `url()`, `route()`, `config()`)
+- [ ] No hardcoded file paths (use `Storage`, `config()`)
+- [ ] Magic numbers replaced with constants or config
+
+**See**: `project-docs/v2/dev-responsibilities.md` for detailed checklist.
+
+---
+
 ## 16. API Response Format
 
 **⚠️ IMPORTANT**: Always use `BaseController` helper methods for API responses.

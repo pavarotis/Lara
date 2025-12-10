@@ -11,22 +11,15 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
-
-// Static Pages
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+// Static Pages (migrated to CMS)
+// Note: These routes are now handled by ContentController@show via dynamic route /{slug}
+// Run: php artisan cms:migrate-static-pages to migrate content
+// Old static views can be deleted after migration
 
 // Public Menu Routes
 Route::get('/menu', [MenuController::class, 'show'])->name('menu');
@@ -56,6 +49,23 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Content Preview Route (Admin only)
+Route::get('/preview/{contentId}', [ContentController::class, 'preview'])
+    ->middleware(['auth'])
+    ->name('content.preview');
+
+// Dynamic Content Routes (CMS)
+// Note: This must be after all static routes to avoid conflicts
+// Route priority: static routes first, then dynamic content
+// Handle root URL (/) explicitly for home page (slug: '/')
+Route::get('/', function () {
+    return app(ContentController::class)->show('/');
+})->name('home');
+// Handle all other dynamic content routes
+Route::get('/{slug}', [ContentController::class, 'show'])
+    ->where('slug', '^(?!admin|api|cart|checkout|menu|dashboard|profile|login|register|password|email-verification|preview).*')
+    ->name('content.show');
 
 // Admin Routes (Blade - Custom Pages)
 // Note: Filament handles /admin for main dashboard and resources
