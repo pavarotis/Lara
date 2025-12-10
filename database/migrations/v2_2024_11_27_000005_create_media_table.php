@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('mime')->nullable();
             $table->unsignedBigInteger('size')->nullable(); // bytes
             $table->json('metadata')->nullable(); // width, height, duration, etc.
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
             $table->index('business_id');

@@ -8,6 +8,255 @@
 
 ### v2.0 — CMS-First Platform (In Progress)
 
+#### Sprint 2 — Media Library (Core) — ✅ **COMPLETE**
+
+**Sprint 2 Final Review** (2024-11-27):
+- ✅ All developers completed tasks with excellent quality
+- ✅ **Issues Found & Fixed**:
+  - Dev B: 1 issue (missing creator relationship in Media model) — Fixed
+  - Dev C: 5 issues (1 critical + 4 minor) — All Fixed
+    - Critical: Hero block data flow mismatch
+    - Minor: Move Modal, File Details Modal, Folder Loading, Upload Button
+- ✅ All deliverables met
+- ✅ Media Library fully functional and integrated
+- ✅ Content Editor integration complete
+- ✅ Services fully integrated in controllers
+- ✅ Ready for Sprint 3
+
+**Completion Status**: **100%** (excluding optional Task C4 - Drag & Drop Upload)
+
+**Detailed Reviews**: 
+- Dev A: `project-docs/v2/sprints/sprint_2/reviews/sprint_2_review_deva.md`
+- Dev B: `project-docs/v2/sprints/sprint_2/reviews/sprint_2_review_devb.md`
+- Dev C: `project-docs/v2/sprints/sprint_2/reviews/sprint_2_review_devc.md`
+
+##### Dev A (Backend/Infrastructure) — ✅ **REVIEWED & APPROVED**
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ No missing deliverables found
+- ✅ Code quality excellent
+- ✅ Controllers ready for service integration (pending Dev B)
+- ✅ All routes registered and working
+- ✅ API Resources for consistent JSON format
+- ✅ Comprehensive validation with Greek messages
+- **Status**: Approved — Ready for Dev B & Dev C
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_2/reviews/sprint_2_review_deva.md`
+
+##### Dev A (Backend/Infrastructure) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task A1: Admin Media Controllers** (2024-11-27)
+  - Created `Admin/MediaController` with index, store, update, destroy methods
+  - Created `Admin/MediaFolderController` with index, store, update, destroy methods
+  - Filters: folder_id, type, search
+  - Pagination support
+  - Routes: `/admin/media/*` and `/admin/media/folders/*`
+  - Services integrated: UploadMediaService, DeleteMediaService, GetMediaService
+- [x] **Task A2: API Endpoints (Headless)** (2024-11-27)
+  - Created `Api/V1/MediaController` with index, store, show, destroy methods
+  - Created `MediaResource` for consistent JSON format
+  - Created `MediaFolderResource` for folder structure
+  - All methods use Resources for API consistency
+  - Filters: folder_id, type, search
+  - Pagination support
+  - Routes: `/api/v1/businesses/{id}/media/*`
+  - All methods functional with services integrated
+- [x] **Task A3: Form Requests & Validation** (2024-11-27)
+  - Created `UploadMediaRequest` with validation:
+    - file/files (required, supports single or multiple files)
+    - Extended file types: images (jpeg, png, gif, webp), videos (mp4, mpeg), PDFs
+    - Max file size: 10MB
+    - folder_id (optional)
+  - Created `CreateFolderRequest` with validation:
+    - name (required, unique per business/parent)
+    - business_id (required)
+    - parent_id (optional)
+  - Created `UpdateMediaRequest` with validation:
+    - name (optional, string, max 255)
+    - folder_id (optional)
+  - Created `UpdateFolderRequest` with validation:
+    - name (required, unique per business/parent, ignore current)
+  - Greek error messages for all validation rules
+
+**Code Quality**:
+- ✅ All controllers use `declare(strict_types=1);`
+- ✅ Type hints & return types everywhere
+- ✅ Services fully integrated from Dev B (UploadMediaService, DeleteMediaService, GetMediaService)
+- ✅ Follows Service Layer Pattern
+- ✅ API Resources for consistent JSON format
+- ✅ Multiple file upload support
+- ✅ Folders passed to views for UI integration
+- ✅ No linting errors
+
+##### Dev B (Architecture/Domain) — ✅ **REVIEWED & APPROVED**
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ No missing deliverables found
+- ✅ Code quality excellent
+- ✅ All models, services, and policies properly implemented
+- ✅ Native PHP GD implementation for image variants (no external dependencies)
+- **Status**: Approved — Ready for Dev C
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_2/reviews/sprint_2_review_devb.md`
+
+##### Dev B (Architecture/Domain) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task B1: Media Database Migrations** (2024-11-27)
+  - Verified migrations already created in Sprint 0 (correct structure)
+  - Foreign keys and indexes properly configured
+  - Nested folder structure supported
+- [x] **Task B2: Media Models** (2024-11-27)
+  - **Media Model**:
+    - Added scopes: `ofBusiness()`, `inFolder()`, `ofType()`, `search()`
+    - Added accessors: `url`, `thumbnail_url`
+    - All relationships: `business()`, `folder()`
+    - Casts: `metadata` → array, `size` → integer
+  - **MediaFolder Model**:
+    - Added scopes: `ofBusiness()`, `root()`
+    - Added helper: `getPath()`
+    - All relationships: `children()`, `parent()`, `files()`, `business()`, `creator()`
+- [x] **Task B3: Media Services** (2024-11-27)
+  - Created `UploadMediaService`: File upload, unique filename generation, automatic variant generation, Media record creation
+  - Created `DeleteMediaService`: File deletion, variant cleanup, empty folder cleanup
+  - Created `GenerateVariantsService`: Image variants (thumb, small, medium, large) using native PHP GD
+  - Created `GetMediaService`: byBusiness, byFolder, search, byType methods
+- [x] **Task B4: Media Policies** (2024-11-27)
+  - Created `MediaPolicy`: viewAny, view, create, update, delete with RBAC support
+  - Created `MediaFolderPolicy`: viewAny, create, update, delete with RBAC support
+
+**Code Quality**:
+- ✅ All models use `declare(strict_types=1);`
+- ✅ Type hints & return types everywhere
+- ✅ Proper relationships and scopes
+- ✅ Useful accessors for URL generation
+- ✅ DB transactions for multi-step operations
+- ✅ Proper error handling
+- ✅ Follows existing patterns from other domains
+- ✅ No linting errors
+
+**Architecture Decisions**:
+- ✅ Native PHP GD for image variants (no external dependencies)
+- ✅ `asset('storage/...')` for public URLs
+- ✅ Automatic empty folder cleanup
+- ✅ File type determination from MIME type
+
+**Bugs Fixed During Review**:
+- ✅ **Missing creator() relationship in Media model** (2024-11-27)
+  - Issue: Media model missing `creator()` relationship (discovered during review)
+  - Fix: Added `creator()` relationship to Media model: `belongsTo(User::class, 'created_by')`
+  - Status: Fixed and verified
+  - Impact: Media records can now access creator user information
+
+##### Dev C (Frontend/UI) — ✅ **REVIEWED & APPROVED**
+
+**Master DEV Review** (2024-11-27):
+- ✅ All tasks completed with excellent quality
+- ✅ 1 critical issue found and fixed:
+  1. Hero Block Data Flow Mismatch — Field names corrected with `getFieldName()` method
+- ✅ 4 minor issues found and fixed:
+  1. Move Modal Missing — Complete modal implementation added
+  2. File Details Modal Placeholder — Full implementation with preview and copy functionality
+  3. Media Picker Folder Loading — Enhanced to use parent context
+  4. Upload Button in Media Picker Modal — Quick upload button added
+- ✅ Code quality excellent
+- ✅ All deliverables met
+- **Status**: Approved — Sprint 2 Complete, Ready for Sprint 3
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_2/reviews/sprint_2_review_devc.md`
+
+##### Dev C (Frontend/UI) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task C1: Media Library Admin UI** (2024-11-27)
+  - Created `admin/media/index.blade.php` with full media library interface
+  - Grid view with image previews and thumbnails
+  - Left sidebar with folder tree
+  - Top bar with upload button, search, filters (type, folder)
+  - Bulk actions bar (Move, Delete, Clear)
+  - View toggle (Grid/List)
+  - Empty state
+  - Create folder modal
+  - File upload functionality (multiple files support)
+  - Delete functionality (single & bulk)
+  - **Move Modal** — Complete with folder selection and bulk file movement
+  - **File Details Modal** — Complete with file info, preview, and copy URL functionality
+- [x] **Task C2: Media Picker Component** (2024-11-27)
+  - Created `components/admin/media-picker.blade.php` — Reusable media picker component
+  - Modal-based picker interface
+  - Thumbnail grid (responsive)
+  - Search bar
+  - Folder navigation (breadcrumb)
+  - Multiple select mode (for galleries)
+  - Single select mode (for hero image)
+  - **Upload Button** — Quick upload in modal empty state
+  - **Folder Loading** — Enhanced to load from parent context
+- [x] **Task C3: Content Editor Integration** (2024-11-27)
+  - Updated `components/admin/blocks/hero.blade.php` to use media-picker
+  - Updated `components/admin/blocks/gallery.blade.php` to use media-picker
+  - Image preview in hero block
+  - Gallery preview in gallery block
+  - **Fixed**: Hero block data flow issue — Added `getFieldName()` method to convert field names correctly
+  - Backend integration: `ContentController` updated to handle media picker data format
+- [ ] **Task C4: Drag & Drop Upload** (Optional)
+  - Not implemented (optional enhancement for future sprint)
+
+**Controller Enhancements** (2024-11-27):
+- `MediaController` — Integrated services from Dev B:
+  - `UploadMediaService` for file uploads
+  - `DeleteMediaService` for file deletion
+  - `GetMediaService` for data retrieval
+  - Multiple file upload support added
+  - Folders passed to index view for sidebar
+- `UploadMediaRequest` — Extended for multiple files and extended file types:
+  - Support for `files[]` array and single `file` input
+  - Extended file types: images, videos, PDFs
+  - Improved validation messages
+
+**Code Quality**:
+- ✅ Clean, well-structured Blade templates
+- ✅ Good use of Alpine.js for interactivity
+- ✅ Responsive design
+- ✅ Proper error handling
+- ✅ Consistent code style
+- ✅ Server-side rendering with progressive enhancement
+- ✅ Component-based architecture for reusability
+
+**Bugs Fixed During Review**:
+1. ✅ **Hero Block Data Flow Mismatch** (Critical)
+   - Issue: Field names `blocks[X][props][image]_id` instead of `blocks[X][props][image_id]`
+   - Fix: Added `getFieldName()` method to media-picker component
+   - Status: Fixed and tested
+2. ✅ **Move Modal Missing** (High Priority)
+   - Issue: Button existed but modal not implemented
+   - Fix: Complete modal with folder selection and `moveFiles()` method
+   - Status: Complete
+3. ✅ **File Details Modal Placeholder** (Medium Priority)
+   - Issue: Modal existed but was empty
+   - Fix: Full implementation with preview, metadata, and copy URL
+   - Status: Complete
+4. ✅ **Media Picker Folder Loading** (Low Priority)
+   - Issue: `loadFolders()` set empty array
+   - Fix: Enhanced to use folders from parent view context
+   - Status: Complete
+5. ✅ **Upload Button in Media Picker Modal** (Low Priority)
+   - Issue: Spec mentioned upload button but not implemented
+   - Fix: Added "Quick Upload" button with `handleQuickUpload()` method
+   - Status: Complete
+
+**Sprint 2 Final Status** (2024-11-27):
+- ✅ All tasks completed by all developers (100% completion)
+- ✅ All critical issues fixed
+- ✅ All minor issues resolved
+- ✅ All deliverables met
+- ✅ Code quality excellent
+- ✅ Services fully integrated
+- ✅ Media Library fully functional and integrated with Content Editor
+- ✅ Ready for Sprint 3
+
 #### Sprint 1 — Content Module (Core) — ✅ **COMPLETE**
 
 ##### Dev A (Backend/Infrastructure) — ✅ **REVIEWED & APPROVED**

@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * MediaFolder Model (Skeleton)
+ * MediaFolder Model
  *
- * Full implementation will be in Sprint 2
+ * Represents folders in the media library with nested structure support.
  */
 class MediaFolder extends Model
 {
@@ -40,13 +40,50 @@ class MediaFolder extends Model
         return $this->hasMany(MediaFolder::class, 'parent_id');
     }
 
-    public function media(): HasMany
+    public function files(): HasMany
     {
-        return $this->hasMany(Media::class);
+        return $this->hasMany(Media::class, 'folder_id');
     }
 
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Scope: Filter by business
+     */
+    public function scopeOfBusiness($query, int $businessId)
+    {
+        return $query->where('business_id', $businessId);
+    }
+
+    /**
+     * Scope: Root folders (no parent)
+     */
+    public function scopeRoot($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    /**
+     * Get the full folder path
+     */
+    public function getPath(): string
+    {
+        if ($this->path) {
+            return $this->path;
+        }
+
+        // Build path from parent chain
+        $path = [$this->name];
+        $parent = $this->parent;
+
+        while ($parent) {
+            array_unshift($path, $parent->name);
+            $parent = $parent->parent;
+        }
+
+        return implode('/', $path);
     }
 }

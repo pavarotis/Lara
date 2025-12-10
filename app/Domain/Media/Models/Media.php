@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Media Model (Skeleton)
+ * Media Model
  *
- * Full implementation will be in Sprint 2
+ * Represents media files (images, videos, documents) in the media library.
  */
 class Media extends Model
 {
@@ -24,6 +24,7 @@ class Media extends Model
         'mime',
         'size',
         'metadata',
+        'created_by',
     ];
 
     protected $casts = [
@@ -39,5 +40,74 @@ class Media extends Model
     public function folder(): BelongsTo
     {
         return $this->belongsTo(MediaFolder::class);
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class, 'created_by');
+    }
+
+    /**
+     * Scope: Filter by business
+     */
+    public function scopeOfBusiness($query, int $businessId)
+    {
+        return $query->where('business_id', $businessId);
+    }
+
+    /**
+     * Scope: Filter by folder
+     */
+    public function scopeInFolder($query, ?int $folderId)
+    {
+        if ($folderId === null) {
+            return $query->whereNull('folder_id');
+        }
+
+        return $query->where('folder_id', $folderId);
+    }
+
+    /**
+     * Scope: Filter by type
+     */
+    public function scopeOfType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    /**
+     * Scope: Search by name
+     */
+    public function scopeSearch($query, string $search)
+    {
+        return $query->where('name', 'like', "%{$search}%");
+    }
+
+    /**
+     * Get the public URL for the media file
+     */
+    public function getUrlAttribute(): string
+    {
+        return asset('storage/'.$this->path);
+    }
+
+    /**
+     * Get the thumbnail URL (if exists)
+     */
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        $variants = $this->metadata['variants'] ?? [];
+        $thumbPath = $variants['thumb'] ?? null;
+
+        if ($thumbPath) {
+            return asset('storage/'.$thumbPath);
+        }
+
+        // Fallback to original if no thumbnail
+        if ($this->type === 'image') {
+            return $this->url;
+        }
+
+        return null;
     }
 }

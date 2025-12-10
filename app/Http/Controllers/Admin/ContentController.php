@@ -94,9 +94,35 @@ class ContentController extends Controller
             $blocks = [];
             foreach ($request->input('blocks', []) as $block) {
                 if (! empty($block['type'])) {
+                    $props = $block['props'] ?? [];
+
+                    // Handle hero block - media picker provides image_id, image_url, image_thumbnail_url
+                    if ($block['type'] === 'hero') {
+                        if (isset($props['image_id'])) {
+                            $props['image_id'] = $props['image_id'];
+                            $props['image_url'] = $props['image_url'] ?? null;
+                            $props['image_thumbnail_url'] = $props['image_thumbnail_url'] ?? null;
+                        }
+                        // Legacy support: if image (URL) exists but no image_id, keep it
+                        if (isset($props['image']) && ! isset($props['image_id'])) {
+                            // Keep old format for backward compatibility
+                        }
+                    }
+
+                    // Handle gallery block - media picker provides images array with id, url, thumbnail_url
+                    if ($block['type'] === 'gallery') {
+                        if (isset($props['images']) && is_array($props['images'])) {
+                            // Media picker format: images array with objects containing id, url, thumbnail_url
+                            $props['images'] = array_values($props['images']); // Ensure indexed array
+                        } elseif (isset($props['images']) && is_string($props['images'])) {
+                            // Legacy support: newline-separated URLs
+                            $props['images'] = array_filter(array_map('trim', explode("\n", $props['images'])));
+                        }
+                    }
+
                     $blocks[] = [
                         'type' => $block['type'],
-                        'props' => $block['props'] ?? [],
+                        'props' => $props,
                     ];
                 }
             }
@@ -161,9 +187,28 @@ class ContentController extends Controller
                 if (! empty($block['type'])) {
                     $props = $block['props'] ?? [];
 
-                    // Handle gallery images - convert newline-separated string to array
-                    if ($block['type'] === 'gallery' && isset($props['images']) && is_string($props['images'])) {
-                        $props['images'] = array_filter(array_map('trim', explode("\n", $props['images'])));
+                    // Handle hero block - media picker provides image_id, image_url, image_thumbnail_url
+                    if ($block['type'] === 'hero') {
+                        if (isset($props['image_id'])) {
+                            $props['image_id'] = $props['image_id'];
+                            $props['image_url'] = $props['image_url'] ?? null;
+                            $props['image_thumbnail_url'] = $props['image_thumbnail_url'] ?? null;
+                        }
+                        // Legacy support: if image (URL) exists but no image_id, keep it
+                        if (isset($props['image']) && ! isset($props['image_id'])) {
+                            // Keep old format for backward compatibility
+                        }
+                    }
+
+                    // Handle gallery block - media picker provides images array with id, url, thumbnail_url
+                    if ($block['type'] === 'gallery') {
+                        if (isset($props['images']) && is_array($props['images'])) {
+                            // Media picker format: images array with objects containing id, url, thumbnail_url
+                            $props['images'] = array_values($props['images']); // Ensure indexed array
+                        } elseif (isset($props['images']) && is_string($props['images'])) {
+                            // Legacy support: newline-separated URLs
+                            $props['images'] = array_filter(array_map('trim', explode("\n", $props['images'])));
+                        }
                     }
 
                     $blocks[] = [

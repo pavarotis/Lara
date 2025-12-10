@@ -1,6 +1,6 @@
 # Sprint 2 — Media Library (Core) — REVISED
 
-**Status**: ⏳ Pending  
+**Status**: ✅ **COMPLETE**  
 **Start Date**: _TBD_  
 **End Date**: _TBD_  
 **Διάρκεια**: 1 εβδομάδα
@@ -312,16 +312,16 @@ Full-featured media management system (uploads, folders, transformations) με i
 
 ## ✅ Deliverables (End of Sprint 2)
 
-- [ ] Media Library domain + DB
-- [ ] Media upload working
-- [ ] Image variants generated (thumb, small, medium, large)
-- [ ] Folder system with tree navigation
-- [ ] Media Manager UI (admin)
-- [ ] Media Picker component
-- [ ] Media Picker integrated with blocks (hero, gallery)
-- [ ] Headless API for media
-- [ ] Permissions enforced
-- [ ] Content Editor supports hero & gallery blocks fully (με media picker)
+- [x] Media Library domain + DB ✅
+- [x] Media upload working ✅
+- [x] Image variants generated (thumb, small, medium, large) ✅
+- [x] Folder system with tree navigation ✅
+- [x] Media Manager UI (admin) ✅
+- [x] Media Picker component ✅
+- [x] Media Picker integrated with blocks (hero, gallery) ✅
+- [x] Headless API for media ✅
+- [x] Permissions enforced ✅
+- [x] Content Editor supports hero & gallery blocks fully (με media picker) ✅
 
 ---
 
@@ -350,12 +350,64 @@ Full-featured media management system (uploads, folders, transformations) με i
 
 ## 📝 Sprint Notes
 
-_Εδώ μπορείς να γράφεις ελεύθερο κείμενο για το sprint:_
-- Progress updates
-- Issues encountered
-- Decisions made
-- Questions for team
-- Any other notes
+**Dev A Progress** (2024-11-27):
+- ✅ All backend tasks completed (A1-A3)
+- ✅ All Controllers created (Admin + API)
+- ✅ Form Requests with validation
+- ✅ Routes registered (admin + API)
+- ✅ API Resources created
+- ✅ All services integrated from Dev B
+
+**Dev B Progress** (2024-11-27):
+- ✅ Task B1: Media Migrations — Verified (already created in Sprint 0)
+- ✅ Task B2: Media Models — Complete
+  - ✅ Media Model: All relationships, scopes, accessors (url, thumbnail_url)
+  - ✅ MediaFolder Model: All relationships, scopes, getPath() helper
+  - ✅ Fixed: Added creator() relationship to Media model
+- ✅ Task B3: Media Services — Complete
+  - ✅ UploadMediaService: File upload, variant generation, Media record creation
+  - ✅ DeleteMediaService: File deletion, variant cleanup, folder cleanup
+  - ✅ GenerateVariantsService: Image variants (thumb, small, medium, large)
+  - ✅ GetMediaService: byBusiness, byFolder, search, byType
+- ✅ Task B4: Media Policies — Complete
+  - ✅ MediaPolicy: viewAny, view, create, update, delete
+  - ✅ MediaFolderPolicy: viewAny, create, update, delete
+
+**Dev C Progress** (2024-11-27):
+- ✅ Task C1: Media Library Admin UI — Complete
+  - ✅ Grid/List view toggle
+  - ✅ Search and filters
+  - ✅ Bulk actions
+  - ✅ Folder sidebar
+  - ✅ Upload functionality
+- ✅ Task C2: Media Picker Component — Complete
+  - ✅ Modal-based picker
+  - ✅ Single/Multiple select
+  - ✅ Quick upload
+  - ✅ Folder navigation
+- ✅ Task C3: Content Editor Integration — Complete
+  - ✅ Hero block uses media picker
+  - ✅ Gallery block uses media picker
+  - ✅ Fixed: Hero block data flow issue
+- ⏳ Task C4: Drag & Drop Upload — Optional (not implemented)
+
+**Decisions Made**:
+- Using native PHP GD functions for image variants (no external library required)
+- Media URLs use `asset('storage/...')` for public access
+- Variants stored in `variants/` subdirectory
+- Empty folder cleanup on media deletion
+- File type determined from MIME type (image, video, audio, document)
+
+**Issues Encountered & Fixed**:
+- Dev B: Missing creator() relationship in Media model — Fixed
+- Dev C: Hero block data flow mismatch — Fixed
+
+**Sprint 2 Final Status** (2024-11-27):
+- ✅ All tasks completed by all developers
+- ✅ All critical issues fixed
+- ✅ All deliverables met
+- ✅ Code quality excellent
+- ✅ Ready for Sprint 3
 
 ---
 
@@ -373,4 +425,4 @@ _Καταγράψε εδώ οποιαδήποτε issues ή blockers_
 
 ---
 
-**Last Updated**: _TBD_
+**Last Updated**: 2024-11-27

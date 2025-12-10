@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ContentController as ApiContentController;
+use App\Http\Controllers\Api\V1\MediaController as ApiMediaController;
 use App\Http\Controllers\Api\V1\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,14 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [ApiContentController::class, 'index'])->name('api.v1.content.index');
         Route::get('/{slug}', [ApiContentController::class, 'show'])->name('api.v1.content.show');
         Route::get('/type/{type}', [ApiContentController::class, 'byType'])->name('api.v1.content.byType');
+    });
+
+    // Media API
+    Route::prefix('businesses/{businessId}/media')->group(function () {
+        Route::get('/', [ApiMediaController::class, 'index'])->name('api.v1.media.index');
+        Route::post('/', [ApiMediaController::class, 'store'])->name('api.v1.media.store');
+        Route::get('/{id}', [ApiMediaController::class, 'show'])->name('api.v1.media.show');
+        Route::delete('/{id}', [ApiMediaController::class, 'destroy'])->name('api.v1.media.destroy');
     });
 
     // Protected routes (require authentication)

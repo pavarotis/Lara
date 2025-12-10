@@ -12,12 +12,30 @@
         <input type="hidden" name="blocks[{{ $index }}][type]" value="gallery">
         
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Image URLs *</label>
-            <textarea name="blocks[{{ $index }}][props][images]" 
-                      rows="4"
-                      class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary"
-                      placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg">{{ is_array($block['props']['images'] ?? []) ? implode("\n", $block['props']['images']) : ($block['props']['images'] ?? '') }}</textarea>
-            <p class="mt-1 text-xs text-gray-500">Enter one image URL per line (media picker coming in Sprint 2)</p>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Gallery Images</label>
+            <!-- Media Picker -->
+            <x-admin.media-picker 
+                :name="'blocks[' . $index . '][props][images]'"
+                mode="multiple"
+                type="image"
+                :selected="isset($block['props']['image_ids']) && is_array($block['props']['image_ids']) ? $block['props']['image_ids'] : []" />
+            
+            <!-- Hidden fields will be managed by media-picker component -->
+            
+            <!-- Gallery Preview -->
+            @if(isset($block['props']['images']) && is_array($block['props']['images']))
+                <div class="mt-2 grid grid-cols-3 gap-2">
+                    @foreach($block['props']['images'] as $image)
+                        @if(is_array($image) && isset($image['url']))
+                            <div class="relative aspect-square rounded-lg overflow-hidden border border-gray-300">
+                                <img src="{{ $image['thumbnail_url'] ?? $image['url'] }}" 
+                                     alt="Gallery preview" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <div>

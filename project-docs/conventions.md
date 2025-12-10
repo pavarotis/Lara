@@ -564,6 +564,43 @@ public function execute(...)
 
 ## 16. API Response Format
 
+**⚠️ IMPORTANT**: Always use `BaseController` helper methods for API responses.
+
+### Paginated Responses
+
+**✅ Correct:**
+```php
+$items = $query->paginate(15);
+$items->setCollection(Resource::collection($items->items())->collection);
+return $this->paginated($items, 'Data retrieved successfully');
+```
+
+**❌ Wrong:**
+```php
+// DON'T create manual JSON for paginated responses
+return response()->json([
+    'success' => true,
+    'data' => $items,
+    'meta' => [...], // Manual pagination data
+]);
+```
+
+### Single Resource Responses
+
+**✅ Correct:**
+```php
+return $this->success(new Resource($model), 'Data retrieved successfully');
+```
+
+### Error Responses
+
+**✅ Correct:**
+```php
+return $this->error('Error message', $errors, 404);
+```
+
+**See**: `project-docs/v2/api_response_patterns.md` for complete guide.
+
 ### Standard Response Structure
 
 **Success Response:**

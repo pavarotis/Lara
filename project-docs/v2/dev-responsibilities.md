@@ -323,6 +323,7 @@
 
 Before committing code, check:
 
+- [ ] **Run Laravel Pint**: `./vendor/bin/pint app/Domain/{Domain}` (fixes formatting automatically)
 - [ ] Code follows PSR-12
 - [ ] No linting errors
 - [ ] All tests passing
@@ -336,6 +337,7 @@ Before committing code, check:
 - [ ] Sprint notes updated (if significant change)
 - [ ] **Task Completion Verification** (see below) ⭐ **NEW**
 - [ ] **Consistency Check** (see below)
+- [ ] **Relationship Chain Verification** (if adding relationships) ⭐ **NEW**
 
 ### ✅ Task Completion Verification (Critical for All Devs) ⭐ **NEW**
 
@@ -352,11 +354,23 @@ Before committing code, check:
    - [ ] Can I verify it? (test manually or automated)
    - [ ] Is it actually met?
 
+**For Relationships (Dev B Specific):**
+6. **For each relationship mentioned in spec:**
+   - [ ] Migration has foreign key column?
+   - [ ] Model has relationship method?
+   - [ ] Model has column in `$fillable`?
+   - [ ] Service sets foreign key (if creating records)?
+   - [ ] Resource/Controller uses relationship? (if yes, verify it exists)
+   - [ ] **See**: `project-docs/v2/sprints/sprint_helper/relationship_implementation_guide.md` for detailed checklist
+
 **Example for API Task:**
 - [ ] Controller created
 - [ ] Routes registered
 - [ ] **API Resource created** (if mentioned in deliverables)
 - [ ] Controller uses API Resource (if required)
+- [ ] **Paginated responses use `$this->paginated()` helper** (not manual JSON)
+- [ ] **Single resource uses `$this->success(new Resource())`**
+- [ ] **Errors use `$this->error()` helper**
 - [ ] Error handling implemented
 - [ ] **Error codes documented** (if "documentation" mentioned)
 - [ ] Rate limiting configured
@@ -388,6 +402,75 @@ Before committing code, check:
 - [ ] Content model has `created_by` → MediaFolder should too ✅
 - [ ] Content model has `creator()` relationship → MediaFolder should too ✅
 - [ ] Migration has foreign key → Model has relationship method ✅
+
+### 🔗 Relationship Implementation Checklist (NEW) ⭐ **CRITICAL**
+
+**When adding a relationship (e.g., `creator()`, `folder()`, etc.):**
+
+**Step 1: Check Sprint Spec**
+- [ ] Read spec deliverables for relationships list
+- [ ] Note ALL relationships mentioned (every bullet point)
+- [ ] Cross-reference with Acceptance Criteria
+
+**Step 2: Migration Verification**
+- [ ] Foreign key column exists in migration (e.g., `created_by`)
+- [ ] Foreign key constraint added: `->constrained('users')->nullOnDelete()`
+- [ ] Index added if needed (for frequently queried relationships)
+
+**Step 3: Model Verification**
+- [ ] Column added to `$fillable` array
+- [ ] Relationship method created: `public function creator(): BelongsTo`
+- [ ] Correct foreign key specified: `'created_by'`
+- [ ] Correct model class imported: `use App\Models\User;`
+
+**Step 4: Service Verification** (if creating records)
+- [ ] Service sets the foreign key when creating records
+- [ ] Example: `'created_by' => auth()->id()`
+
+**Step 5: Resource/Controller Verification** (if used in API/Views)
+- [ ] Check if Resource uses the relationship (e.g., `$media->creator`)
+- [ ] If used, verify relationship exists in model
+- [ ] Test that relationship loads correctly
+
+**Step 6: Cross-Reference Pattern**
+```
+Sprint Spec → Migration → Model → Service → Resource/Controller
+     ↓            ↓         ↓        ↓            ↓
+  creator()   created_by  creator() created_by  $media->creator
+```
+
+**Example Verification for Media Model `creator()`:**
+```bash
+# 1. Check migration
+grep "created_by" database/migrations/v2_*_create_media_table.php
+# Should show: $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+
+# 2. Check model fillable
+grep "created_by" app/Domain/Media/Models/Media.php
+# Should show in $fillable array
+
+# 3. Check relationship method
+grep "function creator" app/Domain/Media/Models/Media.php
+# Should show: public function creator(): BelongsTo
+
+# 4. Check service
+grep "created_by" app/Domain/Media/Services/UploadMediaService.php
+# Should show: 'created_by' => auth()->id(),
+
+# 5. Check resource (if used)
+grep "creator" app/Http/Resources/MediaResource.php
+# Should show: 'creator' => $media->creator ? [...]
+```
+
+**Common Mistakes to Avoid:**
+- ❌ **Mistake**: Adding relationship method but forgetting foreign key in migration
+- ✅ **Fix**: Always check migration first, then add relationship
+- ❌ **Mistake**: Adding foreign key in migration but forgetting `$fillable`
+- ✅ **Fix**: Always add to `$fillable` when adding foreign key
+- ❌ **Mistake**: Resource uses relationship but model doesn't have it
+- ✅ **Fix**: Check all Resources/Controllers that use the model before committing
+- ❌ **Mistake**: Service creates record but doesn't set foreign key
+- ✅ **Fix**: Check all services that create records
 
 ---
 
@@ -439,6 +522,35 @@ Before pushing to repository:
 - **Model-Migration sync**: After creating migration, verify model `$fillable` matches all columns
 - **Relationship audit**: If one entity has `created_by`, similar entities should too
 - **Self-review checklist**: Use the Consistency Check section above before every commit
+- **Relationship Implementation Checklist**: Use the new Relationship Implementation Checklist for every relationship
+
+### 7. Relationship Chain Verification (Dev B Specific) ⭐ **NEW**
+
+**Before marking a task complete, verify the entire chain:**
+
+**For each relationship in the spec:**
+1. **Migration** → Has foreign key column?
+2. **Model** → Has relationship method + `$fillable` entry?
+3. **Service** → Sets foreign key when creating?
+4. **Resource/Controller** → Uses relationship? (if yes, verify it exists)
+
+**Quick Verification Command:**
+```bash
+# For a relationship like creator()
+# 1. Check migration
+grep -r "created_by" database/migrations/v2_*_create_media_table.php
+
+# 2. Check model
+grep -A 3 "function creator" app/Domain/Media/Models/Media.php
+
+# 3. Check service
+grep "created_by" app/Domain/Media/Services/*.php
+
+# 4. Check resource
+grep "creator" app/Http/Resources/MediaResource.php
+```
+
+**If ANY step fails, the relationship is incomplete!**
 
 ---
 
@@ -449,6 +561,7 @@ Before pushing to repository:
 - [v2 Migration Guide](./v2_migration_guide.md) — Migration steps
 - [Project Conventions](../conventions.md)
 - [Architecture Documentation](../architecture.md)
+- [Relationship Implementation Guide](./sprints/sprint_helper/relationship_implementation_guide.md) ⭐ **NEW** — Step-by-step guide for relationships
 
 ### External Resources
 - [Laravel Best Practices](https://laravel.com/docs)
@@ -457,4 +570,83 @@ Before pushing to repository:
 ---
 
 **Last Updated**: 2024-11-27
+
+---
+
+## 🎯 Enhanced Prevention Patterns (After Sprint 2 Review)
+
+### Pattern 1: Relationship Chain Verification
+
+**Problem**: Missing `creator()` relationship in Media model despite being in spec.
+
+**Root Cause**: 
+- Didn't verify complete chain: Migration → Model → Service → Resource
+- Assumed migration was correct without checking model
+- Didn't check if Resource uses the relationship
+
+**Prevention Pattern**:
+```
+For EVERY relationship in spec:
+1. Migration: foreign key exists? ✅
+2. Model: relationship method exists? ✅
+3. Model: column in $fillable? ✅
+4. Service: sets foreign key? ✅
+5. Resource/Controller: uses relationship? ✅ (if yes, verify it exists)
+```
+
+**Checklist Added**: See "Relationship Implementation Checklist" above.
+
+---
+
+### Pattern 2: Cross-Reference Before Commit
+
+**Problem**: Formatting issues (Laravel Pint violations).
+
+**Root Cause**:
+- Didn't run Pint before committing
+- Assumed code was formatted correctly
+
+**Prevention Pattern**:
+```
+Before EVERY commit:
+1. Run: ./vendor/bin/pint app/Domain/{Domain}
+2. Fix all formatting issues
+3. Verify no linting errors
+```
+
+**Added to Pre-Commit Checklist**: Always run Pint before commit.
+
+---
+
+### Pattern 3: Resource Dependency Check
+
+**Problem**: MediaResource uses `$media->creator` but relationship didn't exist.
+
+**Root Cause**:
+- Didn't check what Resources/Controllers use the model
+- Assumed model was complete without checking dependencies
+
+**Prevention Pattern**:
+```
+Before marking model complete:
+1. Search for model usage: grep -r "Media" app/Http/Resources/
+2. Check if any Resource uses relationships
+3. Verify all used relationships exist in model
+4. Test Resource in tinker: new MediaResource($media)->toArray()
+```
+
+**Added to Relationship Checklist**: Step 5 - Resource/Controller Verification.
+
+---
+
+## 📋 Quick Reference: Common Mistakes & Fixes
+
+| Mistake | Fix | Checklist Item |
+|---------|-----|----------------|
+| Relationship in spec but not in model | Add relationship method + foreign key | Relationship Checklist Step 3 |
+| Foreign key in migration but not in `$fillable` | Add to `$fillable` array | Relationship Checklist Step 3 |
+| Resource uses relationship but model doesn't have it | Add relationship to model | Relationship Checklist Step 5 |
+| Service creates record but doesn't set foreign key | Add foreign key to create array | Relationship Checklist Step 4 |
+| Formatting issues (Pint violations) | Run `./vendor/bin/pint` | Pre-Commit Checklist |
+| Missing relationship in similar entities | Check pattern consistency | Consistency Check |
 

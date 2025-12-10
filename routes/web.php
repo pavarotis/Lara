@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MediaController as AdminMediaController;
+use App\Http\Controllers\Admin\MediaFolderController as AdminMediaFolderController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -64,6 +66,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('content', AdminContentController::class);
     Route::post('content/{content}/publish', [AdminContentController::class, 'publish'])->name('content.publish');
+    Route::resource('media', AdminMediaController::class);
+    Route::prefix('media/folders')->name('media.folders.')->group(function () {
+        Route::get('/', [AdminMediaFolderController::class, 'index'])->name('index');
+        Route::post('/', [AdminMediaFolderController::class, 'store'])->name('store');
+        Route::put('/{folder}', [AdminMediaFolderController::class, 'update'])->name('update');
+        Route::delete('/{folder}', [AdminMediaFolderController::class, 'destroy'])->name('destroy');
+    });
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');

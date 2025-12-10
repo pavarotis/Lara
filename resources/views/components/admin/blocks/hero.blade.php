@@ -28,12 +28,24 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-            <input type="text" name="blocks[{{ $index }}][props][image]" 
-                   value="{{ $block['props']['image'] ?? '' }}"
-                   class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary"
-                   placeholder="https://example.com/image.jpg">
-            <p class="mt-1 text-xs text-gray-500">Enter image URL (media picker coming in Sprint 2)</p>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Hero Image</label>
+            <!-- Media Picker -->
+            <x-admin.media-picker 
+                :name="'blocks[' . $index . '][props][image]'"
+                mode="single"
+                type="image"
+                :selected="isset($block['props']['image_id']) ? [$block['props']['image_id']] : []" />
+            
+            <!-- Hidden fields will be managed by media-picker component -->
+            
+            <!-- Image Preview -->
+            @if(isset($block['props']['image_url']) && !empty($block['props']['image_url']))
+                <div class="mt-2">
+                    <img src="{{ $block['props']['image_url'] }}" 
+                         alt="Hero preview" 
+                         class="w-full h-48 object-cover rounded-lg border border-gray-300">
+                </div>
+            @endif
         </div>
 
         <div class="grid grid-cols-2 gap-3">
