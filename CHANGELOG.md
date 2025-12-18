@@ -8,6 +8,160 @@
 
 ### v2.0 — CMS-First Platform (In Progress)
 
+#### Sprint 4 — OpenCart-like Layout System — ✅ **COMPLETE**
+
+##### Dev B (Architecture/Domain) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-12-18):
+- [x] **Task B1: RenderModuleService (3-Level Rows)** (2024-12-18)
+  - Completed `app/Domain/Modules/Services/RenderModuleService.php`
+  - Created `resources/views/components/module-row.blade.php` component
+  - 3-level pattern: row → container → content
+  - Width modes: `contained`, `full`, `full-bg-contained-content`
+  - Style support: background, background_image, padding, margin
+  - Error handling for disabled modules and missing views
+- [x] **Task B2: GetModuleViewService (Theme Resolution)** (2024-12-18)
+  - Verified existing service (already complete)
+  - Theme resolution with fallback chain
+  - Business theme support
+- [x] **Task B3: Module View Structure** (2024-12-18)
+  - Created 14 module views in `resources/views/themes/default/modules/`:
+    - hero, rich-text, image, gallery
+    - banner, cta, menu, products-grid
+    - categories-list, map, opening-hours
+    - contact-card, faq, testimonials
+  - All views use `$settings` from module instance
+  - Media loading with variants support
+  - Responsive design with TailwindCSS
+- [x] **Task B4: Layout View Structure** (2024-12-18)
+  - Created `default.blade.php` (with sidebars)
+  - Created `full-width.blade.php` (without sidebars)
+  - Created `landing.blade.php` (minimal structure)
+  - All layouts extend `layouts.public`
+  - Regions rendering support
+  - Responsive layout structure
+- [x] **Task B5: GetThemeDefaultModulesService** (2024-12-18)
+  - Created `app/Domain/Themes/Services/GetThemeDefaultModulesService.php`
+  - JSON file support for theme defaults
+  - Module instance creation from defaults
+  - Error handling & logging
+
+##### Dev A (Backend/Infrastructure) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-11-27):
+- [x] **Task A1: Database Migrations** (2024-11-27)
+  - Created `v2_2024_11_27_000006_create_layouts_table.php`
+  - Created `v2_2024_11_27_000007_create_module_instances_table.php`
+  - Created `v2_2024_11_27_000008_create_content_module_assignments_table.php`
+  - Created `v2_2024_11_27_000009_add_layout_id_to_contents_table.php`
+  - All migrations run successfully
+  - Foreign keys with `cascadeOnDelete()` for business isolation
+  - Indexes for performance (business_id, type, region, sort_order)
+  - Unique constraint on junction table
+  - `layout_id` nullable for backward compatibility
+- [x] **Task A2: Layout & Module Models** (2024-11-27)
+  - Created `app/Domain/Layouts/Models/Layout.php`
+  - Created `app/Domain/Modules/Models/ModuleInstance.php`
+  - Created `app/Domain/Modules/Models/ContentModuleAssignment.php`
+  - All relationships implemented (business, contents, assignments, etc.)
+  - Scopes implemented (forBusiness, ofType, enabled, reusable, etc.)
+  - Helper methods implemented (hasRegion, getRegions, isReusable, getSetting)
+  - JSON casts working (regions, settings, style)
+  - Updated `Content` model with `layout_id` and `layout()` relationship
+- [x] **Task A3: Layout & Module Services (Core)** (2024-11-27)
+  - Created `app/Domain/Layouts/Services/GetLayoutService.php`
+  - Created `app/Domain/Layouts/Services/CreateLayoutService.php`
+  - Created `app/Domain/Modules/Services/GetModulesForRegionService.php`
+  - Created `app/Domain/Modules/Services/CreateModuleInstanceService.php`
+  - Created `app/Domain/Modules/Services/UpdateModuleInstanceService.php`
+  - Created `app/Domain/Modules/Services/AssignModuleToContentService.php`
+  - Created `app/Domain/Modules/Services/ValidateModuleTypeService.php`
+  - All services use `declare(strict_types=1);`
+  - Type hints & return types everywhere
+  - Constructor injection for dependencies
+  - Proper validation & error handling
+  - Business isolation enforced
+- [x] **Task A4: RenderLayoutService (Core Rendering)** (2024-11-27)
+  - Created `app/Domain/Layouts/Services/RenderLayoutService.php`
+  - Created `app/Domain/Modules/Services/RenderModuleService.php` (completed by Dev B in Task B1)
+  - Created `app/Domain/Modules/Services/GetModuleViewService.php`
+  - Enhanced `RenderContentService` with dual mode:
+    - If `layout_id` exists → use `RenderLayoutService` (layout-based)
+    - If `layout_id` is NULL → render legacy `body_json` blocks
+  - Backward compatibility maintained (legacy blocks still work)
+- [x] **Task A5: Module Registry Configuration** (2024-11-27)
+  - Created `config/modules.php`
+  - All v1 modules defined (hero, rich_text, image, banner, menu, products_grid, categories_list, gallery, cta, map, opening_hours, contact_card, faq, testimonials)
+  - Each module has: name, icon, category, settings_form, view, description
+  - Configuration is extensible
+
+##### Dev C (Frontend/UI) — ✅ **COMPLETE**
+
+**Tasks Completed** (2024-12-18):
+- [x] **Task C1: Module Settings Forms (Form Requests)** (2024-12-18)
+  - Created 14 Form Request classes in `app/Http/Requests/Modules/`:
+    - HeroModuleRequest, RichTextModuleRequest, ImageModuleRequest
+    - GalleryModuleRequest, BannerModuleRequest, CtaModuleRequest
+    - MenuModuleRequest, ProductsGridModuleRequest, CategoriesListModuleRequest
+    - MapModuleRequest, OpeningHoursModuleRequest, ContactCardModuleRequest
+    - FaqModuleRequest, TestimonialsModuleRequest
+  - All use `declare(strict_types=1);`
+  - Proper validation rules for each module type
+  - Authorization checks (`isAdmin()`)
+  - Custom validation logic where needed (GalleryModuleRequest, MapModuleRequest)
+- [x] **Task C2: Admin UI: Layout Selection** (2024-12-18)
+  - Layout dropdown added to `ContentController::create()` and `edit()`
+  - Layout selection in `resources/views/admin/content/create.blade.php`
+  - Layout selection in `resources/views/admin/content/edit.blade.php`
+  - Business scoping: `Layout::forBusiness($business->id)`
+  - "Manage Modules" button when layout is selected
+- [x] **Task C3: Admin UI: Region → Modules Management** (2024-12-18)
+  - Created `app/Http/Controllers/Admin/ContentModuleController.php`
+  - Created `resources/views/admin/content/modules.blade.php`
+  - All CRUD operations: add, reorder, toggle, remove
+  - Drag & drop reordering with Alpine.js
+  - Enable/disable toggles
+  - Add module modal per region
+  - Module grouping by type
+  - Assignment count validation before delete
+- [x] **Task C4: Admin UI: Module Instance CRUD (Filament)** (2024-12-18)
+  - Created `app/Filament/Resources/ModuleInstanceResource.php`
+  - Created `app/Filament/Resources/ModuleInstanceResource/Pages/ListModuleInstances.php`
+  - Created `app/Filament/Resources/ModuleInstanceResource/Pages/CreateModuleInstance.php`
+  - Created `app/Filament/Resources/ModuleInstanceResource/Pages/EditModuleInstance.php`
+  - Form fields: business_id, type, name, enabled, settings, style, width_mode
+  - Table columns: id, type, name, business, enabled, width_mode, assignments_count
+  - Filters: type, enabled, business_id
+  - Delete protection (checks assignments)
+- [x] **Task C5: Module Row Component Styling** (2024-12-18)
+  - Verified `resources/views/components/module-row.blade.php` (created by Dev B)
+  - Responsive container with TailwindCSS
+  - Width modes: contained, full, full-bg-contained-content
+  - Style support: background, background_image, padding, margin
+  - Proper inline styles handling
+
+**Code Quality**:
+- ✅ All code uses `declare(strict_types=1);`
+- ✅ Type hints & return types everywhere
+- ✅ Proper validation & error handling
+- ✅ Business isolation enforced (fixed)
+- ✅ User-friendly UI/UX
+- ✅ Responsive design
+
+**Master DEV Review** (2024-12-18):
+- ✅ All tasks completed with excellent quality
+- ✅ **3 critical issues found and fixed**:
+  1. Business Isolation Missing in ContentModuleController — Module loading now business-scoped
+  2. Business Isolation Missing in ModuleInstanceResource — Query now scoped by business
+  3. Business ID Not Auto-Set in CreateModuleInstance — Auto-set business_id added
+- ✅ Code quality excellent
+- ✅ All deliverables present
+- ✅ User-friendly UI/UX
+- **Status**: Approved — All tasks complete, all issues fixed
+
+**Detailed Review**: See `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devc.md`  
+**Fixes Guide**: See `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devc_fixes_guide.md`
+
 #### Sprint 3 — Content Rendering & Theming — ✅ **COMPLETE**
 
 ##### Dev A (Backend/Infrastructure) — ✅ **REVIEWED & APPROVED**

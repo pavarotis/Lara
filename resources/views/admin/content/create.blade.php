@@ -74,6 +74,24 @@
                     @enderror
                 </div>
 
+                <!-- Layout -->
+                <div class="md:col-span-2">
+                    <label for="layout_id" class="block text-sm font-medium text-gray-700 mb-1">Layout</label>
+                    <select name="layout_id" id="layout_id"
+                            class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary">
+                        <option value="">None (Use legacy blocks)</option>
+                        @foreach($layouts ?? [] as $layout)
+                            <option value="{{ $layout->id }}" {{ old('layout_id') == $layout->id ? 'selected' : '' }}>
+                                {{ $layout->name }} ({{ $layout->type }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500">Select layout for this page. If not set, legacy blocks will be used.</p>
+                    @error('layout_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Business ID -->
                 <input type="hidden" name="business_id" value="{{ $business->id }}">
             </div>

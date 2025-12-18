@@ -76,6 +76,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('content', AdminContentController::class);
     Route::post('content/{content}/publish', [AdminContentController::class, 'publish'])->name('content.publish');
+    Route::prefix('content/{content}/modules')->name('content.modules.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ContentModuleController::class, 'index'])->name('index');
+        Route::post('/add', [\App\Http\Controllers\Admin\ContentModuleController::class, 'addModule'])->name('add');
+        Route::post('/reorder', [\App\Http\Controllers\Admin\ContentModuleController::class, 'reorder'])->name('reorder');
+        Route::post('/{assignment}/toggle', [\App\Http\Controllers\Admin\ContentModuleController::class, 'toggle'])->name('toggle');
+        Route::delete('/{assignment}', [\App\Http\Controllers\Admin\ContentModuleController::class, 'remove'])->name('remove');
+    });
     Route::resource('media', AdminMediaController::class);
     Route::prefix('media/folders')->name('media.folders.')->group(function () {
         Route::get('/', [AdminMediaFolderController::class, 'index'])->name('index');

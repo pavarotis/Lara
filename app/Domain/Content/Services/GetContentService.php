@@ -17,7 +17,7 @@ class GetContentService
         return Content::where('business_id', $businessId)
             ->where('slug', $slug)
             ->published()
-            ->with('business') // Eager load business for theme resolution
+            ->with(['business', 'layout.business']) // Eager load business and layout.business for theme resolution
             ->first();
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Content\Models;
 
 use App\Domain\Businesses\Models\Business;
+use App\Domain\Layouts\Models\Layout;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,7 @@ class Content extends Model
     protected $fillable = [
         'business_id',
         'type',
+        'layout_id',
         'slug',
         'title',
         'body_json',
@@ -53,6 +55,11 @@ class Content extends Model
     public function contentType(): BelongsTo
     {
         return $this->belongsTo(ContentType::class, 'type', 'slug');
+    }
+
+    public function layout(): BelongsTo
+    {
+        return $this->belongsTo(Layout::class);
     }
 
     public function scopePublished($query)

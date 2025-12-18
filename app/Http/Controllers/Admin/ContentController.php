@@ -11,6 +11,7 @@ use App\Domain\Content\Services\DeleteContentService;
 use App\Domain\Content\Services\GetContentService;
 use App\Domain\Content\Services\PublishContentService;
 use App\Domain\Content\Services\UpdateContentService;
+use App\Domain\Layouts\Models\Layout;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Content\StoreContentRequest;
 use App\Http\Requests\Content\UpdateContentRequest;
@@ -73,10 +74,12 @@ class ContentController extends Controller
 
         $business = Business::active()->first();
         $contentTypes = \App\Domain\Content\Models\ContentType::all();
+        $layouts = Layout::forBusiness($business->id)->orderBy('name')->get();
 
         return view('admin.content.create', [
             'business' => $business,
             'contentTypes' => $contentTypes,
+            'layouts' => $layouts,
         ]);
     }
 
@@ -164,10 +167,12 @@ class ContentController extends Controller
 
         $content->load('revisions.user');
         $contentTypes = \App\Domain\Content\Models\ContentType::all();
+        $layouts = Layout::forBusiness($content->business_id)->orderBy('name')->get();
 
         return view('admin.content.edit', [
             'content' => $content,
             'contentTypes' => $contentTypes,
+            'layouts' => $layouts,
         ]);
     }
 

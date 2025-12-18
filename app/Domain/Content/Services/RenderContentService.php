@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Content\Services;
 
 use App\Domain\Content\Models\Content;
+use App\Domain\Layouts\Services\RenderLayoutService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
@@ -16,9 +17,27 @@ use Illuminate\Support\Facades\View;
 class RenderContentService
 {
     /**
-     * Render full content (array of blocks)
+     * Render full content
+     *
+     * Dual mode:
+     * - If layout_id exists → use RenderLayoutService (layout-based)
+     * - If layout_id is NULL → render legacy body_json blocks
      */
     public function render(Content $content): string
+    {
+        // New mode: Layout-based
+        if ($content->layout_id) {
+            return app(RenderLayoutService::class)->render($content);
+        }
+
+        // Legacy mode: Sequential blocks
+        return $this->renderLegacyBlocks($content);
+    }
+
+    /**
+     * Render legacy blocks (body_json)
+     */
+    private function renderLegacyBlocks(Content $content): string
     {
         $blocks = $content->body_json ?? [];
         $renderedBlocks = [];

@@ -355,6 +355,91 @@ grep -r "@yield" resources/views/components/
 
 ---
 
+### Eager Loading Check (Sprint 4) ⭐ **NEW**
+
+**Before committing ANY service method that uses relationships:**
+
+- [ ] **Identify all relationships used**:
+  - [ ] Check for `$model->relationship->method()` patterns
+  - [ ] Check for `$model->relationship` access
+  - [ ] Check for nested relationships: `$model->relationship->nested`
+  
+- [ ] **Add eager loading**:
+  - [ ] Add `->with('relationship')` to query
+  - [ ] For nested: `->with('relationship.nested')`
+  - [ ] For multiple: `->with(['relationship1', 'relationship2'])`
+  
+- [ ] **Verify no N+1 queries**:
+  - [ ] Test in tinker: `$model->relationship` should not trigger extra query
+  - [ ] Check query log for multiple queries
+
+**Quick Verification:**
+```bash
+# Check for relationship access without eager loading
+grep -r "->.*->" app/Domain/*/Services/*.php
+# Verify all have ->with() in the query above
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devb_fixes_guide.md`
+
+---
+
+### Business Isolation Check (Sprint 4) ⭐ **NEW**
+
+**Before committing ANY query that touches multi-tenant data:**
+
+- [ ] **Identify multi-tenant data**:
+  - [ ] Products, Categories, Content, Media, Layouts, Modules
+  - [ ] Any data that belongs to a business
+  
+- [ ] **Get business_id from context**:
+  - [ ] From `$module->business_id` (in module views)
+  - [ ] From `$content->business_id` (in content views)
+  - [ ] From `$request` or `auth()->user()->business_id`
+  
+- [ ] **Add business scoping**:
+  - [ ] Add `->where('business_id', $businessId)` to query
+  - [ ] Verify `$businessId` is not null before querying
+  - [ ] Add fallback if business_id is missing
+
+**Quick Verification:**
+```bash
+# Check for multi-tenant queries without business_id
+grep -r "Product::\|Category::\|Content::" resources/views/themes/default/modules/*.blade.php
+# Verify all have ->where('business_id', ...)
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devb_fixes_guide.md`
+
+---
+
+### Blade Helper Namespace Check (Sprint 4) ⭐ **NEW**
+
+**Before committing ANY Blade view that uses helper classes:**
+
+- [ ] **Identify helper usage**:
+  - [ ] `Str::`, `Arr::`, `Collection::`, etc.
+  - [ ] Check for bare helper calls without namespace
+  
+- [ ] **Add namespace**:
+  - [ ] Use full namespace: `\Illuminate\Support\Str::method()`
+  - [ ] OR add `@php use Illuminate\Support\Str; @endphp` at top
+  
+- [ ] **Verify existing patterns**:
+  - [ ] Check similar views in codebase
+  - [ ] Follow same pattern
+
+**Quick Verification:**
+```bash
+# Check for helper usage without namespace
+grep -r "Str::\|Arr::\|Collection::" resources/views/themes/default/modules/*.blade.php
+# Verify all have full namespace or use statement
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devb_fixes_guide.md`
+
+---
+
 ## 📝 Pre-Commit Checklist (Original)
 
 Before committing code, check:
@@ -876,6 +961,181 @@ grep -r "@yield" resources/views/components/
 
 ---
 
+### Pattern 7: Eager Loading for Relationships (Sprint 4) ⭐ **NEW**
+
+**Problem**: N+1 query issues when accessing relationships without eager loading.
+
+**Root Cause**: 
+- Accessed `$layout->business->getTheme()` without eager loading
+- Accessed `$module->business` in views without eager loading
+- Didn't check if relationships were loaded before use
+
+**Prevention Pattern**:
+```
+For EVERY service method that uses relationships:
+1. Identify all relationships used in the method
+2. Add ->with('relationship') to the query
+3. For nested relationships: ->with('relationship.nested')
+4. Check if relationship is loaded before accessing (if dynamic)
+```
+
+**Checklist Added**: See "Eager Loading Checklist" below.
+
+**Verification Commands**:
+```bash
+# Before commit, check for relationship access:
+grep -r "->.*->" app/Domain/*/Services/*.php
+# Verify all have ->with() in the query above
+
+# Test in tinker:
+php artisan tinker
+>>> $layout = Layout::find(1);
+>>> $layout->business; // Should not trigger extra query if eager loaded
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devb_fixes_guide.md`
+
+---
+
+### Pattern 8: Business Isolation in Multi-Tenant Queries (Sprint 4) ⭐ **NEW**
+
+**Problem**: Catalog modules (menu, products-grid, categories-list) loaded data from all businesses.
+
+**Root Cause**: 
+- Didn't scope queries with business_id
+- Assumed business context was implicit
+- Didn't verify multi-tenant data isolation
+
+**Prevention Pattern**:
+```
+For EVERY query that touches multi-tenant data:
+1. Identify if data is business-scoped (products, categories, content, media, etc.)
+2. Get business_id from context (module, content, request, etc.)
+3. Add ->where('business_id', $businessId) to query
+4. Verify business_id is available before querying
+```
+
+**Checklist Added**: See "Business Isolation Checklist" below.
+
+**Verification Commands**:
+```bash
+# Before commit, check for multi-tenant queries:
+grep -r "Product::\|Category::\|Content::" resources/views/themes/default/modules/*.blade.php
+# Verify all have ->where('business_id', ...)
+
+# Test in tinker:
+php artisan tinker
+>>> $products = Product::all(); // Should be scoped
+>>> $products->pluck('business_id')->unique(); // Should return only current business
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devb_fixes_guide.md`
+
+---
+
+### Pattern 9: Blade Helper Namespace (Sprint 4) ⭐ **NEW**
+
+**Problem**: Used `Str::limit()` in Blade views without full namespace.
+
+**Root Cause**: 
+- Assumed helper classes are auto-imported in Blade
+- Didn't check if namespace is required
+- Didn't verify existing patterns in codebase
+
+**Prevention Pattern**:
+```
+For EVERY Blade view that uses helper classes:
+1. Use full namespace: \Illuminate\Support\Str::method()
+2. OR add @php use statement at top: @php use Illuminate\Support\Str; @endphp
+3. Check existing patterns in similar views
+```
+
+**Checklist Added**: See "Blade Helper Namespace Check" below.
+
+**Verification Commands**:
+```bash
+# Before commit, check for helper usage:
+grep -r "Str::\|Arr::\|Collection::" resources/views/themes/default/modules/*.blade.php
+# Verify all have full namespace or use statement
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_devb_fixes_guide.md`
+
+---
+
+### Pattern 10: Update Service Business Isolation (Sprint 4) ⭐ **NEW**
+
+**Problem**: `UpdateModuleInstanceService` allowed changing `business_id`, breaking multi-tenant isolation.
+
+**Root Cause**: 
+- Didn't validate immutable fields in update operations
+- Assumed business_id wouldn't be in $data array
+- Didn't check for security vulnerabilities
+
+**Prevention Pattern**:
+```
+For EVERY update service method:
+1. Identify immutable fields (business_id, id, created_at, etc.)
+2. Check if $data contains immutable fields
+3. Validate that values match existing model values
+4. Throw ValidationException if trying to change immutable field
+```
+
+**Checklist Added**: See "Update Service Business Isolation Check" below.
+
+**Verification Commands**:
+```bash
+# Before commit, check for update services:
+grep -r "public function.*update\|public function execute" app/Domain/*/Services/*Service.php
+# Verify all have business_id validation
+
+# Test in tinker:
+php artisan tinker
+>>> $module = ModuleInstance::first();
+>>> $service = app(UpdateModuleInstanceService::class);
+>>> $service->execute($module, ['business_id' => 999]); // Should fail
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_deva_fixes_guide.md`
+
+---
+
+### Pattern 11: Related Model Loading with Business Scoping (Sprint 4) ⭐ **NEW**
+
+**Problem**: `AssignModuleToContentService` loaded Layout without business scoping, allowing cross-business access.
+
+**Root Cause**: 
+- Used `Layout::findOrFail()` without business scoping
+- Assumed foreign key would be safe
+- Didn't verify business isolation for related models
+
+**Prevention Pattern**:
+```
+For EVERY related model loading from foreign key:
+1. Identify if model is business-scoped (Layout, ModuleInstance, etc.)
+2. Get business_id from parent model (content, assignment, etc.)
+3. Use Model::forBusiness($businessId)->findOrFail($id)
+4. Never use Model::findOrFail($id) for business-scoped models
+```
+
+**Checklist Added**: See "Related Model Loading Check" below.
+
+**Verification Commands**:
+```bash
+# Before commit, check for related model loading:
+grep -r "::findOrFail\|::find(" app/Domain/*/Services/*Service.php
+# Verify business-scoped models use ->forBusiness()
+
+# Test in tinker:
+php artisan tinker
+>>> $content = Content::first();
+>>> $layout = Layout::findOrFail($content->layout_id); // Should use forBusiness()
+```
+
+**Reference**: `project-docs/v2/sprints/sprint_4/reviews/sprint_4_review_deva_fixes_guide.md`
+
+---
+
 ## 📋 Quick Reference: Common Mistakes & Fixes
 
 | Mistake | Fix | Checklist Item |
@@ -890,4 +1150,9 @@ grep -r "@yield" resources/views/components/
 | Prop name mismatch | Use same prop names as controller | Data Flow Verification |
 | Format mismatch (array vs objects) | Handle both formats in view | Data Flow Verification |
 | Blade syntax mixing (`$slot` in layouts) | Use `@yield('content')` in layouts, `$slot` in components | Blade Views Syntax Check |
+| N+1 query (relationship access) | Add ->with('relationship') to query | Eager Loading Checklist |
+| Multi-tenant query without business_id | Add ->where('business_id', $businessId) | Business Isolation Checklist |
+| Helper class without namespace in Blade | Use \Illuminate\Support\Str::method() | Blade Helper Namespace Check |
+| Update service allows business_id change | Add validation to prevent immutable field changes | Update Service Business Isolation Check |
+| Related model loading without business scoping | Use Model::forBusiness($id)->findOrFail() | Related Model Loading Check |
 
