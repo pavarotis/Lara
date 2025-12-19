@@ -97,4 +97,44 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
 });
 
+/**
+ * Legacy compatibility route:
+ * Some Filament views / code still expect route('filament.admin.pages.settings').
+ * We alias that route name to a redirect towards the Filament System Settings page
+ * (admin/system-settings, route name filament.admin.pages.system-settings).
+ */
+Route::get('/admin/system-settings-legacy', function () {
+    return redirect()->route('filament.admin.pages.system-settings');
+})->middleware(['auth', 'admin'])->name('filament.admin.pages.settings');
+
+/**
+ * Legacy compatibility route for Filament Blog Categories page.
+ * Some code still references route('filament.admin.pages.categories'), but the
+ * Filament page now lives at /admin/blog-categories with route name
+ * filament.admin.pages.blog-categories. We alias the old name to a redirect.
+ */
+Route::get('/admin/blog-categories-legacy', function () {
+    return redirect()->route('filament.admin.pages.blog-categories');
+})->middleware(['auth', 'admin'])->name('filament.admin.pages.categories');
+
+/**
+ * Legacy compatibility route for Filament Catalog Products page.
+ * Some code still references route('filament.admin.pages.products'), but the
+ * Filament page now lives at /admin/catalog-products with route name
+ * filament.admin.pages.catalog-products. We alias the old name to a redirect.
+ */
+Route::get('/admin/catalog-products-legacy', function () {
+    return redirect()->route('filament.admin.pages.catalog-products');
+})->middleware(['auth', 'admin'])->name('filament.admin.pages.products');
+
+/**
+ * Legacy compatibility route for Filament System Users page.
+ * Some code still references route('filament.admin.pages.users'), but the
+ * Filament page now lives at /admin/system-users with route name
+ * filament.admin.pages.system-users. We alias the old name to a redirect.
+ */
+Route::get('/admin/system-users-legacy', function () {
+    return redirect()->route('filament.admin.pages.system-users');
+})->middleware(['auth', 'admin'])->name('filament.admin.pages.users');
+
 require __DIR__.'/auth.php';

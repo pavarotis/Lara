@@ -3,7 +3,8 @@
 **Status**: ✅ Complete (All Devs Complete)  
 **Start Date**: 2024-11-27  
 **End Date**: _TBD_  
-**Διάρκεια**: 2 εβδομάδες
+**Διάρκεια**: 2 εβδομάδες  
+**Filament Version**: Χρησιμοποιούμε μόνο **Filament 4.x** στο admin panel (δεν επιτρέπονται Filament v2/v3 packages ή APIs).
 
 ---
 
@@ -288,7 +289,7 @@ return [
 **Deliverables:**
 
 **Filament Setup:**
-- Install Filament: `composer require filament/filament:"^3.0"`
+- Install Filament: `composer require filament/filament:"^4.0"`
 - Run `php artisan filament:install --panels`
 - Configure Filament panel (path: `/admin`)
 - Customize Filament theme (brand colors, logo)

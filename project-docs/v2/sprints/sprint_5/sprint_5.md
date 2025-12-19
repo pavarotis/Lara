@@ -3,7 +3,8 @@
 **Status**: ⏳ Pending  
 **Start Date**: _TBD_  
 **End Date**: _TBD_  
-**Διάρκεια**: 1 εβδομάδα
+**Διάρκεια**: 1 εβδομάδα  
+**Filament Version**: Χρησιμοποιούμε μόνο **Filament 4.x** στο admin panel (δεν επιτρέπονται Filament v2/v3 packages ή APIs).
 
 ---
 

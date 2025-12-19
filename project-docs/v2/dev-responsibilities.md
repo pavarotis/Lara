@@ -4,6 +4,11 @@
 
 Αυτό το έγγραφο περιγράφει τι πρέπει να κάνει **κάθε dev σε κάθε sprint** πέρα από τα tasks που αναγράφονται. Focus σε **quality, communication, και error prevention**.
 
+### 🧱 Tech Stack Guardrails
+
+- Admin panel χρησιμοποιεί **αποκλειστικά Filament 4.x**.  
+- Δεν επιτρέπεται χρήση/εγκατάσταση Filament v2/v3 packages ή παλιών Filament v2/v3 API patterns — ακολουθούμε πάντα τα Filament 4 docs & το Sprint 4.2 plan.
+
 ---
 
 ## 🎯 General Responsibilities (All Devs)
