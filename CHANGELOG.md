@@ -6,6 +6,93 @@
 
 ## [Unreleased]
 
+### Sprint 7 — Lightweight Public Site & Performance Optimization (2026-01-08)
+
+#### Added
+- **Widget Contract Interface** (`app/Domain/Modules/Contracts/WidgetContract.php`)
+  - Interface για widgets που δηλώνουν assets (CSS/JS)
+  - AbstractWidget base class με default implementations
+  - Asset declarations στο `config/modules.php` για hero, gallery, map modules
+
+- **Layout Compilation Pipeline**
+  - `CompileLayoutService` για compilation από JSON σε HTML
+  - `CollectWidgetAssetsService` για asset collection
+  - Database migration για compilation fields (`compiled_html`, `assets_manifest`, `critical_css`)
+
+- **Per-Widget Asset Loading**
+  - Vite configuration με per-widget chunks
+  - Widget CSS/JS files (`resources/css/widgets/`, `resources/js/widgets/`)
+  - Chunk naming: `widgets/[name]-[hash].[ext]`
+
+- **Zero-JS Default Policy**
+  - Conditional Alpine.js loading (μόνο αν χρειάζεται)
+  - Base JS με mobile menu functionality (no Alpine dependency)
+  - Widget-specific JS loading via `@stack('widget-scripts')`
+
+- **Image Optimization Pipeline** (Placeholder)
+  - `ImageOptimizationService` (χρειάζεται `intervention/image` package)
+  - `optimized-image` Blade component με WebP/AVIF support
+  - Database migration για `variants` field στο `media` table
+
+- **Aggressive Caching Strategy**
+  - `LayoutCacheService` για layout caching
+  - `CachePublicPages` middleware για full page cache (guest users only)
+  - Fragment cache στο `RenderModuleService` για modules
+  - Cache invalidation via timestamps
+
+- **Performance Monitoring Dashboard**
+  - Filament Page: `CMS > Performance`
+  - Cache statistics, layout compilation stats, asset statistics
+
+- **Cache Management UI**
+  - Filament Page: `CMS > Cache Management`
+  - Cache clearing actions (all, layout, page, module)
+  - Cache driver information display
+
+#### Changed
+- `config/modules.php` — Added asset declarations για hero, gallery, map modules
+- `vite.config.js` — Per-widget chunks configuration
+- `resources/js/app.js` — Conditional Alpine.js loading
+- `resources/views/layouts/public.blade.php` — Conditional JS loading
+- `app/Domain/Layouts/Models/Layout.php` — Added compilation fields
+- `app/Domain/Modules/Services/RenderModuleService.php` — Fragment caching
+- `app/Domain/Media/Models/Media.php` — Added variants field
+- `bootstrap/app.php` — Registered CachePublicPages middleware
+
+#### Notes
+- Image optimization service είναι placeholder — ready για implementation όταν install-άρει το `intervention/image` package
+- Όλα τα changes είναι backward compatible
+- Zero breaking changes — existing code continues to work
+
+---
+
+### Sprint 6 — Platform Hardening, Routing Strategy, API, Release (2026-01-08)
+
+#### Added
+- **API v2 (Headless)**: Read-only API endpoints for business, menu, categories, products, and pages
+- **API Authentication**: API key + secret authentication with scope-based access control
+- **API Rate Limiting**: Per-business, per-endpoint rate limiting (100 requests/minute default)
+- **API Key Management**: Filament Resource for managing API keys with auto-generation
+- **API Documentation**: Admin page with complete API documentation (`/admin/api-docs`)
+- **Testing Dashboard**: Admin dashboard for test suite status (`/admin/testing`)
+- **Canonical Routing**: Business-based routing (`/{business:slug}/{page:slug}`)
+- **Business Resolution**: Enhanced business resolution service with route → query → session fallback
+
+#### Changed
+- **API Routes**: Added v2 API routes with authentication and rate limiting middleware
+- **ContentController**: Enhanced with canonical routing support (`showBusinessHome`, `show` methods)
+- **Middleware**: Added `api.auth` and `api.rate_limit` middleware aliases
+
+#### Technical
+- Created `ApiKey` model with relationships, scopes, and expiration checks
+- Created `ApiAuthService` and `ApiRateLimitService` for API management
+- Created 5 API v2 controllers (Business, Menu, Categories, Products, Pages)
+- Created 5 API v2 resources for data formatting
+- Created `ApiKeyResource` Filament resource for admin management
+- Created `config/api.php` for API configuration
+
+---
+
 ### v2.0 — CMS-First Platform (In Progress)
 
 #### Sprint 4 — OpenCart-like Layout System — ✅ **COMPLETE**

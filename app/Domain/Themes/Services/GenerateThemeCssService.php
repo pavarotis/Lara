@@ -24,7 +24,14 @@ class GenerateThemeCssService
         // Colors
         if (isset($tokens['colors'])) {
             foreach ($tokens['colors'] as $key => $value) {
-                $css .= "    --color-{$key}: {$value};\n";
+                // Skip if value is an array (should be string)
+                if (is_array($value)) {
+                    // Try to get DEFAULT or first value
+                    $value = $value['DEFAULT'] ?? $value[0] ?? '';
+                }
+                if (is_string($value) && ! empty($value)) {
+                    $css .= "    --color-{$key}: {$value};\n";
+                }
             }
         }
 
@@ -32,8 +39,15 @@ class GenerateThemeCssService
         if (isset($tokens['fonts'])) {
             foreach ($tokens['fonts'] as $key => $font) {
                 if (is_array($font)) {
-                    $css .= "    --font-{$key}-family: {$font['family']};\n";
-                    $css .= "    --font-{$key}-weight: {$font['weight']};\n";
+                    if (isset($font['family']) && is_string($font['family'])) {
+                        $css .= "    --font-{$key}-family: {$font['family']};\n";
+                    }
+                    if (isset($font['weight']) && is_string($font['weight'])) {
+                        $css .= "    --font-{$key}-weight: {$font['weight']};\n";
+                    }
+                } elseif (is_string($font)) {
+                    // If font is a string, use it as family
+                    $css .= "    --font-{$key}-family: {$font};\n";
                 }
             }
         }
@@ -41,14 +55,26 @@ class GenerateThemeCssService
         // Spacing
         if (isset($tokens['spacing'])) {
             foreach ($tokens['spacing'] as $key => $value) {
-                $css .= "    --spacing-{$key}: {$value};\n";
+                // Skip if value is an array
+                if (is_array($value)) {
+                    $value = $value['DEFAULT'] ?? $value[0] ?? '';
+                }
+                if (is_string($value) && ! empty($value)) {
+                    $css .= "    --spacing-{$key}: {$value};\n";
+                }
             }
         }
 
         // Radius
         if (isset($tokens['radius'])) {
             foreach ($tokens['radius'] as $key => $value) {
-                $css .= "    --radius-{$key}: {$value};\n";
+                // Skip if value is an array
+                if (is_array($value)) {
+                    $value = $value['DEFAULT'] ?? $value[0] ?? '';
+                }
+                if (is_string($value) && ! empty($value)) {
+                    $css .= "    --radius-{$key}: {$value};\n";
+                }
             }
         }
 

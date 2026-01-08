@@ -1,6 +1,6 @@
 # Sprint 6 — Platform Hardening, Routing Strategy, API, Release
 
-**Status**: ⏳ Pending  
+**Status**: ✅ Complete  
 **Start Date**: _TBD_  
 **End Date**: _TBD_  
 **Διάρκεια**: 1 εβδομάδα  

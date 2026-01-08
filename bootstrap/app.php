@@ -16,11 +16,19 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'business' => \App\Http\Middleware\SetCurrentBusiness::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,
+            'api.auth' => \App\Http\Middleware\ApiAuthMiddleware::class,
+            'api.rate_limit' => \App\Http\Middleware\ApiRateLimitMiddleware::class,
         ]);
 
-        // Apply theme tokens to public routes
+        // Apply theme tokens to public routes (after business is set)
+        // Note: This runs after SetCurrentBusiness middleware (which is applied via route middleware)
         $middleware->web(append: [
             \App\Http\Middleware\ApplyThemeMiddleware::class,
+        ]);
+
+        // Cache public pages (after theme middleware)
+        $middleware->web(append: [
+            \App\Http\Middleware\CachePublicPages::class,
         ]);
 
         // API middleware groups

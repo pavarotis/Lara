@@ -16,6 +16,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Static Pages (migrated to CMS)
@@ -58,22 +59,45 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])
     ->name('sitemap.index');
 Route::get('/robots.txt', [RobotsController::class, 'index'])->name('robots.index');
 
+// Admin API Documentation & Testing
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/api-docs', [\App\Http\Controllers\Admin\ApiDocsController::class, 'index'])->name('admin.api-docs');
+    Route::get('/testing', [\App\Http\Controllers\Admin\TestingController::class, 'index'])->name('admin.testing');
+});
+
 // Content Preview Route (Admin only)
 Route::get('/preview/{contentId}', [ContentController::class, 'preview'])
     ->middleware(['auth'])
     ->name('content.preview');
 
-// Dynamic Content Routes (CMS)
-// Note: This must be after all static routes to avoid conflicts
-// Route priority: static routes first, then dynamic content
-// Handle root URL (/) explicitly for home page (slug: '/')
-Route::get('/', function () {
-    return app(ContentController::class)->show('/');
+// Canonical Business Routes (Sprint 6)
+// Format: /{business:slug}/{page:slug?}
+Route::prefix('{business:slug}')->group(function () {
+    // Business home page
+    Route::get('/', [ContentController::class, 'showBusinessHome'])
+        ->where('business', '[a-z0-9-]+')
+        ->name('business.home');
+
+    // Content pages
+    Route::get('/{page:slug}', [ContentController::class, 'show'])
+        ->where('business', '[a-z0-9-]+')
+        ->where('page', '[a-z0-9-/]+')
+        ->name('content.show');
+})->middleware(['business']);
+
+// Fallback: Legacy routes (for backward compatibility)
+Route::get('/', function (Request $request) {
+    $business = app(\App\Domain\Businesses\Services\ResolveBusinessService::class)->resolve($request);
+    if ($business) {
+        return redirect()->route('business.home', ['business' => $business->slug]);
+    }
+    abort(404, 'Business not found');
 })->name('home');
-// Handle all other dynamic content routes
-Route::get('/{slug}', [ContentController::class, 'show'])
+
+// Legacy dynamic content route (fallback)
+Route::get('/{slug}', [ContentController::class, 'showLegacy'])
     ->where('slug', '^(?!admin|api|cart|checkout|menu|dashboard|profile|login|register|password|email-verification|preview|sitemap\.xml|robots\.txt).*')
-    ->name('content.show');
+    ->name('content.show.legacy');
 
 // Admin Routes (Blade - Custom Pages)
 // Note: Filament handles /admin for main dashboard and resources

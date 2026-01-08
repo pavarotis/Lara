@@ -44,3 +44,15 @@ Route::prefix('v1')->group(function () {
         Route::delete('/settings/{key}', [SettingsController::class, 'destroy'])->name('api.v1.settings.destroy');
     });
 });
+
+// API v2 - Headless API (read-only, requires API key authentication)
+Route::prefix('v2')->middleware(['api.auth', 'api.rate_limit'])->group(function () {
+    Route::get('/business', [\App\Http\Controllers\Api\V2\BusinessController::class, 'show'])->name('api.v2.business.show');
+    Route::get('/menu', [\App\Http\Controllers\Api\V2\MenuController::class, 'index'])->name('api.v2.menu.index');
+    Route::get('/categories', [\App\Http\Controllers\Api\V2\CategoriesController::class, 'index'])->name('api.v2.categories.index');
+    Route::get('/categories/{category}', [\App\Http\Controllers\Api\V2\CategoriesController::class, 'show'])->name('api.v2.categories.show');
+    Route::get('/products', [\App\Http\Controllers\Api\V2\ProductsController::class, 'index'])->name('api.v2.products.index');
+    Route::get('/products/{product}', [\App\Http\Controllers\Api\V2\ProductsController::class, 'show'])->name('api.v2.products.show');
+    Route::get('/pages', [\App\Http\Controllers\Api\V2\PagesController::class, 'index'])->name('api.v2.pages.index');
+    Route::get('/pages/{slug}', [\App\Http\Controllers\Api\V2\PagesController::class, 'show'])->name('api.v2.pages.show');
+});

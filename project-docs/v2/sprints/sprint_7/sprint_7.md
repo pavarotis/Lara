@@ -1,8 +1,8 @@
 # Sprint 7 — Lightweight Public Site & Performance Optimization
 
-**Status**: ⏳ Pending  
-**Start Date**: _TBD_  
-**End Date**: _TBD_  
+**Status**: ✅ Completed  
+**Start Date**: 2026-01-08  
+**End Date**: 2026-01-08  
 **Διάρκεια**: 1-2 εβδομάδες  
 **Filament Version**: Χρησιμοποιούμε μόνο **Filament 4.x** στο admin panel (δεν επιτρέπονται Filament v2/v3 packages ή APIs).
 

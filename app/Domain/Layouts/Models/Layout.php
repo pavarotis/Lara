@@ -24,11 +24,17 @@ class Layout extends Model
         'type',
         'regions',
         'is_default',
+        'compiled_html',
+        'assets_manifest',
+        'critical_css',
+        'compiled_at',
     ];
 
     protected $casts = [
         'regions' => 'array',
+        'assets_manifest' => 'array',
         'is_default' => 'boolean',
+        'compiled_at' => 'datetime',
     ];
 
     public function business(): BelongsTo

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Modules\Services;
 
 use App\Domain\Modules\Models\ModuleInstance;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
@@ -36,6 +37,21 @@ class RenderModuleService
             return '';
         }
 
+        // Cache key with module ID and updated timestamp
+        $cacheKey = "module:{$module->id}:{$module->updated_at->timestamp}";
+        $ttl = $this->getCacheTtl($module);
+
+        // Try to get from cache
+        return Cache::remember($cacheKey, $ttl, function () use ($module) {
+            return $this->renderModule($module);
+        });
+    }
+
+    /**
+     * Render module (without cache)
+     */
+    private function renderModule(ModuleInstance $module): string
+    {
         try {
             // 1. Get module view path
             $viewPath = $this->getModuleViewService->getViewPath($module->type, $module->business);
@@ -66,5 +82,19 @@ class RenderModuleService
 
             return "<!-- Error rendering module '{$module->type}' -->";
         }
+    }
+
+    /**
+     * Get cache TTL for module
+     */
+    private function getCacheTtl(ModuleInstance $module): int
+    {
+        $moduleConfig = config("modules.{$module->type}");
+
+        if ($moduleConfig && isset($moduleConfig['cache_ttl'])) {
+            return (int) $moduleConfig['cache_ttl'];
+        }
+
+        return 3600; // Default 1 hour
     }
 }

@@ -28,9 +28,11 @@ class GetThemeTokensService
         }
 
         // 4. Merge: preset tokens + business overrides
+        // Use array_merge (not array_merge_recursive) to avoid creating arrays from strings
         $tokens = $preset->tokens;
         if ($themeToken && $themeToken->token_overrides) {
-            $tokens = array_merge_recursive($tokens, $themeToken->token_overrides);
+            // Merge recursively for nested arrays (fonts, spacing, radius), but replace strings (colors)
+            $tokens = array_replace_recursive($tokens, $themeToken->token_overrides);
         }
 
         return $tokens;

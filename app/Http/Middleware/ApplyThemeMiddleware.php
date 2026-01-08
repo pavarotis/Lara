@@ -22,7 +22,22 @@ class ApplyThemeMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Get business from request attributes (set by SetCurrentBusiness middleware)
         $business = $request->attributes->get('business');
+
+        // If no business in attributes, try to get from session (for admin routes)
+        if (! $business) {
+            $businessId = session('current_business_id');
+            if ($businessId) {
+                $business = \App\Domain\Businesses\Models\Business::find($businessId);
+            }
+        }
+
+        // If still no business, try to get active business (fallback)
+        if (! $business) {
+            $business = \App\Domain\Businesses\Models\Business::active()->first();
+        }
+
         if ($business) {
             $this->applyThemeTokensService->apply($business);
         }

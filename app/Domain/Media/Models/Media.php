@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Media extends Model
 {
     protected $fillable = [
+        'variants',
         'business_id',
         'folder_id',
         'name',
@@ -29,6 +30,7 @@ class Media extends Model
 
     protected $casts = [
         'metadata' => 'array',
+        'variants' => 'array',
         'size' => 'integer',
     ];
 

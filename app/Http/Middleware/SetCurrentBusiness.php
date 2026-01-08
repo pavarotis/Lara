@@ -4,23 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Domain\Businesses\Models\Business;
+use App\Domain\Businesses\Services\ResolveBusinessService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetCurrentBusiness
 {
+    public function __construct(
+        private ResolveBusinessService $resolveBusinessService
+    ) {}
+
     /**
      * Handle an incoming request.
-     * Sets the current business based on subdomain, route param, or session.
+     * Sets the current business based on route param, query param, or session.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $business = $this->resolveBusiness($request);
+        $business = $this->resolveBusinessService->resolve($request);
 
+        // Allow admin and API routes without business context
         if (! $business) {
+            if ($request->is('admin/*') || $request->is('api/*')) {
+                // Admin/API can work without business context
+                return $next($request);
+            }
             abort(404, 'Business not found');
+        }
+
+        // Validate business is active
+        if (! $business->is_active) {
+            abort(403, 'Business is inactive');
         }
 
         // Share business with all views
@@ -33,32 +47,5 @@ class SetCurrentBusiness
         session(['current_business_id' => $business->id]);
 
         return $next($request);
-    }
-
-    private function resolveBusiness(Request $request): ?Business
-    {
-        // 1. Check route parameter (e.g., /b/{business:slug}/menu)
-        if ($slug = $request->route('business')) {
-            return Business::where('slug', $slug)->active()->first();
-        }
-
-        // 2. Check query parameter (e.g., ?business=demo-cafe)
-        if ($slug = $request->query('business')) {
-            $business = Business::where('slug', $slug)->active()->first();
-            if ($business) {
-                return $business;
-            }
-        }
-
-        // 3. Check session
-        if ($businessId = session('current_business_id')) {
-            $business = Business::find($businessId);
-            if ($business && $business->is_active) {
-                return $business;
-            }
-        }
-
-        // 4. Fallback to first active business
-        return Business::active()->first();
     }
 }

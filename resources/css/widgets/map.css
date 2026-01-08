@@ -1,0 +1,13 @@
+/* Map Widget Styles */
+.map {
+    min-height: 400px;
+    position: relative;
+    width: 100%;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.map-container {
+    width: 100%;
+    height: 100%;
+}

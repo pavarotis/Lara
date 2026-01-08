@@ -21,11 +21,82 @@ class ContentController extends Controller
     ) {}
 
     /**
-     * Show public content by slug
+     * Show business home page (canonical routing)
      */
-    public function show(string $slug): View|Response
+    public function showBusinessHome(Business $business): View|Response
     {
-        $business = Business::active()->firstOrFail();
+        // Get home page (slug: '/')
+        // For admin users, also check unpublished content
+        $user = Auth::user();
+        $isAdmin = $user && (method_exists($user, 'hasRole') ? $user->hasRole('admin') : ($user->isAdmin ?? false));
+
+        if ($isAdmin) {
+            // Admin can see unpublished content
+            $content = Content::where('business_id', $business->id)
+                ->where('slug', '/')
+                ->with(['business', 'layout.business'])
+                ->first();
+        } else {
+            // Regular users only see published content
+            $content = $this->getContentService->bySlug($business->id, '/');
+        }
+
+        if (! $content) {
+            $message = $isAdmin
+                ? 'Home page not found. Please create a home page with slug "/" in the CMS (Content → New → Page).'
+                : 'Home page not found.';
+            abort(404, $message);
+        }
+
+        // Only show published content to non-admin users
+        if (! $content->isPublished() && ! $isAdmin) {
+            abort(404, 'Content not found');
+        }
+
+        $renderedContent = $this->renderContentService->execute($content);
+
+        return view('themes.default.layouts.page', [
+            'content' => $content,
+            'renderedContent' => $renderedContent,
+            'isPreview' => false,
+        ]);
+    }
+
+    /**
+     * Show public content by slug (canonical routing with business)
+     */
+    public function show(Business $business, string $page): View|Response
+    {
+        $content = $this->getContentService->bySlug($business->id, $page);
+
+        if (! $content) {
+            abort(404, 'Content not found');
+        }
+
+        // Only show published content to non-admin users
+        if (! $content->isPublished() && (! Auth::check() || ! Auth::user()->hasRole('admin'))) {
+            abort(404, 'Content not found');
+        }
+
+        $renderedContent = $this->renderContentService->execute($content);
+
+        return view('themes.default.layouts.page', [
+            'content' => $content,
+            'renderedContent' => $renderedContent,
+            'isPreview' => false,
+        ]);
+    }
+
+    /**
+     * Legacy show method (fallback for non-canonical routes)
+     */
+    public function showLegacy(Request $request, string $slug): View|Response
+    {
+        $business = $request->attributes->get('business') ?? Business::active()->first();
+
+        if (! $business) {
+            abort(404, 'Business not found');
+        }
 
         $content = $this->getContentService->bySlug($business->id, $slug);
 

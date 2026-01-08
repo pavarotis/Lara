@@ -10,6 +10,12 @@ return [
         'settings_form' => \App\Http\Requests\Modules\HeroModuleRequest::class,
         'view' => 'modules.hero',
         'description' => 'Hero section with title, subtitle, image, and CTA',
+        'assets' => [
+            'css' => ['widgets/hero.css'],
+            'js' => [],
+        ],
+        'critical_css' => '.hero { min-height: 400px; position: relative; }',
+        'cache_ttl' => 3600,
     ],
     'rich_text' => [
         'name' => 'Rich Text',
@@ -66,6 +72,12 @@ return [
         'settings_form' => \App\Http\Requests\Modules\GalleryModuleRequest::class,
         'view' => 'modules.gallery',
         'description' => 'Image gallery',
+        'assets' => [
+            'css' => ['widgets/gallery.css'],
+            'js' => [],
+        ],
+        'critical_css' => '.gallery { display: grid; gap: 1rem; }',
+        'cache_ttl' => 3600,
     ],
     'cta' => [
         'name' => 'Call to Action',
@@ -82,6 +94,12 @@ return [
         'settings_form' => \App\Http\Requests\Modules\MapModuleRequest::class,
         'view' => 'modules.map',
         'description' => 'Google Maps embed',
+        'assets' => [
+            'css' => ['widgets/map.css'],
+            'js' => ['widgets/map.js'],
+        ],
+        'critical_css' => '.map { min-height: 400px; position: relative; }',
+        'cache_ttl' => 1800,
     ],
     'opening_hours' => [
         'name' => 'Opening Hours',

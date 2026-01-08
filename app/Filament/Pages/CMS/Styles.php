@@ -49,20 +49,40 @@ class Styles extends Page implements HasForms
         $getThemeTokensService = app(GetThemeTokensService::class);
         $tokens = $getThemeTokensService->getTokens($business);
 
+        // Extract color values (ensure they are strings, not arrays)
+        $colors = $tokens['colors'] ?? [];
+        $primaryColor = is_array($colors['primary'] ?? null) ? ($colors['primary']['DEFAULT'] ?? ($colors['primary'][0] ?? '#3b82f6')) : (string) ($colors['primary'] ?? '#3b82f6');
+        $accentColor = is_array($colors['accent'] ?? null) ? ($colors['accent']['DEFAULT'] ?? ($colors['accent'][0] ?? '#10b981')) : (string) ($colors['accent'] ?? '#10b981');
+        $backgroundColor = is_array($colors['background'] ?? null) ? ($colors['background']['DEFAULT'] ?? ($colors['background'][0] ?? '#ffffff')) : (string) ($colors['background'] ?? '#ffffff');
+        $textColor = is_array($colors['text'] ?? null) ? ($colors['text']['DEFAULT'] ?? ($colors['text'][0] ?? '#1f2937')) : (string) ($colors['text'] ?? '#1f2937');
+
+        // Extract font values (ensure they are strings)
+        $fonts = $tokens['fonts'] ?? [];
+        $primaryFont = is_array($fonts['primary'] ?? null) ? ($fonts['primary']['family'] ?? 'Outfit') : (string) ($fonts['primary'] ?? 'Outfit');
+        $secondaryFont = is_array($fonts['secondary'] ?? null) ? ($fonts['secondary']['family'] ?? 'Outfit') : (string) ($fonts['secondary'] ?? 'Outfit');
+
+        // Also check for 'heading' and 'body' font keys (from presets)
+        if (empty($primaryFont) && isset($fonts['heading']['family'])) {
+            $primaryFont = $fonts['heading']['family'];
+        }
+        if (empty($secondaryFont) && isset($fonts['body']['family'])) {
+            $secondaryFont = $fonts['body']['family'];
+        }
+
         $this->form->fill([
             'preset' => $business->settings['theme_preset'] ?? null,
             'header_variant' => $business->settings['header_variant'] ?? 'minimal',
             'footer_variant' => $business->settings['footer_variant'] ?? 'simple',
             'token_overrides' => [
                 'colors' => [
-                    'primary' => $tokens['colors']['primary'] ?? '#3b82f6',
-                    'accent' => $tokens['colors']['accent'] ?? '#10b981',
-                    'background' => $tokens['colors']['background'] ?? '#ffffff',
-                    'text' => $tokens['colors']['text'] ?? '#1f2937',
+                    'primary' => $primaryColor,
+                    'accent' => $accentColor,
+                    'background' => $backgroundColor,
+                    'text' => $textColor,
                 ],
                 'fonts' => [
-                    'primary' => $tokens['fonts']['primary'] ?? 'Outfit',
-                    'secondary' => $tokens['fonts']['secondary'] ?? 'Outfit',
+                    'primary' => $primaryFont,
+                    'secondary' => $secondaryFont,
                 ],
             ],
         ]);
@@ -132,10 +152,17 @@ class Styles extends Page implements HasForms
         $updateService = app(UpdateThemeTokensService::class);
         $updateService->execute($business, $data);
 
+        // Clear cache to apply changes immediately
+        \Illuminate\Support\Facades\Cache::flush();
+
         Notification::make()
             ->success()
             ->title('Theme settings saved successfully')
+            ->body('The page will refresh to show your changes.')
             ->send();
+
+        // Redirect to refresh the page and show changes
+        $this->redirect(route('filament.admin.pages.styles'));
     }
 
     public function getTitle(): string

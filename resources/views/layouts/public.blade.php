@@ -11,8 +11,22 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=outfit:300,400,500,600,700&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- Base CSS (always loaded) -->
+        @vite(['resources/css/app.css'])
+
+        <!-- Conditional JS (only if needed) -->
+        @php
+            // Check if page needs JavaScript (Alpine.js, widgets, etc.)
+            $needsAlpine = isset($needsAlpine) ? $needsAlpine : false;
+            $widgetAssets = $widgetAssets ?? [];
+        @endphp
+
+        @if($needsAlpine || !empty($widgetAssets['js'] ?? []))
+            @vite(['resources/js/app.js'])
+        @endif
+
+        <!-- Widget-specific JS -->
+        @stack('widget-scripts')
 
         <!-- Theme CSS Injection (Sprint 5) -->
         @if(isset($themeCss))
