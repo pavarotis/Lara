@@ -78,6 +78,7 @@
 | **Sprint 4** | RBAC & Permissions | 1 week | ⏳ Pending |
 | **Sprint 5** | API & Headless Support | 1 week | ⏳ Pending |
 | **Sprint 6** | Plugins & Polish | 1 week | ⏳ Pending |
+| **Sprint 7** | Lightweight Public Site & Performance | 1-2 weeks | ⏳ Pending |
 
 **📝 Detailed Tasks**: See individual sprint files in [sprints/](./sprints/) folder.
 
@@ -231,6 +232,7 @@ plugins/
 - [Sprint 4 — RBAC & Permissions](./sprints/sprint_4.md)
 - [Sprint 5 — API & Headless Support](./sprints/sprint_5.md)
 - [Sprint 6 — Plugins & Polish](./sprints/sprint_6.md)
+- [Sprint 7 — Lightweight Public Site & Performance](./sprints/sprint_7/sprint_7.md)
 
 ### Other Documentation
 - [Architecture Documentation](../architecture.md)

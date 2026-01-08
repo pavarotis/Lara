@@ -546,11 +546,14 @@ class GetHeaderVariantService {
 class PublishContentService {
     public function publish(Content $content, User $user): void
     {
-        // 1. Create revision before publish
-        app(CreateRevisionService::class)->create($content);
+        // 1. Create revision before publish (using existing service from Sprint 4.4)
+        app(CreateRevisionService::class)->execute($content, $user->id);
         
         // 2. Publish
-        $content->publish();
+        $content->update([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
         
         // 3. Log audit
         \Log::info('Content published', [
@@ -566,9 +569,14 @@ class PublishContentService {
 }
 ```
 
+**Integration with Sprint 4.4**:
+- Uses existing `CreateRevisionService` (Sprint 4.4)
+- Revisions accessible via `ContentRevisionController` (Sprint 4.4)
+- Follows MVC patterns (Sprint 4.4)
+
 **Acceptance Criteria:**
 - [x] Audit log created
-- [x] Revision created before publish
+- [x] Revision created before publish (using Sprint 4.4 service)
 - [x] Cache cleared
 
 ---
@@ -579,31 +587,49 @@ class PublishContentService {
 
 **Περιγραφή**: Create Filament page για theme settings.
 
+**Decision**: Use Filament Page (standard CRUD for theme settings) ✅
+
 **Deliverables:**
-- `app/Filament/Pages/ThemeSettings.php`
+- `app/Filament/Pages/CMS/Styles.php` (or `ThemeSettings.php`)
 
 **Technical Details:**
 
 ```php
-class ThemeSettings extends Page {
-    protected static ?string $navigationIcon = 'heroicon-o-paint-brush';
-    protected static string $view = 'filament.pages.theme-settings';
+use Filament\Pages\Page;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+
+class Styles extends Page implements HasForms
+{
+    use InteractsWithForms;
     
-    public function mount() {
+    protected static ?string $navigationGroup = 'CMS';
+    protected static ?int $navigationSort = 3;
+    protected static string $view = 'filament.pages.cms.styles';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-paint-brush';
+    protected static ?string $navigationLabel = 'Styles';
+    
+    public ?array $data = [];
+    
+    public function mount(): void
+    {
+        $business = Business::active()->first();
         $this->form->fill([
-            'preset' => $this->getBusinessThemePreset(),
-            'header_variant' => $this->getBusinessHeaderVariant(),
-            'footer_variant' => $this->getBusinessFooterVariant(),
-            'token_overrides' => $this->getBusinessTokenOverrides(),
+            'preset' => $this->getBusinessThemePreset($business),
+            'header_variant' => $this->getBusinessHeaderVariant($business),
+            'footer_variant' => $this->getBusinessFooterVariant($business),
+            'token_overrides' => $this->getBusinessTokenOverrides($business),
         ]);
     }
     
-    protected function getFormSchema(): array {
+    protected function getFormSchema(): array
+    {
         return [
             Select::make('preset')
                 ->label('Theme Preset')
                 ->options(ThemePreset::pluck('name', 'slug'))
-                ->required(),
+                ->required()
+                ->live(),
             Select::make('header_variant')
                 ->label('Header Variant')
                 ->options(array_column(config('header_variants'), 'name', 'key'))
@@ -617,8 +643,21 @@ class ThemeSettings extends Page {
             // ... more token overrides
         ];
     }
+    
+    public function save(): void
+    {
+        $data = $this->form->getState();
+        $business = Business::active()->first();
+        
+        // Save theme settings
+        app(UpdateThemeTokensService::class)->execute($business, $data);
+        
+        $this->notify('success', 'Theme settings saved successfully.');
+    }
 }
 ```
+
+**Note**: Following Hybrid Admin Panel guidelines (Sprint 4.5) — Filament Page for standard settings UI.
 
 **Acceptance Criteria:**
 - [x] Preset selection
@@ -683,40 +722,78 @@ class InformationPagesSeeder extends Seeder {
 
 **Περιγραφή**: Add SEO fields στο Content editor.
 
+**Decision**: Use Blade Controller (Content Editor is custom UI) ✅
+
+**Note**: Content Editor uses Blade Controller (Sprint 4.5 guidelines), not Filament Resource.
+
 **Deliverables:**
-- Update `app/Filament/Resources/ContentResource.php`
+- Update `resources/views/admin/content/edit.blade.php` (add SEO section)
+- Update `app/Http/Controllers/Admin/ContentController.php` (handle SEO fields)
 
 **Technical Details:**
 
-```php
-// In ContentResource form
-Section::make('SEO')
-    ->schema([
-        TextInput::make('meta.title')
-            ->label('Meta Title')
-            ->maxLength(60)
-            ->helperText('Recommended: 50-60 characters'),
-        Textarea::make('meta.description')
-            ->label('Meta Description')
-            ->maxLength(160)
-            ->helperText('Recommended: 150-160 characters'),
-        TextInput::make('meta.keywords')
-            ->label('Keywords')
-            ->helperText('Comma-separated'),
-        FileUpload::make('meta.og_image')
-            ->label('OG Image')
-            ->image()
-            ->directory('og-images'),
-        Toggle::make('meta.noindex')
-            ->label('No Index')
-            ->helperText('Prevent search engines from indexing this page'),
-    ])
+```blade
+{{-- In resources/views/admin/content/edit.blade.php --}}
+<div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">SEO Settings</h3>
+    <div class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Meta Title
+                <span class="text-xs text-gray-500">(Recommended: 50-60 characters)</span>
+            </label>
+            <input type="text" 
+                   name="meta[title]" 
+                   value="{{ old('meta.title', $content->meta['title'] ?? '') }}"
+                   maxlength="60"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Meta Description
+                <span class="text-xs text-gray-500">(Recommended: 150-160 characters)</span>
+            </label>
+            <textarea name="meta[description]" 
+                      maxlength="160"
+                      rows="3"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">{{ old('meta.description', $content->meta['description'] ?? '') }}</textarea>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+            <input type="text" 
+                   name="meta[keywords]" 
+                   value="{{ old('meta.keywords', $content->meta['keywords'] ?? '') }}"
+                   placeholder="Comma-separated"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">OG Image</label>
+            <input type="file" 
+                   name="meta[og_image]" 
+                   accept="image/*"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+        </div>
+        <div>
+            <label class="flex items-center gap-2">
+                <input type="checkbox" 
+                       name="meta[noindex]" 
+                       value="1"
+                       {{ old('meta.noindex', $content->meta['noindex'] ?? false) ? 'checked' : '' }}
+                       class="rounded border-gray-300 text-primary focus:ring-primary">
+                <span class="text-sm text-gray-700">No Index (Prevent search engines from indexing this page)</span>
+            </label>
+        </div>
+    </div>
+</div>
 ```
+
+**Note**: Following Hybrid Admin Panel guidelines (Sprint 4.5) — Blade Controller for Content Editor (custom UI).
 
 **Acceptance Criteria:**
 - [x] All SEO fields added
-- [x] Validation rules
+- [x] Validation rules (in UpdateContentRequest)
 - [x] Helper text
+- [x] SEO fields saved in Content meta JSON
 
 ---
 
@@ -822,10 +899,28 @@ _Καταγράψε εδώ progress, decisions, issues_
 ## 📚 References
 
 - [v2 Overview](../v2_overview.md) — Architecture & strategy
-- [Sprint 4](../sprint_4/sprint_4.md) — Layout System
-- [Developer Responsibilities](../dev-responsibilities.md) ⭐
+- [Sprint 4.1 — Navigation Structure](./sprint_4.1/sprint_4.1.md) — Admin panel navigation
+- [Sprint 4.3 — Filament 4 Alignment](./sprint_4.3/sprint_4.3.md) — Filament 4 compatibility
+- [Sprint 4.4 — MVC Audit](./sprint_4.4/sprint_4.4.md) — MVC patterns & guidelines
+- [Sprint 4.5 — Hybrid Admin Panel](./sprint_4.5/sprint_4.5.md) — Filament vs Blade guidelines
+- [Hybrid Admin Decision Tree](../architecture/hybrid_admin_decision_tree.md) — When to use Filament vs Blade
+- [MVC Best Practices](../architecture/mvc_best_practices.md) — MVC guidelines
 
 ---
 
-**Last Updated**: 2024-11-27
+## 🔄 Integration with Sprint 4.x
+
+### Sprint 4.4 (MVC Audit)
+- **Enhancement**: Theme services follow MVC patterns
+- **Integration**: Services in `app/Domain/Themes/Services/`
+- **Guidelines**: Follow MVC best practices
+
+### Sprint 4.5 (Hybrid Admin Panel)
+- **Enhancement**: Theme Settings use Filament Page (standard CRUD)
+- **Integration**: Follows Hybrid Admin Panel guidelines
+- **Decision**: Filament Page for theme settings (standard forms)
+
+---
+
+**Last Updated**: 2025-01-27
 

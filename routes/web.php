@@ -76,6 +76,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('content', AdminContentController::class);
     Route::post('content/{content}/publish', [AdminContentController::class, 'publish'])->name('content.publish');
+    Route::prefix('content/{content}/revisions')->name('content.revisions.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ContentRevisionController::class, 'index'])->name('index');
+        Route::get('/{revision}', [\App\Http\Controllers\Admin\ContentRevisionController::class, 'show'])->name('show');
+        Route::post('/{revision}/restore', [\App\Http\Controllers\Admin\ContentRevisionController::class, 'restore'])->name('restore');
+        Route::get('/compare/{a}/{b}', [\App\Http\Controllers\Admin\ContentRevisionController::class, 'compare'])->name('compare')->where('b', 'latest|\d+');
+    });
     Route::prefix('content/{content}/modules')->name('content.modules.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ContentModuleController::class, 'index'])->name('index');
         Route::post('/add', [\App\Http\Controllers\Admin\ContentModuleController::class, 'addModule'])->name('add');

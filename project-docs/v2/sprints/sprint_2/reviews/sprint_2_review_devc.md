@@ -23,7 +23,7 @@ Dev C was responsible for:
 
 **Deliverables:**
 - ✅ `admin/media/index.blade.php` created
-- ✅ Grid view with image previews and thumbnails
+  - ✅ Grid view with image previews and thumbnails
 - ✅ Left sidebar with folder tree
 - ✅ Top bar with upload button, search, filters (type, folder)
 - ✅ Bulk actions bar (Move, Delete, Clear)
@@ -54,9 +54,9 @@ Dev C was responsible for:
 **Deliverables:**
 - ✅ `components/admin/media-picker.blade.php` created
 - ✅ Modal-based picker
-- ✅ Thumbnail grid (responsive)
-- ✅ Search bar
-- ✅ Folder navigation (breadcrumb)
+  - ✅ Thumbnail grid (responsive)
+  - ✅ Search bar
+  - ✅ Folder navigation (breadcrumb)
 - ✅ Multiple select mode
 - ✅ Single select mode
 - ✅ Returns clean JSON structure

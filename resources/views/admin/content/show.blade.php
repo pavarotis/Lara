@@ -154,10 +154,10 @@
             </div>
 
             <!-- Revisions -->
-            @if($content->revisions->count() > 0)
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Revisions</h3>
-                    <div class="space-y-3">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Revisions</h3>
+                @if($content->revisions->count() > 0)
+                    <div class="space-y-3 mb-4">
                         @foreach($content->revisions->take(5) as $revision)
                             <div class="text-sm">
                                 <p class="font-medium text-gray-900">{{ $revision->created_at->format('M d, Y H:i') }}</p>
@@ -170,8 +170,18 @@
                             <p class="text-xs text-gray-500">+ {{ $content->revisions->count() - 5 }} more revisions</p>
                         @endif
                     </div>
-                </div>
-            @endif
+                    <a href="{{ route('admin.content.revisions.index', $content) }}" 
+                       class="block w-full text-center px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary-600 transition-colors">
+                        View All Revisions ({{ $content->revisions->count() }})
+                    </a>
+                @else
+                    <p class="text-sm text-gray-500 mb-4">No revisions yet. Revisions are created automatically when content is updated.</p>
+                    <a href="{{ route('admin.content.revisions.index', $content) }}" 
+                       class="block w-full text-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
+                        View Revisions
+                    </a>
+                @endif
+            </div>
         </div>
     </div>
 </x-admin-layout>

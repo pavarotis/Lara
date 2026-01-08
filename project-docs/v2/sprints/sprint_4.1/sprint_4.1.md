@@ -32,6 +32,15 @@
 
 ---
 
+## 🔄 Related Sprints
+
+- **Sprint 4.2** — Filament 4 Migration (technical migration)
+- **Sprint 4.3** — Filament 4 Alignment (code-level alignment)
+- **Sprint 4.4** — MVC Audit & Completion (MVC flow audit)
+- **Sprint 4.5** — Hybrid Admin Panel Guidelines (decision tree & patterns)
+
+---
+
 ## 📁 File Structure
 
 ```

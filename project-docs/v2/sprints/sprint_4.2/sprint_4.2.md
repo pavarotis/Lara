@@ -244,4 +244,13 @@
 - Το Sprint 4.2 είναι **καθαρά τεχνικό/migration sprint**: δεν προσθέτει νέα business features, αλλά σταθεροποιεί την admin layer πάνω σε Filament 4.
 - Όλα τα προηγούμενα sprints (0–4.1) θεωρούνται **contract**: το migration δεν πρέπει να αλλάζει τη συμπεριφορά τους, μόνο την υλοποίηση στο admin layer.
 
+---
+
+## 🔄 Related Sprints
+
+- **Sprint 4.1** — Navigation Structure (prerequisite)
+- **Sprint 4.3** — Filament 4 Alignment (code-level fixes)
+- **Sprint 4.4** — MVC Audit & Completion (MVC flow audit)
+- **Sprint 4.5** — Hybrid Admin Panel Guidelines (decision tree & patterns)
+
 

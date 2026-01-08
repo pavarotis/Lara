@@ -35,6 +35,7 @@
 - ❌ Full plugin marketplace — Future
 - ❌ Multi-domain routing — Sprint 7+
 - ❌ Frontend rewrite (React/Vue) — Future
+- ❌ Performance optimizations — Sprint 7
 
 ---
 
@@ -628,32 +629,56 @@ public function forContentRegion(Content $content, string $region): Collection
 
 **Περιγραφή**: Create Filament resource για API keys.
 
+**Decision**: Use Filament Resource (standard CRUD) ✅
+
 **Deliverables:**
 - `app/Filament/Resources/ApiKeyResource.php`
 
 **Technical Details:**
 
 ```php
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Table;
+
 class ApiKeyResource extends Resource {
     protected static ?string $model = ApiKey::class;
     
-    public static function form(Form $form): Form {
-        return $form->schema([
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-key';
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
+    protected static ?int $navigationSort = 20;
+    
+    public static function form(Schema $schema): Schema {
+        return $schema->components([
             TextInput::make('name')->required(),
             TextInput::make('key')
                 ->default(fn() => Str::random(32))
-                ->disabled(),
+                ->disabled()
+                ->dehydrated(),
             TextInput::make('secret')
                 ->default(fn() => Str::random(64))
-                ->disabled(),
+                ->disabled()
+                ->dehydrated(),
             TagsInput::make('scopes')
                 ->suggestions(['read:menu', 'read:products', 'read:pages', '*']),
             DateTimePicker::make('expires_at'),
-            Toggle::make('is_active'),
+            Toggle::make('is_active')->default(true),
         ]);
+    }
+    
+    public static function table(Table $table): Table {
+        return $table
+            ->columns([
+                TextColumn::make('name'),
+                TextColumn::make('key')->limit(20),
+                TextColumn::make('last_used_at')->dateTime(),
+                IconColumn::make('is_active')->boolean(),
+            ]);
     }
 }
 ```
+
+**Note**: Following Hybrid Admin Panel guidelines (Sprint 4.5) — Filament Resource for standard CRUD.
 
 **Acceptance Criteria:**
 - [x] CRUD for API keys
@@ -670,11 +695,62 @@ class ApiKeyResource extends Resource {
 - `resources/views/admin/api-docs.blade.php`
 - `app/Http/Controllers/Admin/ApiDocsController.php`
 
+**Decision**: Use Blade Controller (custom documentation UI) ✅
+
 **Technical Details:**
-- List all endpoints
-- Show request/response examples
-- Show authentication method
-- Show rate limits
+
+```php
+// app/Http/Controllers/Admin/ApiDocsController.php
+class ApiDocsController extends Controller {
+    public function index(): View {
+        $this->authorize('viewAny', ApiKey::class);
+        
+        $endpoints = [
+            'business' => [
+                'method' => 'GET',
+                'path' => '/api/v2/business',
+                'description' => 'Get business information',
+                'auth' => 'API Key + Secret',
+                'rate_limit' => '100 requests/minute',
+            ],
+            'menu' => [
+                'method' => 'GET',
+                'path' => '/api/v2/menu',
+                'description' => 'Get menu structure',
+                'auth' => 'API Key + Secret',
+                'rate_limit' => '100 requests/minute',
+            ],
+            // ... more endpoints
+        ];
+        
+        return view('admin.api-docs', compact('endpoints'));
+    }
+}
+```
+
+```blade
+{{-- resources/views/admin/api-docs.blade.php --}}
+<x-admin-layout>
+    <x-slot name="title">API Documentation</x-slot>
+    
+    <div class="space-y-6">
+        @foreach($endpoints as $name => $endpoint)
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ ucfirst($name) }}</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ $endpoint['description'] }}</p>
+                <div class="space-y-2 text-sm">
+                    <p><strong>Method:</strong> <code class="bg-gray-100 px-2 py-1 rounded">{{ $endpoint['method'] }}</code></p>
+                    <p><strong>Path:</strong> <code class="bg-gray-100 px-2 py-1 rounded">{{ $endpoint['path'] }}</code></p>
+                    <p><strong>Authentication:</strong> {{ $endpoint['auth'] }}</p>
+                    <p><strong>Rate Limit:</strong> {{ $endpoint['rate_limit'] }}</p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</x-admin-layout>
+```
+
+**Note**: Following Hybrid Admin Panel guidelines (Sprint 4.5) — Blade Controller for custom documentation UI.
 
 **Acceptance Criteria:**
 - [x] Documentation page created
@@ -687,13 +763,49 @@ class ApiKeyResource extends Resource {
 
 **Περιγραφή**: Create testing dashboard για QA.
 
+**Decision**: Use Blade Controller (custom dashboard UI) ✅
+
 **Deliverables:**
 - `resources/views/admin/testing.blade.php`
+- `app/Http/Controllers/Admin/TestingController.php` (optional)
 
 **Technical Details:**
-- List all test suites
-- Show test coverage
-- Run tests button (optional)
+
+```php
+// app/Http/Controllers/Admin/TestingController.php (optional)
+class TestingController extends Controller {
+    public function index(): View {
+        $this->authorize('viewAny', User::class); // Admin only
+        
+        $testSuites = [
+            'Feature Tests' => ['status' => 'passing', 'count' => 45],
+            'Unit Tests' => ['status' => 'passing', 'count' => 120],
+            'Integration Tests' => ['status' => 'passing', 'count' => 30],
+        ];
+        
+        return view('admin.testing', compact('testSuites'));
+    }
+}
+```
+
+```blade
+{{-- resources/views/admin/testing.blade.php --}}
+<x-admin-layout>
+    <x-slot name="title">Testing Dashboard</x-slot>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @foreach($testSuites as $name => $suite)
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $name }}</h3>
+                <p class="text-sm text-gray-600 mb-2">Status: <span class="text-green-600">{{ $suite['status'] }}</span></p>
+                <p class="text-sm text-gray-600">Tests: {{ $suite['count'] }}</p>
+            </div>
+        @endforeach
+    </div>
+</x-admin-layout>
+```
+
+**Note**: Following Hybrid Admin Panel guidelines (Sprint 4.5) — Blade Controller for custom dashboard UI.
 
 **Acceptance Criteria:**
 - [x] Testing dashboard created
@@ -730,10 +842,11 @@ class ApiKeyResource extends Resource {
 
 ## 🧠 Τι ΔΕΝ Κάνει το Sprint 6
 
-- ❌ Full plugin marketplace
-- ❌ Multi-domain routing (Sprint 7+)
-- ❌ Frontend rewrite (React/Vue)
-- ❌ Complex permissions redesign
+- ❌ Full plugin marketplace — Future
+- ❌ Multi-domain routing — Sprint 7+
+- ❌ Frontend rewrite (React/Vue) — Future
+- ❌ Complex permissions redesign — Not needed
+- ❌ Performance optimizations — Sprint 7
 
 ---
 
@@ -746,11 +859,30 @@ _Καταγράψε εδώ progress, decisions, issues_
 ## 📚 References
 
 - [v2 Overview](../v2_overview.md) — Architecture & strategy
-- [Sprint 4](../sprint_4/sprint_4.md) — Layout System
-- [Sprint 5](../sprint_5/sprint_5.md) — Theming
-- [Developer Responsibilities](../dev-responsibilities.md) ⭐
+- [Sprint 4.1 — Navigation Structure](./sprint_4.1/sprint_4.1.md) — Admin panel navigation
+- [Sprint 4.3 — Filament 4 Alignment](./sprint_4.3/sprint_4.3.md) — Filament 4 compatibility
+- [Sprint 4.4 — MVC Audit](./sprint_4.4/sprint_4.4.md) — MVC patterns & guidelines
+- [Sprint 4.5 — Hybrid Admin Panel](./sprint_4.5/sprint_4.5.md) — Filament vs Blade guidelines
+- [Sprint 5 — Theming](./sprint_5/sprint_5.md) — Theming system
+- [Hybrid Admin Decision Tree](../architecture/hybrid_admin_decision_tree.md) — When to use Filament vs Blade
+- [MVC Best Practices](../architecture/mvc_best_practices.md) — MVC guidelines
 
 ---
 
-**Last Updated**: 2024-11-27
+## 🔄 Integration with Sprint 4.x
+
+### Sprint 4.4 (MVC Audit)
+- **Enhancement**: API services follow MVC patterns
+- **Integration**: Services in `app/Domain/Api/Services/`
+- **Guidelines**: Follow MVC best practices
+- **Controllers**: API Controllers in `app/Http/Controllers/Api/`
+
+### Sprint 4.5 (Hybrid Admin Panel)
+- **Enhancement**: API Key Management uses Filament Resource (standard CRUD)
+- **Integration**: Follows Hybrid Admin Panel guidelines
+- **Decision**: Filament Resource for API keys (standard CRUD)
+
+---
+
+**Last Updated**: 2025-01-27
 
