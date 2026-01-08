@@ -150,10 +150,18 @@ Route::get('/admin/system-settings-legacy', function () {
  * Some code still references route('filament.admin.pages.categories'), but the
  * Filament page now lives at /admin/blog-categories with route name
  * filament.admin.pages.blog-categories. We alias the old name to a redirect.
+ *
+ * Note: This route must be defined BEFORE Filament registers its routes to avoid conflicts.
  */
 Route::get('/admin/blog-categories-legacy', function () {
-    return redirect()->route('filament.admin.pages.blog-categories');
+    // Direct redirect to avoid route name resolution issues
+    return redirect('/admin/blog-categories');
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.categories');
+
+// Also handle direct access to legacy URL
+Route::get('/admin/categories-legacy', function () {
+    return redirect('/admin/blog-categories');
+})->middleware(['auth', 'admin']);
 
 /**
  * Legacy compatibility route for Filament Catalog Products page.

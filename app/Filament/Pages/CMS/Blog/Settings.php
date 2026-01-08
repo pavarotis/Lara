@@ -16,6 +16,15 @@ class Settings extends Page
 
     protected static ?string $navigationLabel = 'Blog Settings';
 
+    /**
+     * Use a custom slug to avoid conflicts.
+     * This will register the Filament page at /admin/blog-settings with route name filament.admin.pages.blog-settings.
+     */
+    public static function getSlug(?\Filament\Panel $panel = null): string
+    {
+        return 'blog-settings';
+    }
+
     public function getTitle(): string
     {
         return 'Blog Settings';

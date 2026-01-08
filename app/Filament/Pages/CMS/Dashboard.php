@@ -16,6 +16,14 @@ class Dashboard extends Page
 
     protected static ?string $navigationLabel = 'Dashboard';
 
+    /**
+     * Use a custom slug to avoid conflict with Filament's default Dashboard
+     */
+    public static function getSlug(?\Filament\Panel $panel = null): string
+    {
+        return 'cms-dashboard';
+    }
+
     public function getTitle(): string
     {
         return 'CMS Dashboard';
