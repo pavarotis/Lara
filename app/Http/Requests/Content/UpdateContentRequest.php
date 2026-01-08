@@ -42,6 +42,11 @@ class UpdateContentRequest extends FormRequest
             'blocks.*.type' => ['required_with:blocks', 'string'],
             'blocks.*.props' => ['required_with:blocks', 'array'],
             'meta' => ['nullable', 'array'],
+            'meta.title' => ['nullable', 'string', 'max:60'],
+            'meta.description' => ['nullable', 'string', 'max:160'],
+            'meta.keywords' => ['nullable', 'string', 'max:255'],
+            'meta.og_image' => ['nullable', 'string', 'url', 'max:500'],
+            'meta.noindex' => ['nullable', 'boolean'],
             'status' => ['sometimes', 'string', Rule::in(['draft', 'published', 'archived'])],
         ];
     }

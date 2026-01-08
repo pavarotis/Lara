@@ -18,6 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
 
+        // Apply theme tokens to public routes
+        $middleware->web(append: [
+            \App\Http\Middleware\ApplyThemeMiddleware::class,
+        ]);
+
         // API middleware groups
         $middleware->api(append: [
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',

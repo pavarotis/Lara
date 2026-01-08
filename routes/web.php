@@ -14,6 +14,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 // Static Pages (migrated to CMS)
@@ -50,6 +52,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// SEO Routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])
+    ->middleware(['business'])
+    ->name('sitemap.index');
+Route::get('/robots.txt', [RobotsController::class, 'index'])->name('robots.index');
+
 // Content Preview Route (Admin only)
 Route::get('/preview/{contentId}', [ContentController::class, 'preview'])
     ->middleware(['auth'])
@@ -64,7 +72,7 @@ Route::get('/', function () {
 })->name('home');
 // Handle all other dynamic content routes
 Route::get('/{slug}', [ContentController::class, 'show'])
-    ->where('slug', '^(?!admin|api|cart|checkout|menu|dashboard|profile|login|register|password|email-verification|preview).*')
+    ->where('slug', '^(?!admin|api|cart|checkout|menu|dashboard|profile|login|register|password|email-verification|preview|sitemap\.xml|robots\.txt).*')
     ->name('content.show');
 
 // Admin Routes (Blade - Custom Pages)

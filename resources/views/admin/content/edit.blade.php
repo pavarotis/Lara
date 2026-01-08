@@ -106,6 +106,65 @@
             </div>
         </div>
 
+        <!-- SEO Settings -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">SEO Settings</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Meta Title
+                        <span class="text-xs text-gray-500">(Recommended: 50-60 characters)</span>
+                    </label>
+                    <input type="text" 
+                           name="meta[title]" 
+                           value="{{ old('meta.title', $content->meta['title'] ?? '') }}"
+                           maxlength="60"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                    <p class="mt-1 text-xs text-gray-500" id="meta-title-count">0 / 60 characters</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Meta Description
+                        <span class="text-xs text-gray-500">(Recommended: 150-160 characters)</span>
+                    </label>
+                    <textarea name="meta[description]" 
+                              maxlength="160"
+                              rows="3"
+                              id="meta-description"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">{{ old('meta.description', $content->meta['description'] ?? '') }}</textarea>
+                    <p class="mt-1 text-xs text-gray-500" id="meta-description-count">0 / 160 characters</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+                    <input type="text" 
+                           name="meta[keywords]" 
+                           value="{{ old('meta.keywords', $content->meta['keywords'] ?? '') }}"
+                           placeholder="Comma-separated keywords"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                    <p class="mt-1 text-xs text-gray-500">Separate keywords with commas</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">OG Image URL</label>
+                    <input type="text" 
+                           name="meta[og_image]" 
+                           value="{{ old('meta.og_image', $content->meta['og_image'] ?? '') }}"
+                           placeholder="https://example.com/image.jpg"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                    <p class="mt-1 text-xs text-gray-500">URL to image for social media sharing</p>
+                </div>
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" 
+                               name="meta[noindex]" 
+                               value="1"
+                               {{ old('meta.noindex', $content->meta['noindex'] ?? false) ? 'checked' : '' }}
+                               class="rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm text-gray-700">No Index (Prevent search engines from indexing this page)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <!-- Block Builder -->
         <div class="bg-white rounded-xl shadow-sm p-6 space-y-6 mb-6">
             <div class="flex items-center justify-between">
