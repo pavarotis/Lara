@@ -1,7 +1,18 @@
 <x-filament-panels::page>
-    <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">Blog Settings</h2>
-        <p class="text-gray-600">Blog Settings functionality will be implemented here.</p>
-    </div>
+    <form wire:submit="save">
+        {{ $this->form }}
+
+        <x-filament::section>
+            <x-slot name="heading">
+                Actions
+            </x-slot>
+
+            <div class="flex gap-4">
+                <x-filament::button type="submit">
+                    Save Blog Settings
+                </x-filament::button>
+            </div>
+        </x-filament::section>
+    </form>
 </x-filament-panels::page>
 

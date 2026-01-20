@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Support\ContentStatusHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -61,6 +62,22 @@ class Content extends Model
     public function layout(): BelongsTo
     {
         return $this->belongsTo(Layout::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(BlogComment::class)->topLevel()->ordered();
+    }
+
+    public function allComments(): HasMany
+    {
+        return $this->hasMany(BlogComment::class)->ordered();
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(BlogCategory::class, 'content_blog_category')
+            ->withTimestamps();
     }
 
     public function scopePublished($query)

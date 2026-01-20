@@ -14,7 +14,7 @@ class Marketing extends Page
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-megaphone';
 
-    protected static ?string $navigationLabel = 'Marketing';
+    protected static ?string $navigationLabel = 'Marketing Dashboard';
 
     public function getTitle(): string
     {

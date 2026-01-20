@@ -6,9 +6,9 @@ use Filament\Pages\Page;
 
 class Downloads extends Page
 {
-    protected static string|\UnitEnum|null $navigationGroup = 'Catalog';
+    protected static string|\UnitEnum|null $navigationGroup = 'Catalog Spare';
 
-    protected static ?int $navigationSort = 9;
+    protected static ?int $navigationSort = 2;
 
     protected string $view = 'filament.pages.catalog.downloads';
 

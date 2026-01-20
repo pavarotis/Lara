@@ -6,9 +6,9 @@ use Filament\Pages\Page;
 
 class Reviews extends Page
 {
-    protected static string|\UnitEnum|null $navigationGroup = 'Catalog';
+    protected static string|\UnitEnum|null $navigationGroup = 'Catalog Spare';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 3;
 
     protected string $view = 'filament.pages.catalog.reviews';
 

@@ -24,7 +24,7 @@ class Styles extends Page implements HasForms
 
     protected static string|\UnitEnum|null $navigationGroup = 'CMS';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     protected string $view = 'filament.pages.cms.styles';
 

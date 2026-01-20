@@ -7,12 +7,15 @@ namespace App\Domain\Catalog\Models;
 use App\Domain\Businesses\Models\Business;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
     protected $fillable = [
         'business_id',
         'category_id',
+        'manufacturer_id',
         'name',
         'slug',
         'description',
@@ -38,6 +41,34 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function manufacturer(): BelongsTo
+    {
+        return $this->belongsTo(Manufacturer::class);
+    }
+
+    public function extras(): HasMany
+    {
+        return $this->hasMany(ProductExtra::class)->ordered();
+    }
+
+    public function recurringProfiles(): HasMany
+    {
+        return $this->hasMany(RecurringProfile::class);
+    }
+
+    public function filterValues(): BelongsToMany
+    {
+        return $this->belongsToMany(FilterValue::class, 'product_filter_value')
+            ->withTimestamps();
+    }
+
+    public function attributes(): BelongsToMany
+    {
+        return $this->belongsToMany(Attribute::class, 'product_attribute')
+            ->withPivot('value')
+            ->withTimestamps();
     }
 
     public function scopeAvailable($query)

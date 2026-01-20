@@ -16,6 +16,8 @@ class GoogleAds extends Page
 
     protected static ?string $navigationLabel = 'Google Ads';
 
+    // Note: This is a settings/integration page, not a Resource
+
     public function getTitle(): string
     {
         return 'Google Ads';

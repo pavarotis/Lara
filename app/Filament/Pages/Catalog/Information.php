@@ -6,9 +6,9 @@ use Filament\Pages\Page;
 
 class Information extends Page
 {
-    protected static string|\UnitEnum|null $navigationGroup = 'Catalog';
+    protected static string|\UnitEnum|null $navigationGroup = 'Catalog Spare';
 
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 4;
 
     protected string $view = 'filament.pages.catalog.information';
 

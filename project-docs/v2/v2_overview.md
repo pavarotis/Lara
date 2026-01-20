@@ -71,15 +71,18 @@
 
 | Sprint | Focus | Duration | Status |
 |--------|-------|----------|--------|
-| **Sprint 0** | Infrastructure & Foundation | 2 weeks | ⏳ Pending |
-| **Sprint 1** | Content Module (Core) | 1 week | ⏳ Pending |
-| **Sprint 2** | Media Library | 1 week | ⏳ Pending |
-| **Sprint 3** | Content Rendering & Theming | 1 week | ⏳ Pending |
+| **Sprint 0** | Infrastructure & Foundation | 2 weeks | ✅ Completed |
+| **Sprint 1** | Content Module (Core) | 1 week | ✅ Completed |
+| **Sprint 2** | Media Library | 1 week | ✅ Completed |
+| **Sprint 3** | Content Rendering & Theming | 1 week | ✅ Completed |
 | **Sprint 4** | RBAC & Permissions | 1 week | ⏳ Pending |
 | **Sprint 5** | API & Headless Support | 1 week | ⏳ Pending |
-| **Sprint 6** | Plugins & Polish | 1 week | ⏳ Pending |
-| **Sprint 7** | Lightweight Public Site & Performance | 1-2 weeks | ⏳ Pending |
-| **Sprint 7.5** | Hardening & Performance Closure | 1 week | ⏳ Pending |
+| **Sprint 6** | Plugins & Polish | 1 week | ✅ Completed |
+| **Sprint 7** | Lightweight Public Site & Performance | 1-2 weeks | ✅ Completed |
+| **Sprint 7.5** | Hardening & Performance Closure | 1 week | ✅ Completed |
+| **Sprint 8** | CMS Admin Panel Completion | 1 day | ✅ Completed |
+| **Sprint 8.1** | Catalog Admin Panel Completion | 1 day | ✅ Completed |
+| **Sprint 8.2** | Sales Admin Panel Completion | 1 day | ✅ Completed |
 
 **📝 Detailed Tasks**: See individual sprint files in [sprints/](./sprints/) folder.
 
@@ -235,6 +238,7 @@ plugins/
 - [Sprint 6 — Plugins & Polish](./sprints/sprint_6.md)
 - [Sprint 7 — Lightweight Public Site & Performance](./sprints/sprint_7/sprint_7.md)
 - [Sprint 7.5 — Hardening & Performance Closure](./sprints/sprint_7.5/sprint_7.5.md)
+- [Sprint 8 — CMS Admin Panel Completion](./sprints/sprint_8/sprint_8.md)
 
 ### Other Documentation
 - [Architecture Documentation](../architecture.md)
@@ -253,5 +257,5 @@ plugins/
 
 ---
 
-**Last Updated**: 2024-11-27
+**Last Updated**: 2026-01-20
 

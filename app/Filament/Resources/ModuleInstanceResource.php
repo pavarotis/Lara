@@ -34,7 +34,9 @@ class ModuleInstanceResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Module Instances';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Content';
+    protected static string|\UnitEnum|null $navigationGroup = 'CMS';
+
+    protected static ?int $navigationSort = 8;
 
     public static function form(Schema $schema): Schema
     {

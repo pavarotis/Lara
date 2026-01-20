@@ -141,9 +141,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('/{folder}', [AdminMediaFolderController::class, 'update'])->name('update');
         Route::delete('/{folder}', [AdminMediaFolderController::class, 'destroy'])->name('destroy');
     });
-    Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
-    Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    // Legacy orders routes - kept for backward compatibility but can redirect to Filament Resource
+    // Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    // Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    // Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
 });
@@ -159,23 +160,23 @@ Route::get('/admin/system-settings-legacy', function () {
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.settings');
 
 /**
- * Legacy compatibility route for Filament Blog Categories page.
+ * Legacy compatibility route for Catalog Categories page.
  * Some code still references route('filament.admin.pages.categories'), but the
- * Filament page now lives at /admin/blog-categories with route name
- * filament.admin.pages.blog-categories. We alias the old name to a redirect.
+ * Filament page has been replaced with CategoryResource with route name
+ * filament.admin.resources.catalog-categories.index. We alias the old name to a redirect.
  */
-Route::get('/admin/blog-categories-legacy', function () {
-    return redirect()->route('filament.admin.pages.blog-categories');
+Route::get('/admin/categories-legacy', function () {
+    return redirect()->route('filament.admin.resources.catalog-categories.index');
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.categories');
 
 /**
  * Legacy compatibility route for Filament Catalog Products page.
  * Some code still references route('filament.admin.pages.products'), but the
- * Filament page now lives at /admin/catalog-products with route name
- * filament.admin.pages.catalog-products. We alias the old name to a redirect.
+ * Filament page has been replaced with ProductResource with route name
+ * filament.admin.resources.catalog-products.index. We alias the old name to a redirect.
  */
 Route::get('/admin/catalog-products-legacy', function () {
-    return redirect()->route('filament.admin.pages.catalog-products');
+    return redirect()->route('filament.admin.resources.catalog-products.index');
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.products');
 
 /**
@@ -187,3 +188,32 @@ Route::get('/admin/catalog-products-legacy', function () {
 Route::get('/admin/system-users-legacy', function () {
     return redirect()->route('filament.admin.pages.system-users');
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.users');
+
+/**
+ * Legacy compatibility route for Filament Sales Returns page.
+ * Some code still references route('filament.admin.pages.returns'), but the
+ * Filament page has been replaced with ReturnResource with route name
+ * filament.admin.resources.returns.index. We alias the old name to a redirect.
+ */
+Route::get('/admin/returns-legacy', function () {
+    return redirect()->route('filament.admin.resources.returns.index');
+})->middleware(['auth', 'admin'])->name('filament.admin.pages.returns');
+
+/**
+ * Legacy compatibility route for Filament Sales Orders page.
+ * Some code still references route('filament.admin.pages.orders') or 'orders.index', but the
+ * Filament page has been replaced with OrderResource with route name
+ * filament.admin.resources.sales-orders.index. We alias the old names to redirects.
+ */
+Route::get('/admin/orders-legacy', function () {
+    return redirect()->route('filament.admin.resources.sales-orders.index');
+})->middleware(['auth', 'admin'])->name('filament.admin.pages.orders');
+
+// Legacy Blade routes for orders - redirect to Filament Resource
+Route::get('/admin/orders', function () {
+    return redirect()->route('filament.admin.resources.sales-orders.index');
+})->middleware(['auth', 'admin'])->name('admin.orders.index');
+
+Route::get('/admin/orders/{order}', function ($order) {
+    return redirect()->route('filament.admin.resources.sales-orders.edit', $order);
+})->middleware(['auth', 'admin'])->name('admin.orders.show');

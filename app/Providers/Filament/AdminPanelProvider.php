@@ -38,17 +38,19 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make('CMS')
-                    ->collapsible(false),
+                    ->collapsible(true),
                 NavigationGroup::make('Catalog')
-                    ->collapsible(false),
+                    ->collapsible(true),
+                NavigationGroup::make('Catalog Spare')
+                    ->collapsible(true),
                 NavigationGroup::make('Extensions')
                     ->collapsible(false),
                 NavigationGroup::make('Sales')
-                    ->collapsible(false),
+                    ->collapsible(true),
                 NavigationGroup::make('Customers')
-                    ->collapsible(false),
+                    ->collapsible(true),
                 NavigationGroup::make('Marketing')
-                    ->collapsible(false),
+                    ->collapsible(true),
                 NavigationGroup::make('System')
                     ->collapsible(false),
                 NavigationGroup::make('Reports')
