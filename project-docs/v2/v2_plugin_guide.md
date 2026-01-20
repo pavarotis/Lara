@@ -193,10 +193,15 @@ Hook::register('dashboard.widgets', function ($widgets) {
 2. Register in `config/plugins.php`:
 ```php
 return [
-    'plugins' => [
+    'providers' => [
         \Plugins\ExamplePlugin\ExamplePluginServiceProvider::class,
     ],
 ];
+```
+
+3. Refresh autoload:
+```bash
+composer dump-autoload
 ```
 
 3. Run migrations:

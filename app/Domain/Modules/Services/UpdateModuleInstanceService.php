@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Modules\Services;
 
 use App\Domain\Modules\Models\ModuleInstance;
+use App\Support\CacheInvalidationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -23,6 +24,7 @@ class UpdateModuleInstanceService
     public function execute(ModuleInstance $module, array $data): ModuleInstance
     {
         return DB::transaction(function () use ($module, $data) {
+            $previousUpdatedAt = $module->updated_at?->timestamp;
             // Prevent changing business_id (business isolation)
             if (isset($data['business_id']) && $data['business_id'] !== $module->business_id) {
                 throw ValidationException::withMessages([
@@ -41,6 +43,10 @@ class UpdateModuleInstanceService
             }
 
             $module->update($data);
+
+            // Invalidate cached module output and affected page caches
+            app(CacheInvalidationService::class)->forgetModuleCache($module, $previousUpdatedAt);
+            app(CacheInvalidationService::class)->forgetPageCache($module->business_id);
 
             return $module->fresh();
         });

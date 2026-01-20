@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Modules;
 
+use App\Support\PermissionHelper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OpeningHoursModuleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->isAdmin() ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array

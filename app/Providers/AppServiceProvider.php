@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domain\Plugins\Services\PluginRegistryService;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +25,16 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register response macros
         $this->registerResponseMacros();
+
+        // Define default API rate limiter
+        RateLimiter::for('api', function (Request $request) {
+            $key = $request->header('X-API-Key') ?: $request->ip();
+
+            return Limit::perMinute(120)->by($key);
+        });
+
+        // Register plugins from config
+        app(PluginRegistryService::class)->registerAll();
     }
 
     /**

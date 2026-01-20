@@ -16,6 +16,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
+use App\Support\RouteHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -70,17 +71,21 @@ Route::get('/preview/{contentId}', [ContentController::class, 'preview'])
     ->middleware(['auth'])
     ->name('content.preview');
 
+// Load auth routes FIRST to ensure /login, /register, etc. work before catch-all routes
+require __DIR__.'/auth.php';
+
 // Canonical Business Routes (Sprint 6)
 // Format: /{business:slug}/{page:slug?}
+// Uses RouteHelper to ensure business slugs don't conflict with system routes
 Route::prefix('{business:slug}')->group(function () {
     // Business home page
     Route::get('/', [ContentController::class, 'showBusinessHome'])
-        ->where('business', '[a-z0-9-]+')
+        ->where('business', RouteHelper::businessSlugPattern())
         ->name('business.home');
 
     // Content pages
     Route::get('/{page:slug}', [ContentController::class, 'show'])
-        ->where('business', '[a-z0-9-]+')
+        ->where('business', RouteHelper::businessSlugPattern())
         ->where('page', '[a-z0-9-/]+')
         ->name('content.show');
 })->middleware(['business']);
@@ -88,15 +93,23 @@ Route::prefix('{business:slug}')->group(function () {
 // Fallback: Legacy routes (for backward compatibility)
 Route::get('/', function (Request $request) {
     $business = app(\App\Domain\Businesses\Services\ResolveBusinessService::class)->resolve($request);
+
+    // If no business found via route/query/session, try first active business
+    if (! $business) {
+        $business = \App\Domain\Businesses\Models\Business::active()->first();
+    }
+
     if ($business) {
         return redirect()->route('business.home', ['business' => $business->slug]);
     }
-    abort(404, 'Business not found');
+
+    abort(404, 'Business not found. Please create an active business in the admin panel.');
 })->name('home');
 
 // Legacy dynamic content route (fallback)
+// Uses RouteHelper to exclude system routes automatically
 Route::get('/{slug}', [ContentController::class, 'showLegacy'])
-    ->where('slug', '^(?!admin|api|cart|checkout|menu|dashboard|profile|login|register|password|email-verification|preview|sitemap\.xml|robots\.txt).*')
+    ->where('slug', RouteHelper::exclusionPattern())
     ->name('content.show.legacy');
 
 // Admin Routes (Blade - Custom Pages)
@@ -150,18 +163,10 @@ Route::get('/admin/system-settings-legacy', function () {
  * Some code still references route('filament.admin.pages.categories'), but the
  * Filament page now lives at /admin/blog-categories with route name
  * filament.admin.pages.blog-categories. We alias the old name to a redirect.
- *
- * Note: This route must be defined BEFORE Filament registers its routes to avoid conflicts.
  */
 Route::get('/admin/blog-categories-legacy', function () {
-    // Direct redirect to avoid route name resolution issues
-    return redirect('/admin/blog-categories');
+    return redirect()->route('filament.admin.pages.blog-categories');
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.categories');
-
-// Also handle direct access to legacy URL
-Route::get('/admin/categories-legacy', function () {
-    return redirect('/admin/blog-categories');
-})->middleware(['auth', 'admin']);
 
 /**
  * Legacy compatibility route for Filament Catalog Products page.
@@ -182,5 +187,3 @@ Route::get('/admin/catalog-products-legacy', function () {
 Route::get('/admin/system-users-legacy', function () {
     return redirect()->route('filament.admin.pages.system-users');
 })->middleware(['auth', 'admin'])->name('filament.admin.pages.users');
-
-require __DIR__.'/auth.php';

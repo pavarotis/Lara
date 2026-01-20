@@ -63,17 +63,17 @@
     @if($widthMode === 'full-bg-contained-content')
         {{-- Full background, contained content --}}
         <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            {{ $slot }}
+            {!! $slot !!}
         </div>
     @elseif($widthMode === 'full')
         {{-- Full width, no container --}}
         <div class="relative z-10 w-full">
-            {{ $slot }}
+            {!! $slot !!}
         </div>
     @else
         {{-- Contained (default) --}}
         <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            {{ $slot }}
+            {!! $slot !!}
         </div>
     @endif
 </div>

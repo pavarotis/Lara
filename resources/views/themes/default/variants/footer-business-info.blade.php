@@ -1,22 +1,29 @@
 @php
-    $variant = app(\App\Domain\Themes\Services\GetFooterVariantService::class)->getVariant($currentBusiness);
-    $showOpeningHours = $variant['show_opening_hours'] ?? false;
-    $showSocial = $variant['show_social'] ?? false;
-    $showNewsletter = $variant['show_newsletter'] ?? false;
+    $business = $currentBusiness ?? null;
+    if ($business) {
+        $variant = app(\App\Domain\Themes\Services\GetFooterVariantService::class)->getVariant($business);
+        $showOpeningHours = $variant['show_opening_hours'] ?? false;
+        $showSocial = $variant['show_social'] ?? false;
+        $showNewsletter = $variant['show_newsletter'] ?? false;
+    } else {
+        $showOpeningHours = false;
+        $showSocial = false;
+        $showNewsletter = false;
+    }
 @endphp
 
 <footer class="footer-business-info bg-gray-900 text-white py-12">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-                <h3 class="text-lg font-semibold mb-4">{{ $currentBusiness->name }}</h3>
-                @if(isset($currentBusiness->settings['address']))
-                    <p class="text-gray-400 mb-2">{{ $currentBusiness->settings['address'] }}</p>
+                <h3 class="text-lg font-semibold mb-4">{{ $business ? $business->name : config('app.name', 'LaraShop') }}</h3>
+                @if($business && isset($business->settings['address']))
+                    <p class="text-gray-400 mb-2">{{ $business->settings['address'] }}</p>
                 @endif
-                @if(isset($currentBusiness->settings['phone']))
+                @if($business && isset($business->settings['phone']))
                     <p class="text-gray-400">
-                        <a href="tel:{{ $currentBusiness->settings['phone'] }}" class="hover:text-white">
-                            {{ $currentBusiness->settings['phone'] }}
+                        <a href="tel:{{ $business->settings['phone'] }}" class="hover:text-white">
+                            {{ $business->settings['phone'] }}
                         </a>
                     </p>
                 @endif
@@ -28,10 +35,10 @@
                     <li><a href="/menu" class="hover:text-white">Menu</a></li>
                 </ul>
             </div>
-            @if($showOpeningHours)
+            @if($business && $showOpeningHours)
                 <div>
                     <h3 class="text-lg font-semibold mb-4">Opening Hours</h3>
-                    @if(isset($currentBusiness->settings['opening_hours']))
+                    @if(isset($business->settings['opening_hours']))
                         <p class="text-gray-400">Mon-Sun: 9:00 - 17:00</p>
                     @endif
                 </div>
@@ -52,7 +59,7 @@
             </div>
         @endif
         <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-            <p>&copy; {{ date('Y') }} {{ $currentBusiness->name }}. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} {{ $business ? $business->name : config('app.name', 'LaraShop') }}. All rights reserved.</p>
         </div>
     </div>
 </footer>

@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "bundle:report": "node scripts/bundle-report.js"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

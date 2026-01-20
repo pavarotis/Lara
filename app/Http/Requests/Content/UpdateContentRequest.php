@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Content;
 
 use App\Domain\Content\Models\Content;
+use App\Support\ContentStatusHelper;
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,7 +15,7 @@ class UpdateContentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
@@ -22,7 +25,7 @@ class UpdateContentRequest extends FormRequest
 
         return [
             'type' => ['sometimes', 'string', Rule::in(['page', 'article', 'block'])],
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'title' => array_merge(['sometimes'], ValidationHelper::name()),
             'slug' => [
                 'sometimes',
                 'string',
@@ -47,7 +50,7 @@ class UpdateContentRequest extends FormRequest
             'meta.keywords' => ['nullable', 'string', 'max:255'],
             'meta.og_image' => ['nullable', 'string', 'url', 'max:500'],
             'meta.noindex' => ['nullable', 'boolean'],
-            'status' => ['sometimes', 'string', Rule::in(['draft', 'published', 'archived'])],
+            'status' => ContentStatusHelper::validationRule(),
         ];
     }
 

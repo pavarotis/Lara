@@ -13,9 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('media')) {
+            return;
+        }
+
         Schema::table('media', function (Blueprint $table) {
-            $table->json('variants')->nullable()->after('path');
-            // variants: {webp: '...', avif: '...', sizes: {320: '...', 640: '...', ...}}
+            if (! Schema::hasColumn('media', 'variants')) {
+                $table->json('variants')->nullable()->after('path');
+                // variants: {webp: '...', avif: '...', sizes: {320: '...', 640: '...', ...}}
+            }
         });
     }
 
@@ -24,8 +30,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('media')) {
+            return;
+        }
+
         Schema::table('media', function (Blueprint $table) {
-            $table->dropColumn('variants');
+            if (Schema::hasColumn('media', 'variants')) {
+                $table->dropColumn('variants');
+            }
         });
     }
 };

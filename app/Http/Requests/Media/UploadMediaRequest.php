@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Media;
 
+use App\Support\PermissionHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
@@ -11,7 +12,7 @@ class UploadMediaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array

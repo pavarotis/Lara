@@ -1,9 +1,17 @@
 @php
-    $variant = app(\App\Domain\Themes\Services\GetHeaderVariantService::class)->getVariant($currentBusiness);
-    $showPhone = $variant['show_phone'] ?? false;
-    $showHours = $variant['show_hours'] ?? false;
-    $showSocial = $variant['show_social'] ?? false;
-    $sticky = $variant['sticky'] ?? false;
+    $business = $currentBusiness ?? null;
+    if ($business) {
+        $variant = app(\App\Domain\Themes\Services\GetHeaderVariantService::class)->getVariant($business);
+        $showPhone = $variant['show_phone'] ?? false;
+        $showHours = $variant['show_hours'] ?? false;
+        $showSocial = $variant['show_social'] ?? false;
+        $sticky = $variant['sticky'] ?? false;
+    } else {
+        $showPhone = false;
+        $showHours = false;
+        $showSocial = false;
+        $sticky = false;
+    }
 @endphp
 
 <header class="header-with-topbar {{ $sticky ? 'sticky top-0 z-50 bg-white shadow-sm' : '' }}">
@@ -12,12 +20,12 @@
             <div class="container mx-auto px-4">
                 <div class="flex items-center justify-between text-sm">
                     <div class="flex items-center gap-4">
-                        @if($showPhone && isset($currentBusiness->settings['phone']))
-                            <a href="tel:{{ $currentBusiness->settings['phone'] }}" class="hover:opacity-75">
-                                📞 {{ $currentBusiness->settings['phone'] }}
+                        @if($business && $showPhone && isset($business->settings['phone']))
+                            <a href="tel:{{ $business->settings['phone'] }}" class="hover:opacity-75">
+                                📞 {{ $business->settings['phone'] }}
                             </a>
                         @endif
-                        @if($showHours && isset($currentBusiness->settings['opening_hours']))
+                        @if($business && $showHours && isset($business->settings['opening_hours']))
                             <span>🕐 Open Now</span>
                         @endif
                     </div>
@@ -33,10 +41,12 @@
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between py-4">
             <div class="logo">
-                @if($currentBusiness->logo)
-                    <img src="{{ asset($currentBusiness->logo) }}" alt="{{ $currentBusiness->name }}" class="h-12">
+                @if($business && $business->logo)
+                    <img src="{{ asset($business->logo) }}" alt="{{ $business->name }}" class="h-12">
+                @elseif($business)
+                    <span class="text-xl font-bold" style="color: var(--color-primary);">{{ $business->name }}</span>
                 @else
-                    <span class="text-xl font-bold" style="color: var(--color-primary);">{{ $currentBusiness->name }}</span>
+                    <span class="text-xl font-bold" style="color: var(--color-primary);">{{ config('app.name', 'LaraShop') }}</span>
                 @endif
             </div>
             <nav class="menu">

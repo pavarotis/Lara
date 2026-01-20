@@ -19,6 +19,12 @@ class GetModuleViewService
      */
     public function getViewPath(string $moduleType, ?Business $business = null): string
     {
+        // 0. Use explicit module view if provided (e.g. plugin namespace)
+        $explicitView = config("modules.{$moduleType}.view");
+        if ($explicitView && View::exists($explicitView)) {
+            return $explicitView;
+        }
+
         // 1. Get theme from business
         $theme = $business ? $business->getTheme() : 'default';
 

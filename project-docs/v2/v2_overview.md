@@ -79,6 +79,7 @@
 | **Sprint 5** | API & Headless Support | 1 week | ⏳ Pending |
 | **Sprint 6** | Plugins & Polish | 1 week | ⏳ Pending |
 | **Sprint 7** | Lightweight Public Site & Performance | 1-2 weeks | ⏳ Pending |
+| **Sprint 7.5** | Hardening & Performance Closure | 1 week | ⏳ Pending |
 
 **📝 Detailed Tasks**: See individual sprint files in [sprints/](./sprints/) folder.
 
@@ -233,6 +234,7 @@ plugins/
 - [Sprint 5 — API & Headless Support](./sprints/sprint_5.md)
 - [Sprint 6 — Plugins & Polish](./sprints/sprint_6.md)
 - [Sprint 7 — Lightweight Public Site & Performance](./sprints/sprint_7/sprint_7.md)
+- [Sprint 7.5 — Hardening & Performance Closure](./sprints/sprint_7.5/sprint_7.5.md)
 
 ### Other Documentation
 - [Architecture Documentation](../architecture.md)

@@ -25,17 +25,6 @@ class Categories extends Page
         return 'blog-categories';
     }
 
-    /**
-     * Override route name to match custom slug
-     */
-    public static function getRouteName(?\Filament\Panel $panel = null): string
-    {
-        $panel ??= \Filament\Facades\Filament::getPanel('admin');
-        $slug = static::getSlug($panel);
-
-        return $panel->generateRouteName('pages.'.$slug);
-    }
-
     public function getTitle(): string
     {
         return 'Blog Categories';

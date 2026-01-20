@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Domain\Modules\Services;
 
 use App\Domain\Modules\Models\ModuleInstance;
+use App\Support\CacheMetricsService;
+use Illuminate\Cache\TaggableStore;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
@@ -18,7 +21,8 @@ use Illuminate\Support\Facades\View;
 class RenderModuleService
 {
     public function __construct(
-        private GetModuleViewService $getModuleViewService
+        private GetModuleViewService $getModuleViewService,
+        private CacheMetricsService $cacheMetricsService
     ) {}
 
     /**
@@ -41,10 +45,22 @@ class RenderModuleService
         $cacheKey = "module:{$module->id}:{$module->updated_at->timestamp}";
         $ttl = $this->getCacheTtl($module);
 
+        $cache = $this->cacheStore($module->business_id);
+
         // Try to get from cache
-        return Cache::remember($cacheKey, $ttl, function () use ($module) {
-            return $this->renderModule($module);
-        });
+        $cached = $cache->get($cacheKey);
+        if ($cached !== null && is_string($cached)) {
+            $this->cacheMetricsService->increment('module.hit', $module->business_id);
+
+            return $cached;
+        }
+
+        $this->cacheMetricsService->increment('module.miss', $module->business_id);
+
+        $rendered = $this->renderModule($module);
+        $cache->put($cacheKey, $rendered, $ttl);
+
+        return $rendered;
     }
 
     /**
@@ -96,5 +112,14 @@ class RenderModuleService
         }
 
         return 3600; // Default 1 hour
+    }
+
+    private function cacheStore(int $businessId): Repository
+    {
+        if (Cache::getStore() instanceof TaggableStore) {
+            return Cache::tags(['modules', "business:{$businessId}"]);
+        }
+
+        return Cache::store();
     }
 }

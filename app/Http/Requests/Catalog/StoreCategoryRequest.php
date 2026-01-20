@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Catalog;
 
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'name' => ValidationHelper::name(),
+            'slug' => ValidationHelper::slugOptional(),
+            'description' => ValidationHelper::description(),
             'image' => ['nullable', 'string', 'max:255'],
-            'is_active' => ['boolean'],
-            'sort_order' => ['integer', 'min:0'],
+            'is_active' => ValidationHelper::boolean(),
+            'sort_order' => ValidationHelper::sortOrder(),
         ];
     }
 

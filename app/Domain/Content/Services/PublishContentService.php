@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Content\Services;
 
 use App\Domain\Content\Models\Content;
-use Illuminate\Support\Facades\Cache;
+use App\Support\CacheInvalidationService;
+use App\Support\ContentStatusHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -26,7 +27,7 @@ class PublishContentService
 
             // 2. Publish
             $content->update([
-                'status' => 'published',
+                'status' => ContentStatusHelper::published(),
                 'published_at' => now(),
             ]);
 
@@ -38,8 +39,8 @@ class PublishContentService
                 'published_at' => $content->published_at,
             ]);
 
-            // 4. Clear cache
-            Cache::tags(['content', "content:{$content->id}"])->flush();
+            // 4. Clear page cache for this business
+            app(CacheInvalidationService::class)->forgetPageCache($content->business_id);
 
             return $content->fresh();
         });

@@ -85,8 +85,10 @@ class ProductsController extends Controller
         }
 
         $product = Product::where('business_id', $business->id)
-            ->where('id', $id)
-            ->orWhere('slug', $id)
+            ->where(function ($query) use ($id) {
+                $query->where('id', $id)
+                    ->orWhere('slug', $id);
+            })
             ->with('category')
             ->first();
 

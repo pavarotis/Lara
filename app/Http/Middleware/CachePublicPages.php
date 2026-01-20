@@ -4,14 +4,26 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Domain\Businesses\Services\ResolveBusinessService;
+use App\Support\CacheInvalidationService;
+use App\Support\CacheMetricsService;
 use Closure;
+use Illuminate\Cache\TaggableStore;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class CachePublicPages
 {
+    public function __construct(
+        private ResolveBusinessService $resolveBusinessService,
+        private CacheInvalidationService $cacheInvalidationService,
+        private CacheMetricsService $cacheMetricsService
+    ) {}
+
     /**
      * Handle an incoming request.
      *
@@ -34,19 +46,34 @@ class CachePublicPages
             return $next($request);
         }
 
+        // Skip cache for auth routes (avoid stale CSRF tokens)
+        $path = trim($request->path(), '/');
+        foreach (config('routes.auth', []) as $authRoute) {
+            if ($path === $authRoute || Str::startsWith($path, $authRoute.'/')) {
+                return $next($request);
+            }
+        }
+
+        $business = $this->resolveBusinessService->resolve($request);
+        $businessId = $business?->id;
+
         // Generate cache key
         $cacheKey = 'page:'.$request->path().':'.app()->getLocale();
         $ttl = config('cache.page_ttl', 3600); // 1 hour default
+        $cache = $this->cacheStore($businessId);
 
         // Try to get from cache
-        $cached = Cache::get($cacheKey);
+        $cached = $cache->get($cacheKey);
 
         if ($cached !== null && is_string($cached)) {
+            $this->cacheMetricsService->increment('page.hit', $businessId);
             $response = response($cached);
             $this->setCacheHeaders($response, $ttl);
 
             return $response;
         }
+
+        $this->cacheMetricsService->increment('page.miss', $businessId);
 
         // Generate response
         $response = $next($request);
@@ -58,7 +85,8 @@ class CachePublicPages
             // Only cache if content is not empty and is a string
             if ($content !== false && is_string($content) && ! empty($content)) {
                 try {
-                    Cache::put($cacheKey, $content, $ttl);
+                    $cache->put($cacheKey, $content, $ttl);
+                    $this->cacheInvalidationService->registerPageCacheKey($cacheKey, $businessId);
                     $this->setCacheHeaders($response, $ttl);
                 } catch (\Exception $e) {
                     // If caching fails, just continue without caching
@@ -85,5 +113,19 @@ class CachePublicPages
             // If setting headers fails, just continue
             // Don't break the response
         }
+    }
+
+    private function cacheStore(?int $businessId): Repository
+    {
+        if (Cache::getStore() instanceof TaggableStore) {
+            $tags = ['pages'];
+            if ($businessId !== null) {
+                $tags[] = "business:{$businessId}";
+            }
+
+            return Cache::tags($tags);
+        }
+
+        return Cache::store();
     }
 }

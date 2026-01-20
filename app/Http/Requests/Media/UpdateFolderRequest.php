@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Media;
 
 use App\Domain\Media\Models\MediaFolder;
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,7 +14,7 @@ class UpdateFolderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
@@ -22,15 +24,15 @@ class UpdateFolderRequest extends FormRequest
         $parentId = $folder instanceof MediaFolder ? $folder->parent_id : $this->input('parent_id');
 
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('media_folders', 'name')
-                    ->where('business_id', $businessId)
-                    ->where('parent_id', $parentId)
-                    ->ignore($folder instanceof MediaFolder ? $folder->id : null),
-            ],
+            'name' => array_merge(
+                ValidationHelper::name(),
+                [
+                    Rule::unique('media_folders', 'name')
+                        ->where('business_id', $businessId)
+                        ->where('parent_id', $parentId)
+                        ->ignore($folder instanceof MediaFolder ? $folder->id : null),
+                ]
+            ),
         ];
     }
 

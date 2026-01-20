@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Storage;
 
 class GenerateVariantsService
 {
+    public function __construct(
+        private ImageOptimizationService $imageOptimizationService
+    ) {}
+
     /**
      * Generate image variants (thumb, small, medium, large)
      */
@@ -54,7 +58,12 @@ class GenerateVariantsService
         // Update media metadata with variant paths
         $metadata = $media->metadata ?? [];
         $metadata['variants'] = $variants;
-        $media->update(['metadata' => $metadata]);
+        $optimizedVariants = $this->imageOptimizationService->generateVariants($media->path);
+
+        $media->update([
+            'metadata' => $metadata,
+            'variants' => $optimizedVariants,
+        ]);
     }
 
     /**

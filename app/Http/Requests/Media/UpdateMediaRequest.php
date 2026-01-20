@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Media;
 
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMediaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name' => array_merge(['sometimes'], ValidationHelper::name()),
             'folder_id' => ['nullable', 'integer', 'exists:media_folders,id'],
         ];
     }

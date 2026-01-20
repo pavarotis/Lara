@@ -7,6 +7,7 @@ namespace App\Domain\Content\Models;
 use App\Domain\Businesses\Models\Business;
 use App\Domain\Layouts\Models\Layout;
 use App\Models\User;
+use App\Support\ContentStatusHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -64,13 +65,13 @@ class Content extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('status', 'published')
+        return $query->where('status', ContentStatusHelper::published())
             ->whereNotNull('published_at');
     }
 
     public function scopeDraft($query)
     {
-        return $query->where('status', 'draft');
+        return $query->where('status', ContentStatusHelper::draft());
     }
 
     public function scopeForBusiness($query, int $businessId)
@@ -85,7 +86,7 @@ class Content extends Model
 
     public function scopeArchived($query)
     {
-        return $query->where('status', 'archived');
+        return $query->where('status', ContentStatusHelper::archived());
     }
 
     /**
@@ -93,7 +94,7 @@ class Content extends Model
      */
     public function isPublished(): bool
     {
-        return $this->status === 'published' && $this->published_at !== null;
+        return $this->status === ContentStatusHelper::published() && $this->published_at !== null;
     }
 
     /**
@@ -101,7 +102,7 @@ class Content extends Model
      */
     public function isDraft(): bool
     {
-        return $this->status === 'draft';
+        return $this->status === ContentStatusHelper::draft();
     }
 
     /**
@@ -110,7 +111,7 @@ class Content extends Model
     public function publish(): void
     {
         $this->update([
-            'status' => 'published',
+            'status' => ContentStatusHelper::published(),
             'published_at' => now(),
         ]);
     }
@@ -121,7 +122,7 @@ class Content extends Model
     public function archive(): void
     {
         $this->update([
-            'status' => 'archived',
+            'status' => ContentStatusHelper::archived(),
         ]);
     }
 }

@@ -13,11 +13,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('layouts')) {
+            return;
+        }
+
         Schema::table('layouts', function (Blueprint $table) {
-            $table->text('compiled_html')->nullable()->after('regions');
-            $table->json('assets_manifest')->nullable()->after('compiled_html');
-            $table->text('critical_css')->nullable()->after('assets_manifest');
-            $table->timestamp('compiled_at')->nullable()->after('critical_css');
+            if (! Schema::hasColumn('layouts', 'compiled_html')) {
+                $table->text('compiled_html')->nullable()->after('regions');
+            }
+            if (! Schema::hasColumn('layouts', 'assets_manifest')) {
+                $table->json('assets_manifest')->nullable()->after('compiled_html');
+            }
+            if (! Schema::hasColumn('layouts', 'critical_css')) {
+                $table->text('critical_css')->nullable()->after('assets_manifest');
+            }
+            if (! Schema::hasColumn('layouts', 'compiled_at')) {
+                $table->timestamp('compiled_at')->nullable()->after('critical_css');
+            }
         });
     }
 
@@ -26,8 +38,19 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('layouts')) {
+            return;
+        }
+
         Schema::table('layouts', function (Blueprint $table) {
-            $table->dropColumn(['compiled_html', 'assets_manifest', 'critical_css', 'compiled_at']);
+            $columns = array_filter(
+                ['compiled_html', 'assets_manifest', 'critical_css', 'compiled_at'],
+                fn ($column) => Schema::hasColumn('layouts', $column)
+            );
+
+            if ($columns) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\CMS\Performance;
 
+use App\Domain\Performance\Models\LighthouseAudit;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Schema;
 
 class Performance extends Page
 {
@@ -36,6 +38,8 @@ class Performance extends Page
             'cache' => $cacheStats,
             'compilation' => $compilationStats,
             'assets' => $assetStats,
+            'lighthouse' => $this->getLighthouseStats(),
+            'bundle' => $this->getBundleReport(),
         ];
     }
 
@@ -82,6 +86,72 @@ class Performance extends Page
             'modules_with_assets' => $modulesWithAssets,
             'total_modules' => count($modules),
             'total_assets' => $totalAssets,
+        ];
+    }
+
+    private function getLighthouseStats(): array
+    {
+        if (! Schema::hasTable('lighthouse_audits')) {
+            return [
+                'latest' => null,
+                'recent' => collect(),
+                'average' => null,
+            ];
+        }
+
+        $recent = LighthouseAudit::orderByDesc('audited_at')
+            ->orderByDesc('id')
+            ->limit(5)
+            ->get();
+
+        $latest = $recent->first();
+
+        $average = null;
+        if ($recent->count() > 0) {
+            $average = [
+                'performance' => round((float) $recent->avg('performance'), 1),
+                'accessibility' => round((float) $recent->avg('accessibility'), 1),
+                'best_practices' => round((float) $recent->avg('best_practices'), 1),
+                'seo' => round((float) $recent->avg('seo'), 1),
+            ];
+        }
+
+        return [
+            'latest' => $latest,
+            'recent' => $recent,
+            'average' => $average,
+        ];
+    }
+
+    private function getBundleReport(): array
+    {
+        $path = storage_path('app/performance/bundle-report.json');
+        if (! is_file($path)) {
+            return [
+                'exists' => false,
+                'generated_at' => null,
+                'totals' => null,
+                'files' => [],
+            ];
+        }
+
+        $raw = file_get_contents($path);
+        $report = $raw ? json_decode($raw, true) : null;
+
+        if (! is_array($report)) {
+            return [
+                'exists' => false,
+                'generated_at' => null,
+                'totals' => null,
+                'files' => [],
+            ];
+        }
+
+        return [
+            'exists' => true,
+            'generated_at' => $report['generated_at'] ?? null,
+            'totals' => $report['totals'] ?? null,
+            'files' => $report['files'] ?? [],
         ];
     }
 }

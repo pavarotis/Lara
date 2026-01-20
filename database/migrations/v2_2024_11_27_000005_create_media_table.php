@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('folder_id')->nullable()->constrained('media_folders')->nullOnDelete();
             $table->string('name');
             $table->string('path'); // Storage path
+            $table->json('variants')->nullable(); // {webp: '', avif: '', sizes: {...}}
             $table->string('type'); // 'image', 'video', 'document', etc.
             $table->string('mime')->nullable();
             $table->unsignedBigInteger('size')->nullable(); // bytes

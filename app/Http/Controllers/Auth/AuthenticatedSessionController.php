@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Support\PermissionHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Redirect to admin panel if user is admin, otherwise to dashboard
-        if ($request->user()->hasRole('admin') || $request->user()->isAdmin()) {
+        if (PermissionHelper::isAdmin($request->user())) {
             return redirect()->intended('/admin');
         }
 

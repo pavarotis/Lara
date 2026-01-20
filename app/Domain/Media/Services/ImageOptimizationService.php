@@ -5,32 +5,22 @@ declare(strict_types=1);
 namespace App\Domain\Media\Services;
 
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
 
 /**
  * Image Optimization Service
  *
  * Generates optimized image variants (WebP, AVIF, responsive sizes).
- *
- * NOTE: This service requires the intervention/image package.
- * Install it with: composer require intervention/image
- *
- * For now, this is a placeholder implementation. Once intervention/image
- * is installed, uncomment the ImageManager usage below.
  */
 class ImageOptimizationService
 {
-    // TODO: Uncomment when intervention/image is installed
-    // private ImageManager $imageManager;
-    //
-    // public function __construct()
-    // {
-    //     // Use GD driver (can be changed to Imagick if available)
-    //     $this->imageManager = new ImageManager(new Driver);
-    // }
+    private ImageManager $imageManager;
 
     public function __construct()
     {
-        // Placeholder - requires intervention/image package
+        // Use GD driver by default (Imagick can be swapped if available)
+        $this->imageManager = ImageManager::gd();
     }
 
     /**
@@ -41,45 +31,40 @@ class ImageOptimizationService
      */
     public function generateVariants(string $path): array
     {
-        // TODO: Implement when intervention/image is installed
-        // For now, return empty variants
-        return [
-            'webp' => null,
-            'avif' => null,
-            'sizes' => [],
-        ];
-
-        // Uncomment when intervention/image is installed:
-        /*
-        $fullPath = Storage::path($path);
+        $disk = Storage::disk('public');
+        $fullPath = $disk->path($path);
 
         if (! file_exists($fullPath)) {
-            throw new \RuntimeException("Image not found: {$path}");
+            return [
+                'webp' => null,
+                'avif' => null,
+                'sizes' => [],
+            ];
         }
 
         $pathInfo = pathinfo($path);
-        $directory = $pathInfo['dirname'];
+        $directory = $pathInfo['dirname'] === '.' ? '' : $pathInfo['dirname'];
         $filename = $pathInfo['filename'];
         $extension = $pathInfo['extension'] ?? 'jpg';
+        $variantsDir = trim($directory.'/variants', '/');
 
         // Load original image
         $image = $this->imageManager->read($fullPath);
 
         // Generate WebP
-        $webpPath = $this->generateWebP($image, $directory, $filename);
+        $webpPath = $this->generateWebP($image, $variantsDir, $filename);
 
         // Generate AVIF (if supported)
-        $avifPath = $this->generateAVIF($image, $directory, $filename);
+        $avifPath = $this->generateAVIF($image, $variantsDir, $filename);
 
         // Generate responsive sizes
-        $sizes = $this->generateResponsiveSizes($image, $directory, $filename, $extension);
+        $sizes = $this->generateResponsiveSizes($fullPath, $variantsDir, $filename, $extension);
 
         return [
             'webp' => $webpPath,
             'avif' => $avifPath,
             'sizes' => $sizes,
         ];
-        */
     }
 
     /**
@@ -87,11 +72,12 @@ class ImageOptimizationService
      *
      * @param  mixed  $image  ImageInterface from intervention/image
      */
-    private function generateWebP($image, string $directory, string $filename): ?string
+    private function generateWebP(ImageInterface $image, string $directory, string $filename): ?string
     {
         try {
             $webpPath = "{$directory}/{$filename}.webp";
-            $webpFullPath = Storage::path($webpPath);
+            $disk = Storage::disk('public');
+            $webpFullPath = $disk->path($webpPath);
 
             // Ensure directory exists
             $webpDir = dirname($webpFullPath);
@@ -114,16 +100,12 @@ class ImageOptimizationService
      *
      * @param  mixed  $image  ImageInterface from intervention/image
      */
-    private function generateAVIF($image, string $directory, string $filename): ?string
+    private function generateAVIF(ImageInterface $image, string $directory, string $filename): ?string
     {
-        // AVIF support requires PHP 8.1+ and imagick extension
-        if (! function_exists('imageavif')) {
-            return null;
-        }
-
         try {
             $avifPath = "{$directory}/{$filename}.avif";
-            $avifFullPath = Storage::path($avifPath);
+            $disk = Storage::disk('public');
+            $avifFullPath = $disk->path($avifPath);
 
             // Ensure directory exists
             $avifDir = dirname($avifFullPath);
@@ -147,24 +129,28 @@ class ImageOptimizationService
      * @param  mixed  $image  ImageInterface from intervention/image
      * @return array<string, string> Array of [width => path]
      */
-    private function generateResponsiveSizes($image, string $directory, string $filename, string $extension): array
-    {
+    private function generateResponsiveSizes(
+        string $fullPath,
+        string $directory,
+        string $filename,
+        string $extension
+    ): array {
         $sizes = [];
         $widths = [320, 640, 768, 1024, 1280, 1920]; // Common responsive breakpoints
-
-        $originalWidth = $image->width();
-        $originalHeight = $image->height();
+        $disk = Storage::disk('public');
 
         foreach ($widths as $width) {
-            // Don't upscale
-            if ($width > $originalWidth) {
-                continue;
-            }
-
             try {
-                $height = (int) (($width / $originalWidth) * $originalHeight);
+                $image = $this->imageManager->read($fullPath);
+                $originalWidth = $image->width();
+
+                // Don't upscale
+                if ($width > $originalWidth) {
+                    continue;
+                }
+
                 $sizePath = "{$directory}/{$filename}-{$width}w.{$extension}";
-                $sizeFullPath = Storage::path($sizePath);
+                $sizeFullPath = $disk->path($sizePath);
 
                 // Ensure directory exists
                 $sizeDir = dirname($sizeFullPath);
@@ -172,9 +158,8 @@ class ImageOptimizationService
                     mkdir($sizeDir, 0755, true);
                 }
 
-                // Resize and save
-                $resized = $image->scale($width, $height);
-                $resized->save($sizeFullPath);
+                // Resize and save (no upscaling)
+                $image->scaleDown($width)->save($sizeFullPath);
 
                 $sizes[$width] = $sizePath;
             } catch (\Exception $e) {

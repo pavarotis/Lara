@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Catalog;
 
 use App\Domain\Catalog\Services\ImageUploadService;
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,7 +14,7 @@ class UpdateProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
@@ -21,14 +23,17 @@ class UpdateProductRequest extends FormRequest
 
         return [
             'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('products')->ignore($productId)],
-            'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'name' => ValidationHelper::name(),
+            'slug' => array_merge(
+                ValidationHelper::slugOptional(),
+                [Rule::unique('products')->ignore($productId)]
+            ),
+            'description' => ValidationHelper::description(),
+            'price' => ValidationHelper::price(),
             'image' => ImageUploadService::getValidationRules(false),
-            'is_available' => ['boolean'],
-            'is_featured' => ['boolean'],
-            'sort_order' => ['integer', 'min:0'],
+            'is_available' => ValidationHelper::boolean(),
+            'is_featured' => ValidationHelper::boolean(),
+            'sort_order' => ValidationHelper::sortOrder(),
         ];
     }
 

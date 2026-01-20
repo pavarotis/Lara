@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Media;
 
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -11,7 +13,7 @@ class CreateFolderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
@@ -21,14 +23,14 @@ class CreateFolderRequest extends FormRequest
 
         return [
             'business_id' => ['required', 'exists:businesses,id'],
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('media_folders', 'name')
-                    ->where('business_id', $businessId)
-                    ->where('parent_id', $parentId),
-            ],
+            'name' => array_merge(
+                ValidationHelper::name(),
+                [
+                    Rule::unique('media_folders', 'name')
+                        ->where('business_id', $businessId)
+                        ->where('parent_id', $parentId),
+                ]
+            ),
             'parent_id' => ['nullable', 'integer', 'exists:media_folders,id'],
         ];
     }

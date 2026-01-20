@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Domain\Businesses\Models\Business;
 use App\Domain\Content\Models\Content;
 use App\Domain\Content\Services\GetContentService;
+use App\Support\ContentStatusHelper;
 use Illuminate\Console\Command;
 
 class DebugContent extends Command
@@ -48,7 +49,7 @@ class DebugContent extends Command
         $this->line("  Business ID: {$content->business_id}");
 
         // Check if published
-        $isPublished = $content->status === 'published' && $content->published_at !== null;
+        $isPublished = $content->status === ContentStatusHelper::published() && $content->published_at !== null;
         $this->line('  Is Published: '.($isPublished ? 'YES' : 'NO'));
 
         // Check via service

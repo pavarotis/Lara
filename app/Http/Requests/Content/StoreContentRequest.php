@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Content;
 
+use App\Support\ContentStatusHelper;
+use App\Support\PermissionHelper;
+use App\Support\ValidationHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -11,7 +14,7 @@ class StoreContentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->is_admin ?? false;
+        return PermissionHelper::isAdmin($this->user());
     }
 
     public function rules(): array
@@ -21,7 +24,7 @@ class StoreContentRequest extends FormRequest
         return [
             'business_id' => ['required', 'exists:businesses,id'],
             'type' => ['required', 'string', Rule::in(['page', 'article', 'block'])],
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ValidationHelper::name(),
             'slug' => [
                 'nullable',
                 'string',
@@ -38,7 +41,7 @@ class StoreContentRequest extends FormRequest
             'blocks.*.type' => ['required_with:blocks', 'string'],
             'blocks.*.props' => ['required_with:blocks', 'array'],
             'meta' => ['nullable', 'array'],
-            'status' => ['nullable', 'string', Rule::in(['draft', 'published', 'archived'])],
+            'status' => ContentStatusHelper::nullableValidationRule(),
         ];
     }
 

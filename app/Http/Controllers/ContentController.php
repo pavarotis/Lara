@@ -8,9 +8,9 @@ use App\Domain\Businesses\Models\Business;
 use App\Domain\Content\Models\Content;
 use App\Domain\Content\Services\GetContentService;
 use App\Domain\Content\Services\RenderContentService;
+use App\Support\PermissionHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ContentController extends Controller
@@ -27,8 +27,7 @@ class ContentController extends Controller
     {
         // Get home page (slug: '/')
         // For admin users, also check unpublished content
-        $user = Auth::user();
-        $isAdmin = $user && (method_exists($user, 'hasRole') ? $user->hasRole('admin') : ($user->isAdmin ?? false));
+        $isAdmin = PermissionHelper::canViewUnpublished();
 
         if ($isAdmin) {
             // Admin can see unpublished content
@@ -55,6 +54,10 @@ class ContentController extends Controller
 
         $renderedContent = $this->renderContentService->execute($content);
 
+        if ($content->layout_id) {
+            return response($renderedContent);
+        }
+
         return view('themes.default.layouts.page', [
             'content' => $content,
             'renderedContent' => $renderedContent,
@@ -74,11 +77,15 @@ class ContentController extends Controller
         }
 
         // Only show published content to non-admin users
-        if (! $content->isPublished() && (! Auth::check() || ! Auth::user()->hasRole('admin'))) {
+        if (! $content->isPublished() && ! PermissionHelper::canViewUnpublished()) {
             abort(404, 'Content not found');
         }
 
         $renderedContent = $this->renderContentService->execute($content);
+
+        if ($content->layout_id) {
+            return response($renderedContent);
+        }
 
         return view('themes.default.layouts.page', [
             'content' => $content,
@@ -90,7 +97,7 @@ class ContentController extends Controller
     /**
      * Legacy show method (fallback for non-canonical routes)
      */
-    public function showLegacy(Request $request, string $slug): View|Response
+    public function showLegacy(Request $request, string $slug): View|Response|\Illuminate\Http\RedirectResponse
     {
         $business = $request->attributes->get('business') ?? Business::active()->first();
 
@@ -105,17 +112,14 @@ class ContentController extends Controller
         }
 
         // Only show published content to non-admin users
-        if (! $content->isPublished() && (! Auth::check() || ! Auth::user()->hasRole('admin'))) {
+        if (! $content->isPublished() && ! PermissionHelper::canViewUnpublished()) {
             abort(404, 'Content not found');
         }
 
-        $renderedContent = $this->renderContentService->execute($content);
+        // Redirect to canonical business route to avoid duplicate content URLs
+        $canonicalPath = '/'.$business->slug.'/'.ltrim($content->slug, '/');
 
-        return view('themes.default.layouts.page', [
-            'content' => $content,
-            'renderedContent' => $renderedContent,
-            'isPreview' => false,
-        ]);
+        return redirect($canonicalPath, 301);
     }
 
     /**
@@ -124,9 +128,7 @@ class ContentController extends Controller
     public function preview(Request $request, int $contentId): View|Response
     {
         // Only allow authenticated admins
-        if (! Auth::check() || (! Auth::user()->hasRole('admin') && ! Auth::user()->isAdmin())) {
-            abort(403, 'Access denied. Admin privileges required for preview.');
-        }
+        PermissionHelper::requireAdmin();
 
         $content = Content::findOrFail($contentId);
         $business = $content->business;
@@ -137,6 +139,10 @@ class ContentController extends Controller
 
         // Render content (including drafts)
         $renderedContent = $this->renderContentService->execute($content);
+
+        if ($content->layout_id) {
+            return response($renderedContent);
+        }
 
         return view('themes.default.layouts.page', [
             'content' => $content,

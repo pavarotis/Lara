@@ -78,6 +78,11 @@
         @include($headerVariant['view'], ['variant' => $headerVariant])
 
         <!-- Mobile Menu Drawer -->
+        @php
+            // Calculate cart count from session
+            $cart = session('cart', []);
+            $cartCount = isset($cartCount) ? $cartCount : array_sum(array_column($cart, 'quantity'));
+        @endphp
         <div id="mobile-menu-overlay" class="fixed inset-0 z-50 hidden">
             <!-- Backdrop -->
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" id="mobile-menu-backdrop"></div>

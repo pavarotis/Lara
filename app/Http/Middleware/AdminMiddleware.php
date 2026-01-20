@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Support\PermissionHelper;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,8 @@ class AdminMiddleware
             abort(401, 'Unauthenticated');
         }
 
-        // Use RBAC if available, fallback to legacy is_admin
-        if (! $request->user()->hasRole('admin') && ! $request->user()->isAdmin()) {
+        // Use PermissionHelper for consistent admin checking
+        if (! PermissionHelper::isAdmin($request->user())) {
             abort(403, 'Access denied. Admin privileges required.');
         }
 

@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('type')->default('default'); // 'default', 'full-width', 'landing'
             $table->json('regions'); // ['header_top', 'content_top', 'main_content', ...]
             $table->boolean('is_default')->default(false);
+            $table->text('compiled_html')->nullable();
+            $table->json('assets_manifest')->nullable();
+            $table->text('critical_css')->nullable();
+            $table->timestamp('compiled_at')->nullable();
             $table->timestamps();
 
             $table->index('business_id');

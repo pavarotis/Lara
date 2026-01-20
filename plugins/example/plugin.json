@@ -1,0 +1,11 @@
+{
+  "name": "example-plugin",
+  "title": "Example Plugin",
+  "version": "1.0.0",
+  "description": "Adds an example module",
+  "author": "LaraShop",
+  "license": "MIT",
+  "requires": {
+    "larashop": ">=2.0.0"
+  }
+}

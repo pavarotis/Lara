@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Content\Services;
 
 use App\Domain\Content\Models\Content;
+use App\Support\ContentStatusHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,7 @@ class CreateContentService
             }
 
             // Set defaults
-            $data['status'] = $data['status'] ?? 'draft';
+            $data['status'] = $data['status'] ?? ContentStatusHelper::default();
             $data['body_json'] = $data['body_json'] ?? [];
             $data['meta'] = $data['meta'] ?? [];
             $data['created_by'] = $data['created_by'] ?? auth()->id();
