@@ -1,6 +1,11 @@
 <x-filament-panels::page>
-    <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">s to re l oc at io n</h2>
-        <p class="text-gray-600">s to re l oc at io n functionality will be implemented here.</p>
-    </div>
+    <form wire:submit="save">
+        {{ $this->form }}
+
+        <div class="mt-6">
+            <x-filament::button type="submit">
+                Save Store Location
+            </x-filament::button>
+        </div>
+    </form>
 </x-filament-panels::page>

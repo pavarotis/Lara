@@ -6,15 +6,9 @@ use Filament\Pages\Page;
 
 class Returns extends Page
 {
-    protected static string|\UnitEnum|null $navigationGroup = 'System';
-
-    protected static ?int $navigationSort = 10;
+    protected static bool $shouldRegisterNavigation = false;
 
     protected string $view = 'filament.pages.system.localisation.returns';
-
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-path-rounded-square';
-
-    protected static ?string $navigationLabel = 'Returns';
 
     public function getTitle(): string
     {

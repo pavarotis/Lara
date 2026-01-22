@@ -38,7 +38,7 @@ class ApiKeyResource extends Resource
 
     protected static ?string $pluralModelLabel = 'API Keys';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'System';
+    protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
     protected static ?int $navigationSort = 20;
 

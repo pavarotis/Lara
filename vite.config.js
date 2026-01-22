@@ -14,6 +14,8 @@ export default defineConfig({
                 'resources/css/widgets/map.css',
                 // Reports CSS
                 'resources/css/reports.css',
+                // Error Logs CSS
+                'resources/css/error-logs.css',
                 // Widget JS (only where needed)
                 'resources/js/widgets/map.js',
             ],
