@@ -3,6 +3,7 @@ import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -46,6 +47,8 @@ export default {
                 // Surface colors
                 surface: '#FAFAF9',
                 content: '#1C1917',
+                // Dark mode background color
+                'dark-bg': 'rgb(24 24 27)',
             },
         },
     },

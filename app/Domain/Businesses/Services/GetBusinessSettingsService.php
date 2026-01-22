@@ -103,7 +103,7 @@ class GetBusinessSettingsService
             ],
             'industrial' => [
                 'name' => 'Industrial',
-                'primary' => '#374151',
+                'primary' => '#2c2c2c',
                 'accent' => '#EF4444',
             ],
         ];

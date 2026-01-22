@@ -6,8 +6,8 @@ namespace App\Filament\Resources\LayoutResource\Pages;
 
 use App\Domain\Layouts\Models\Layout;
 use App\Filament\Resources\LayoutResource;
-use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditLayout extends EditRecord
@@ -17,7 +17,7 @@ class EditLayout extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->before(function (Layout $record) {
                     if ($record->contents()->count() > 0) {
                         throw new \Exception('Cannot delete layout that is assigned to content. Remove assignments first.');
@@ -74,13 +74,16 @@ class EditLayout extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Ensure regions is an array
-        if (isset($data['regions']) && ! is_array($data['regions'])) {
+        if (! isset($data['regions']) || ! is_array($data['regions'])) {
             $data['regions'] = [];
         }
 
+        // Get business_id from data or existing record
+        $businessId = $data['business_id'] ?? $this->record->business_id;
+
         // If setting as default, unset other defaults for this business
         if (isset($data['is_default']) && $data['is_default']) {
-            Layout::forBusiness($data['business_id'])
+            Layout::forBusiness($businessId)
                 ->where('id', '!=', $this->record->id)
                 ->where('is_default', true)
                 ->update(['is_default' => false]);

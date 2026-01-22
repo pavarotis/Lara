@@ -16,7 +16,9 @@ class Performance extends Page
 
     protected static ?string $navigationLabel = 'Performance';
 
-    protected static ?int $navigationSort = 100;
+    protected static string|\UnitEnum|null $navigationGroup = 'Reports';
+
+    protected static ?int $navigationSort = 4;
 
     public function mount(): void
     {

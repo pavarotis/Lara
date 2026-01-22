@@ -108,6 +108,31 @@ Before creating a new Filament Resource/Page:
 
 ---
 
+## 6. Horizontal Tabs Menu
+
+**When to use**: Pages with 3+ categories/functions that need organization.
+
+**✅ CORRECT:**
+```blade
+<x-filament::tabs>
+    <x-filament::tabs.item
+        :active="$activeTab === 'tab1'"
+        wire:click="$set('activeTab', 'tab1')"
+    >
+        Tab Label
+    </x-filament::tabs.item>
+</x-filament::tabs>
+```
+
+**❌ WRONG:**
+```blade
+<x-filament::tabs.item label="Tab Label" />
+```
+
+**See**: [Horizontal Tabs Menu Guide](./horizontal_tabs_menu.md) for complete implementation.
+
+---
+
 ## 🔍 How to Verify
 
 1. **Check existing working code:**

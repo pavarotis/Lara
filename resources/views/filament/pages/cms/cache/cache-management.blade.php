@@ -1,51 +1,131 @@
 <x-filament-panels::page>
-    <div class="space-y-6">
-        <!-- Cache Information -->
-        <x-filament::section>
-            <x-slot name="heading">
-                Cache Information
-            </x-slot>
-            <x-slot name="description">
-                Current cache configuration and status
+        <!-- Theme & Assets -->
+        <x-section-three-parts
+            heading="Theme & Assets"
+            description="Manage theme cache and SASS/asset compilation"
+        >
+            <x-slot name="actions">
+                <x-section-three-parts-split-content>
+                    <x-slot name="left">
+                        <!-- Theme Cache -->
+                        <div class="flex flex-col p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="mb-4">
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">Theme Cache</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Enable or disable theme caching</p>
+                            </div>
+                            <div class="flex items-center gap-4" style="align-items: center;">
+                                <button
+                                    type="button"
+                                    wire:click="toggleThemeCache"
+                                    class="relative inline-flex items-center justify-center h-8 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                    style="width: 4rem; height: 2rem; border-radius: 0.5rem; padding: 0; line-height: 2rem; vertical-align: middle; {{ $themeCacheEnabled ? 'background-color: rgb(22 163 74);' : 'background-color: rgb(220 38 38);' }}"
+                                >
+                                    <span class="text-xs font-semibold text-white">
+                                        {{ $themeCacheEnabled ? 'ON' : 'OFF' }}
+                                    </span>
+                                </button>
+                                <x-filament::button
+                                    wire:click="refreshThemeCache"
+                                    color="warning"
+                                    icon="heroicon-o-arrow-path"
+                                    size="sm"
+                                    style="padding: 9px; margin-top: 24px;"
+                                >
+                                    Refresh
+                                </x-filament::button>
+                            </div>
+                        </div>
+                    </x-slot>
+
+                    <x-slot name="right">
+                        <!-- SASS Cache -->
+                        <div class="flex flex-col p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="mb-4">
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">SASS</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Enable or disable SASS/asset compilation cache</p>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <button
+                                    type="button"
+                                    wire:click="toggleSassCache"
+                                    class="relative inline-flex items-center justify-center h-8 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                    style="width: 4rem; height: 2rem; border-radius: 0.5rem; margin-top: 0px; padding: 0; line-height: 2rem; {{ $sassCacheEnabled ? 'background-color: rgb(22 163 74);' : 'background-color: rgb(220 38 38);' }}"
+                                >
+                                    <span class="text-xs font-semibold text-white">
+                                        {{ $sassCacheEnabled ? 'ON' : 'OFF' }}
+                                    </span>
+                                </button>
+                                <x-filament::button
+                                    wire:click="refreshSassCache"
+                                    color="warning"
+                                    icon="heroicon-o-arrow-path"
+                                    size="sm"
+                                    style="padding: 9px; margin-top: 24px;"
+                                >
+                                    Refresh
+                                </x-filament::button>
+                            </div>
+                        </div>
+                    </x-slot>
+                </x-section-three-parts-split-content>
             </x-slot>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Cache Driver</div>
-                    <div class="text-lg font-semibold text-gray-900 dark:text-white">
-                        {{ $this->getCacheInfo()['driver'] }}
-                    </div>
+            <x-slot name="info">
+                <p class="text-sm mb-4">
+                    <strong class="text-gray-900 dark:text-white">Theme Cache : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Controls whether theme tokens and styling are cached for better performance.</span>
+                </p>
+                <br>
+                <p class="text-sm">
+                    <strong class="text-gray-900 dark:text-white">SASS : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Controls whether SASS/SCSS files are compiled and cached. Refresh rebuilds all assets.</span>
+                </p>
+            </x-slot>
+        </x-section-three-parts>
+
+        <!-- Modifications -->
+        <x-section-three-parts
+            heading="Modifications"
+            description="Clear or rebuild optimized/compiled files (config, routes, views)"
+        >
+            <x-slot name="actions">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <x-filament::button
+                        wire:click="clearModificationsCache"
+                        color="warning"
+                        icon="heroicon-o-arrow-path"
+                        class="w-full"
+                    >
+                        Clear Modifications
+                    </x-filament::button>
+
+                    <x-filament::button
+                        wire:click="resetModificationsCache"
+                        color="success"
+                        icon="heroicon-o-arrow-path"
+                        class="w-full"
+                    >
+                        Reset Modifications
+                    </x-filament::button>
                 </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Store Class</div>
-                    <div class="text-sm font-mono text-gray-900 dark:text-white break-all">
-                        {{ class_basename($this->getCacheInfo()['store']) }}
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Tag Support</div>
-                    <div class="text-lg font-semibold">
-                        @if($this->getCacheInfo()['supports_tags'])
-                            <span class="text-green-600 dark:text-green-400">Yes</span>
-                        @else
-                            <span class="text-yellow-600 dark:text-yellow-400">No</span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </x-filament::section>
+            </x-slot>
+
+            <x-slot name="info">
+                <p class="text-sm mb-4">
+                    <strong class="text-gray-900 dark:text-white">Clear Modifications : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Clears optimized/compiled files: config, routes, and views cache.</span>
+                </p>
+                <br>
+                <p class="text-sm">
+                    <strong class="text-gray-900 dark:text-white">Reset Modifications : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Rebuilds optimized/compiled files: config, routes, and views cache for better performance.</span>
+                </p>
+            </x-slot>
+        </x-section-three-parts>
 
         <!-- Cache Actions -->
-        <x-filament::section>
-            <x-slot name="heading">
-                Cache Actions
-            </x-slot>
-            <x-slot name="description">
-                Clear specific cache types or all cache
-            </x-slot>
-
-            <div class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <x-section-three-parts
+            heading="Cache Actions"
+            description="Clear specific cache types or all cache"
+        >
+            <x-slot name="actions">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <x-filament::button
                         wire:click="clearLayoutCache"
                         color="warning"
@@ -81,29 +161,44 @@
                     >
                         Clear All Cache
                     </x-filament::button>
-                </div>
 
-                <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                                Warning
-                            </h3>
-                            <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
-                                <p>
-                                    Clearing cache will temporarily slow down the site as pages need to be regenerated.
-                                    Use with caution in production.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <x-filament::button
+                        wire:click="resetAllCache"
+                        color="success"
+                        icon="heroicon-o-arrow-path"
+                        class="w-full"
+                    >
+                        Reset All Cache
+                    </x-filament::button>
                 </div>
-            </div>
-        </x-filament::section>
-    </div>
+            </x-slot>
+
+            <x-slot name="info">
+                <p class="text-sm mb-4">
+                    <strong class="text-gray-900 dark:text-white">Clear Layout Cache : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Clears cached layout templates and structure data.</span>
+                </p>
+                <br>
+                <p class="text-sm mb-4">
+                    <strong class="text-gray-900 dark:text-white">Clear Page Cache : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Clears cached page content and rendered HTML.</span>
+                </p>
+                <br>
+                <p class="text-sm mb-4">
+                    <strong class="text-gray-900 dark:text-white">Clear Module Cache : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Clears cached module data and configurations.</span>
+                </p>
+                <br>
+                <p class="text-sm mb-4">
+                    <strong class="text-gray-900 dark:text-white">Clear All Cache : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Clears all cache types: application, config, view, and route cache.</span>
+                </p>
+                <br>
+                <p class="text-sm">
+                    <strong class="text-gray-900 dark:text-white">Reset All Cache : </strong><span style="color: rgb(156 163 175);" class="dark:!text-gray-500">Clears all cache types and rebuilds optimized files for optimal performance. Recommended for production deployments.</span>
+                </p>
+            </x-slot>
+        </x-section-three-parts>
+
+        <!-- Warning -->
+        <x-section-header 
+            heading="Warning"
+            description="Clearing cache will temporarily slow down the site as pages need to be regenerated. Use with caution in production."
+        />
 </x-filament-panels::page>

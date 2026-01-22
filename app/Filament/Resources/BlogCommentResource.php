@@ -29,7 +29,7 @@ class BlogCommentResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
-    protected static ?string $navigationLabel = 'Comments';
+    protected static ?string $navigationLabel = 'Post Comments';
 
     protected static ?string $modelLabel = 'Comment';
 

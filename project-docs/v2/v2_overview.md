@@ -83,6 +83,9 @@
 | **Sprint 8** | CMS Admin Panel Completion | 1 day | ✅ Completed |
 | **Sprint 8.1** | Catalog Admin Panel Completion | 1 day | ✅ Completed |
 | **Sprint 8.2** | Sales Admin Panel Completion | 1 day | ✅ Completed |
+| **Sprint 8.3** | Customers Admin Panel Completion | 1 day | ✅ Completed |
+| **Sprint 8.4** | Marketing Admin Panel Completion | 1 day | ✅ Completed |
+| **Sprint 8.5** | Reports Admin Panel Completion | 1 day | ✅ Completed |
 
 **📝 Detailed Tasks**: See individual sprint files in [sprints/](./sprints/) folder.
 
@@ -239,6 +242,11 @@ plugins/
 - [Sprint 7 — Lightweight Public Site & Performance](./sprints/sprint_7/sprint_7.md)
 - [Sprint 7.5 — Hardening & Performance Closure](./sprints/sprint_7.5/sprint_7.5.md)
 - [Sprint 8 — CMS Admin Panel Completion](./sprints/sprint_8/sprint_8.md)
+- [Sprint 8.1 — Catalog Admin Panel Completion](./sprints/sprint_8.1/sprint_8.1.md)
+- [Sprint 8.2 — Sales Admin Panel Completion](./sprints/sprint_8.2/sprint_8.2.md)
+- [Sprint 8.3 — Customers Admin Panel Completion](./sprints/sprint_8.3/sprint_8.3.md)
+- [Sprint 8.4 — Marketing Admin Panel Completion](./sprints/sprint_8.4/sprint_8.4.md)
+- [Sprint 8.5 — Reports Admin Panel Completion](./sprints/sprint_8.5/sprint_8.5.md)
 
 ### Other Documentation
 - [Architecture Documentation](../architecture.md)

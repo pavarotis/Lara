@@ -6,18 +6,59 @@ namespace App\Domain\Settings\Services;
 
 use App\Domain\Settings\Models\Setting;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class GetSettingsService
 {
+    /**
+     * Check if settings table exists
+     */
+    private function tableExists(): bool
+    {
+        return Schema::hasTable('settings');
+    }
+
+    /**
+     * Check if cache store supports tagging
+     */
+    private function supportsTagging(): bool
+    {
+        $store = Cache::getStore();
+
+        return method_exists($store, 'tags');
+    }
+
+    /**
+     * Get cache instance (with or without tags)
+     */
+    private function getCache()
+    {
+        if ($this->supportsTagging()) {
+            return Cache::tags(['settings']);
+        }
+
+        return Cache::store();
+    }
+
     /**
      * Get all settings (cached)
      */
     public function all(): array
     {
-        return Cache::tags(['settings'])->remember('settings:all', now()->addHour(), function () {
-            return Setting::all()
-                ->mapWithKeys(fn ($setting) => [$setting->key => $this->castValue($setting)])
-                ->toArray();
+        if (! $this->tableExists()) {
+            return [];
+        }
+
+        $cache = $this->getCache();
+
+        return $cache->remember('settings:all', now()->addHour(), function () {
+            try {
+                return Setting::all()
+                    ->mapWithKeys(fn ($setting) => [$setting->key => $this->castValue($setting)])
+                    ->toArray();
+            } catch (\Exception $e) {
+                return [];
+            }
         });
     }
 
@@ -36,11 +77,21 @@ class GetSettingsService
      */
     public function getGroup(string $group): array
     {
-        return Cache::tags(['settings'])->remember("settings:group:{$group}", now()->addHour(), function () use ($group) {
-            return Setting::group($group)
-                ->get()
-                ->mapWithKeys(fn ($setting) => [$setting->key => $this->castValue($setting)])
-                ->toArray();
+        if (! $this->tableExists()) {
+            return [];
+        }
+
+        $cache = $this->getCache();
+
+        return $cache->remember("settings:group:{$group}", now()->addHour(), function () use ($group) {
+            try {
+                return Setting::group($group)
+                    ->get()
+                    ->mapWithKeys(fn ($setting) => [$setting->key => $this->castValue($setting)])
+                    ->toArray();
+            } catch (\Exception $e) {
+                return [];
+            }
         });
     }
 
@@ -71,6 +122,26 @@ class GetSettingsService
     public function clearCache(): void
     {
         Cache::forget('settings:all');
-        Cache::tags(['settings'])->flush();
+
+        // Clear group caches
+        if ($this->tableExists()) {
+            try {
+                $groups = Setting::distinct()->pluck('group');
+                foreach ($groups as $group) {
+                    Cache::forget("settings:group:{$group}");
+                }
+            } catch (\Exception $e) {
+                // Ignore if query fails
+            }
+        }
+
+        // If tagging is supported, flush tags
+        if ($this->supportsTagging()) {
+            try {
+                Cache::tags(['settings'])->flush();
+            } catch (\Exception $e) {
+                // Ignore if tagging fails
+            }
+        }
     }
 }

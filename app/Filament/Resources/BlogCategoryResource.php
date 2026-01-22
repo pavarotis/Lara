@@ -32,7 +32,7 @@ class BlogCategoryResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationLabel = 'Categories';
+    protected static ?string $navigationLabel = 'Blog Categories';
 
     protected static ?string $modelLabel = 'Blog Category';
 

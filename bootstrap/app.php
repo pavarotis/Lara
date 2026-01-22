@@ -26,7 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\ApplyThemeMiddleware::class,
         ]);
 
-        // Cache public pages (after theme middleware)
+        // Handle URL redirects (before caching)
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleRedirects::class,
+        ]);
+
+        // Cache public pages (after theme middleware and redirects)
         $middleware->web(append: [
             \App\Http\Middleware\CachePublicPages::class,
         ]);

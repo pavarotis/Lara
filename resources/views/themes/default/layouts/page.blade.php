@@ -22,7 +22,7 @@
 @push('styles')
     <style>
         .prose {
-            color: #374151;
+            color: #2c2c2c;
         }
         .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
             font-weight: 700;

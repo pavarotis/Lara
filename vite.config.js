@@ -12,6 +12,8 @@ export default defineConfig({
                 'resources/css/widgets/hero.css',
                 'resources/css/widgets/gallery.css',
                 'resources/css/widgets/map.css',
+                // Reports CSS
+                'resources/css/reports.css',
                 // Widget JS (only where needed)
                 'resources/js/widgets/map.js',
             ],

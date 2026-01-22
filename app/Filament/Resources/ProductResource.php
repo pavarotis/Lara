@@ -131,6 +131,14 @@ class ProductResource extends Resource
                             ->directory('products')
                             ->maxSize(5120)
                             ->helperText('Product image (max 5MB)'),
+                        TextInput::make('image_alt')
+                            ->label('Image Alt Text')
+                            ->maxLength(255)
+                            ->helperText('Alternative text for the image (important for SEO and accessibility)'),
+                        TextInput::make('image_title')
+                            ->label('Image Title')
+                            ->maxLength(255)
+                            ->helperText('Title attribute for the image (shown on hover)'),
                     ]),
                 Section::make('Filters')
                     ->description('Assign filter values to this product for filtering on the public site.')
@@ -192,6 +200,24 @@ class ProductResource extends Resource
                                     $component->state($attributes);
                                 }
                             }),
+                    ]),
+                Section::make('SEO Settings')
+                    ->description('Search engine optimization settings for this product')
+                    ->collapsible()
+                    ->schema([
+                        TextInput::make('meta_title')
+                            ->label('Meta Title')
+                            ->maxLength(60)
+                            ->helperText('Recommended: 50-60 characters. Leave empty to use product name.'),
+                        Textarea::make('meta_description')
+                            ->label('Meta Description')
+                            ->maxLength(160)
+                            ->rows(3)
+                            ->helperText('Recommended: 150-160 characters. Leave empty to use product description.'),
+                        Textarea::make('meta_keywords')
+                            ->label('Meta Keywords')
+                            ->rows(2)
+                            ->helperText('Comma-separated keywords for this product'),
                     ]),
                 Section::make('Settings')
                     ->columns(2)

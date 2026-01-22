@@ -16,34 +16,28 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                \Filament\Tables\Columns\TextColumn::make('roles.name')
-                    ->label('Roles')
-                    ->badge(),
-                IconColumn::make('is_admin')
-                    ->label('Legacy Admin')
-                    ->boolean()
-                    ->toggleable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
+                TextColumn::make('email')
+                    ->searchable()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                    ->copyable(),
+                TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->badge()
+                    ->color('primary')
+                    ->separator(','),
+                IconColumn::make('is_admin')
+                    ->label('Admin')
+                    ->boolean(),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload(),
+                \Filament\Tables\Filters\TernaryFilter::make('is_admin')
+                    ->label('Admin Users'),
             ])
             ->recordActions([
                 EditAction::make(),

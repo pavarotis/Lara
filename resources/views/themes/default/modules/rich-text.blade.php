@@ -23,7 +23,7 @@
 
 <style>
     .prose {
-        color: #374151;
+        color: #2c2c2c;
         line-height: 1.75;
     }
     .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {

@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->darkMode()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -54,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('System')
                     ->collapsible(false),
                 NavigationGroup::make('Reports')
-                    ->collapsible(false),
+                    ->collapsible(true),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
