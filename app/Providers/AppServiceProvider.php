@@ -34,7 +34,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Register plugins from config
-        app(PluginRegistryService::class)->registerAll();
+        // Wrap in try-catch to prevent bootstrap issues if config is not available
+        try {
+            if (app()->bound('config')) {
+                app(PluginRegistryService::class)->registerAll();
+            }
+        } catch (\Exception $e) {
+            // Silently fail during bootstrap - plugins will be registered on next request
+            // This prevents "config does not exist" errors during cache clearing
+        }
     }
 
     /**

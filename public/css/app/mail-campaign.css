@@ -1,0 +1,149 @@
+/**
+ * Mail Campaign Resource - Custom Styling
+ * 
+ * Provides enhanced styling for Mail Campaign forms and tables
+ */
+
+/* ============================================
+   CodeEditor Styling
+   ============================================ */
+
+/* Ensure CodeEditor has adequate height for email content */
+.fi-fo-code-editor textarea {
+    min-height: 400px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* CodeEditor container improvements */
+.fi-fo-code-editor {
+    border-radius: 0.5rem;
+}
+
+/* Dark mode support for CodeEditor */
+.dark .fi-fo-code-editor textarea {
+    background-color: rgb(17, 24, 39);
+    color: rgb(243, 244, 246);
+}
+
+/* ============================================
+   Table Styling
+   ============================================ */
+
+/* Ensure table takes full width */
+.fi-ta-table {
+    width: 100%;
+    table-layout: auto;
+}
+
+/* Responsive table container */
+@media (max-width: 768px) {
+    .fi-ta-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Column width constraints for better layout */
+.fi-ta-table th:nth-child(1),
+.fi-ta-table td:nth-child(1) {
+    /* Campaign Name - wider */
+    min-width: 150px;
+    max-width: 250px;
+}
+
+.fi-ta-table th:nth-child(2),
+.fi-ta-table td:nth-child(2) {
+    /* Subject - medium width */
+    min-width: 200px;
+    max-width: 300px;
+}
+
+/* Badge spacing improvements */
+.fi-ta-badge {
+    margin: 0 0.25rem;
+}
+
+/* Statistics badges - consistent sizing */
+.fi-ta-badge[data-color="success"],
+.fi-ta-badge[data-color="info"],
+.fi-ta-badge[data-color="warning"] {
+    min-width: 3rem;
+    text-align: center;
+}
+
+/* ============================================
+   Form Section Spacing
+   ============================================ */
+
+/* Improved spacing between sections */
+.fi-section {
+    margin-bottom: 1.5rem;
+}
+
+/* Content section - more space for CodeEditor */
+.fi-section[data-section="Content"] {
+    margin-bottom: 2rem;
+}
+
+/* ============================================
+   Actions Column Alignment
+   ============================================ */
+
+/* Actions column - consistent alignment */
+.fi-ta-actions-cell {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Action buttons spacing */
+.fi-ta-actions-cell .fi-btn {
+    margin: 0 0.25rem;
+}
+
+/* ============================================
+   Responsive Improvements
+   ============================================ */
+
+/* Hide less important columns on mobile */
+@media (max-width: 640px) {
+    .fi-ta-table th:nth-child(9),
+    .fi-ta-table td:nth-child(9),
+    .fi-ta-table th:nth-child(10),
+    .fi-ta-table td:nth-child(10),
+    .fi-ta-table th:nth-child(11),
+    .fi-ta-table td:nth-child(11) {
+        display: none;
+    }
+}
+
+/* ============================================
+   Helper Text Improvements
+   ============================================ */
+
+/* Better visibility for helper texts */
+.fi-input-helper-text {
+    font-size: 0.875rem;
+    color: rgb(107, 114, 128);
+    margin-top: 0.5rem;
+}
+
+.dark .fi-input-helper-text {
+    color: rgb(156, 163, 175);
+}
+
+/* ============================================
+   Statistics Section Styling
+   ============================================ */
+
+/* Statistics inputs - readonly styling */
+.fi-input-wrp[data-disabled="true"] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Statistics section - compact layout */
+.fi-section[data-section="Statistics"] .fi-fo-field-wrp {
+    margin-bottom: 0.75rem;
+}

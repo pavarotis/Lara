@@ -12,9 +12,9 @@ return new class extends Migration
     {
         Schema::create('gift_vouchers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('business_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('voucher_theme_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('voucher_theme_id')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
             $table->string('code')->unique();
             $table->string('from_name')->nullable();
             $table->string('from_email')->nullable();
@@ -34,10 +34,34 @@ return new class extends Migration
             $table->index('code');
             $table->index('status');
         });
+
+        // Add foreign keys after table creation
+        Schema::table('gift_vouchers', function (Blueprint $table) {
+            $table->foreign('business_id')
+                ->references('id')
+                ->on('businesses')
+                ->onDelete('cascade');
+
+            $table->foreign('voucher_theme_id')
+                ->references('id')
+                ->on('voucher_themes')
+                ->onDelete('set null');
+
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onDelete('set null');
+        });
     }
 
     public function down(): void
     {
+        Schema::table('gift_vouchers', function (Blueprint $table) {
+            $table->dropForeign(['business_id']);
+            $table->dropForeign(['voucher_theme_id']);
+            $table->dropForeign(['order_id']);
+        });
+
         Schema::dropIfExists('gift_vouchers');
     }
 };

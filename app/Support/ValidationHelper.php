@@ -49,10 +49,17 @@ class ValidationHelper
 
     /**
      * Password validation rule
+     *
+     * Note: Password rule cannot be cached in config (non-serializable).
+     * Always adds Password::defaults() directly here.
      */
     public static function password(): array
     {
-        return config('validation.rules.password', ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()]);
+        $baseRules = config('validation.rules.password', ['required', 'confirmed']);
+        // Always add Password rule directly (cannot be in config cache)
+        $baseRules[] = \Illuminate\Validation\Rules\Password::defaults();
+
+        return $baseRules;
     }
 
     /**

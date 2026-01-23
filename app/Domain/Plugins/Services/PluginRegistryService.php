@@ -17,6 +17,11 @@ class PluginRegistryService
      */
     public function discover(): array
     {
+        // Check if config service is available before using config helper
+        if (! app()->bound('config')) {
+            return [];
+        }
+
         return config('plugins.providers', []);
     }
 
@@ -36,7 +41,10 @@ class PluginRegistryService
     public function register(string $pluginClass): void
     {
         if (! class_exists($pluginClass)) {
-            Log::warning("Plugin class not found: {$pluginClass}");
+            // Only log if config is available
+            if (app()->bound('config') && app()->bound('log')) {
+                Log::warning("Plugin class not found: {$pluginClass}");
+            }
 
             return;
         }
@@ -44,7 +52,10 @@ class PluginRegistryService
         $plugin = app($pluginClass);
 
         if (! $plugin instanceof PluginInterface) {
-            Log::warning("Plugin class must implement PluginInterface: {$pluginClass}");
+            // Only log if config is available
+            if (app()->bound('config') && app()->bound('log')) {
+                Log::warning("Plugin class must implement PluginInterface: {$pluginClass}");
+            }
 
             return;
         }
@@ -60,6 +71,11 @@ class PluginRegistryService
      */
     private function registerModules(PluginInterface $plugin): void
     {
+        // Check if config service is available before using config helper
+        if (! app()->bound('config')) {
+            return;
+        }
+
         $modules = $plugin->registerModules();
 
         foreach ($modules as $name => $moduleConfig) {

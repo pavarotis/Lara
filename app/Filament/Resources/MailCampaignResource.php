@@ -11,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CodeEditor;
+use Filament\Forms\Components\CodeEditor\Enums\Language;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -51,6 +52,7 @@ class MailCampaignResource extends Resource
                             ->required()
                             ->searchable()
                             ->preload()
+                            ->extraAttributes(['data-cy' => 'mail-campaign-business'])
                             ->default(fn () => \App\Domain\Businesses\Models\Business::active()->first()?->id)
                             ->helperText('The business this campaign belongs to'),
                         TextInput::make('name')
@@ -71,6 +73,7 @@ class MailCampaignResource extends Resource
                             ])
                             ->required()
                             ->default('html')
+                            ->live()
                             ->helperText('Email format'),
                         Select::make('status')
                             ->label('Status')
@@ -90,6 +93,8 @@ class MailCampaignResource extends Resource
                             ->label('Email Body')
                             ->required()
                             ->columnSpanFull()
+                            ->language(fn ($get) => $get('type') === 'html' ? Language::Html : null)
+                            ->extraAttributes(['data-cy' => 'mail-campaign-body'])
                             ->helperText('Email body content (HTML or plain text depending on type)'),
                     ]),
                 Section::make('Scheduling')

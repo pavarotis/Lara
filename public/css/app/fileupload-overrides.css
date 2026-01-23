@@ -1,0 +1,140 @@
+/*
+ * Filament FileUpload Customization
+ * 
+ * Scoped CSS selectors based on Filament 4 semantic classes.
+ * 
+ * HTML Structure (from inspect element):
+ * - .fi-fo-field (outermost field wrapper)
+ * - .fi-fo-file-upload (FileUpload component wrapper)
+ * - .fi-fo-file-upload-input-ctn (input container)
+ * - .filepond--root (FilePond root element)
+ */
+
+/* Scoped στο FileUpload field - μειώνει το μέγεθος των εικονιδίων */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--root {
+    --filepond-icon-size: 1.25rem;
+}
+
+/* File icon wrapper - μικρότερα εικονίδια */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-icon-wrapper svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Image preview wrapper - μικρότερα previews */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--image-preview-wrapper {
+    max-height: 120px;
+}
+
+/* File item panel - horizontal layout με εικονίδια δίπλα στα κείμενα */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file {
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+/* File icon wrapper - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-icon-wrapper {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* File info container - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    min-width: 0; /* Allows text truncation */
+}
+
+/* File name - truncate αν είναι μεγάλο */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-main {
+    font-weight: 500;
+    color: var(--color-gray-900, #18181b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* File size - secondary text */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-sub {
+    font-size: 0.6875rem;
+    color: var(--color-gray-600, #52525b);
+}
+
+/* File status - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-status {
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* File actions - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-action-button {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-main {
+        color: var(--color-gray-100, #f4f4f5);
+    }
+    
+    .fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-sub {
+        color: var(--color-gray-400, #a1a1aa);
+    }
+}
+
+/* Info list (About Media Library) */
+.my-info-list {
+    display: grid;
+    gap: 0.75rem; /* 12px */
+}
+
+.my-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem; /* 12px */
+}
+
+.my-info-icon {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    color: rgb(99 102 241); /* περίπου primary-500 */
+}
+
+.my-info-icon svg {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.my-info-text {
+    font-size: 0.875rem;  /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(75 85 99); /* gray-600 */
+}
+
+.my-info-text strong {
+    font-weight: 600;
+    color: rgb(17 24 39); /* gray-900 */
+}
+
+/* Optional: dark mode */
+.dark .my-info-text { color: rgb(156 163 175); } /* gray-400 */
+.dark .my-info-text strong { color: white; }

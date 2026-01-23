@@ -34,7 +34,10 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->assets([
-                Css::make('error-logs', base_path('resources/css/error-logs.css')),
+                Css::make('error-logs', resource_path('css/error-logs.css')),
+                Css::make('fileupload-overrides', resource_path('css/filament-fileupload.css')),
+                Css::make('backup-restore', resource_path('css/backup-restore.css')),
+                Css::make('mail-campaign', resource_path('css/mail-campaign.css')),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -49,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Catalog Spare')
                     ->collapsible(true),
                 NavigationGroup::make('Extensions')
-                    ->collapsible(false),
+                    ->collapsible(true),
                 NavigationGroup::make('Sales')
                     ->collapsible(true),
                 NavigationGroup::make('Customers')

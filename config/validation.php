@@ -18,7 +18,9 @@ return [
         'email' => ['required', 'string', 'email', 'max:255'],
         'email_unique' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
         'name' => ['required', 'string', 'max:255'],
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        // Note: Password rule cannot be cached in config (non-serializable)
+        // Use Rules\Password::defaults() directly in FormRequests instead
+        'password' => ['required', 'confirmed'],
         'password_current' => ['required', 'current_password'],
         'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/'],
         'slug_optional' => ['nullable', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/'],

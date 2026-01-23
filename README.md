@@ -76,6 +76,12 @@ Modular Laravel πλατφόρμα για **multi-business e-commerce & CMS**. �
 
 ## 📦 Installation
 
+**📖 [Πλήρης Οδηγός Εγκατάστασης →](INSTALLATION.md)**
+
+Για λεπτομερείς οδηγίες εγκατάστασης (Laragon, troubleshooting, κ.λπ.), δείτε το [INSTALLATION.md](INSTALLATION.md).
+
+### Quick Start
+
 ```bash
 # Clone repository
 git clone https://github.com/pavarotis/larashop.git
@@ -96,7 +102,7 @@ php artisan db:seed
 # Build assets
 npm run build
 
-# Start server
+# Start server (Laragon) ή
 php artisan serve
 ```
 

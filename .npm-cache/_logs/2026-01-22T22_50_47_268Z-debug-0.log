@@ -1,0 +1,550 @@
+0 verbose cli C:\laragon\bin\nodejs\node-v22\node.exe C:\laragon\bin\nodejs\node-v22\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.4
+2 info using node@v22.21.1
+3 silly config load:file:C:\laragon\bin\nodejs\node-v22\node_modules\npm\npmrc
+4 silly config load:file:C:\laragon\www\lara\.npmrc
+5 silly config load:file:C:\Users\stama\.npmrc
+6 silly config load:file:C:\laragon\bin\nodejs\node-v22\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--prefer-offline" "--no-audit"
+9 verbose logfile logs-max:10 dir:C:\laragon\www\lara\.npm-cache\_logs\2026-01-22T22_50_47_268Z-
+10 verbose logfile C:\laragon\www\lara\.npm-cache\_logs\2026-01-22T22_50_47_268Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\alpinejs' ]
+15 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\ansi-regex' ]
+16 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\ansi-styles' ]
+17 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\any-promise' ]
+18 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\anymatch' ]
+19 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\arg' ]
+20 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\asynckit' ]
+21 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\autoprefixer' ]
+22 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\axios' ]
+23 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\baseline-browser-mapping' ]
+24 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\binary-extensions' ]
+25 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\braces' ]
+26 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\browserslist' ]
+27 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\call-bind-apply-helpers' ]
+28 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\camelcase-css' ]
+29 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\caniuse-lite' ]
+30 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\chalk' ]
+31 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\chokidar' ]
+32 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\cliui' ]
+33 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\color-convert' ]
+34 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\color-name' ]
+35 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\combined-stream' ]
+36 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\commander' ]
+37 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\concurrently' ]
+38 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\cssesc' ]
+39 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\delayed-stream' ]
+40 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\detect-libc' ]
+41 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\didyoumean' ]
+42 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\dlv' ]
+43 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\dunder-proto' ]
+44 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\electron-to-chromium' ]
+45 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\emoji-regex' ]
+46 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\enhanced-resolve' ]
+47 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\es-define-property' ]
+48 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\es-errors' ]
+49 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\es-object-atoms' ]
+50 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\es-set-tostringtag' ]
+51 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\esbuild' ]
+52 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\escalade' ]
+53 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\fast-glob' ]
+54 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\fastq' ]
+55 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\fill-range' ]
+56 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\follow-redirects' ]
+57 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\form-data' ]
+58 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\fraction.js' ]
+59 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\fsevents' ]
+60 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\function-bind' ]
+61 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\get-caller-file' ]
+62 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\get-intrinsic' ]
+63 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\glob-parent' ]
+64 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\get-proto' ]
+65 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\graceful-fs' ]
+66 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\gopd' ]
+67 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\has-flag' ]
+68 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\has-symbols' ]
+69 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\has-tostringtag' ]
+70 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\hasown' ]
+71 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\is-binary-path' ]
+72 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\is-core-module' ]
+73 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\is-extglob' ]
+74 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\is-fullwidth-code-point' ]
+75 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\is-glob' ]
+76 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\jiti' ]
+77 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\is-number' ]
+78 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\laravel-vite-plugin' ]
+79 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss' ]
+80 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-android-arm64' ]
+81 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-darwin-arm64' ]
+82 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-darwin-x64' ]
+83 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-freebsd-x64' ]
+84 silly reify mark retired [
+84 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-arm-gnueabihf'
+84 silly reify ]
+85 silly reify mark retired [
+85 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-arm64-gnu'
+85 silly reify ]
+86 silly reify mark retired [
+86 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-arm64-musl'
+86 silly reify ]
+87 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-x64-gnu' ]
+88 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-x64-musl' ]
+89 silly reify mark retired [
+89 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-win32-arm64-msvc'
+89 silly reify ]
+90 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lightningcss-win32-x64-msvc' ]
+91 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lilconfig' ]
+92 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\lines-and-columns' ]
+93 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\magic-string' ]
+94 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\math-intrinsics' ]
+95 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\micromatch' ]
+96 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\mime-db' ]
+97 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\merge2' ]
+98 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\mime-types' ]
+99 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\mini-svg-data-uri' ]
+100 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\mz' ]
+101 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\node-releases' ]
+102 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\nanoid' ]
+103 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\normalize-path' ]
+104 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\normalize-range' ]
+105 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\object-hash' ]
+106 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\object-assign' ]
+107 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\picocolors' ]
+108 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\path-parse' ]
+109 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\pify' ]
+110 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\pirates' ]
+111 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\picomatch' ]
+112 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss-import' ]
+113 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss' ]
+114 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss-js' ]
+115 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss-load-config' ]
+116 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss-nested' ]
+117 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss-value-parser' ]
+118 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\postcss-selector-parser' ]
+119 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\proxy-from-env' ]
+120 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\queue-microtask' ]
+121 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\read-cache' ]
+122 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\readdirp' ]
+123 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\require-directory' ]
+124 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\resolve' ]
+125 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\reusify' ]
+126 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\rollup' ]
+127 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\run-parallel' ]
+128 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\rxjs' ]
+129 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\shell-quote' ]
+130 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\source-map-js' ]
+131 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\string-width' ]
+132 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\strip-ansi' ]
+133 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\sucrase' ]
+134 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\supports-color' ]
+135 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\tailwindcss' ]
+136 silly reify mark retired [
+136 silly reify   'C:\\laragon\\www\\lara\\node_modules\\supports-preserve-symlinks-flag'
+136 silly reify ]
+137 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\tapable' ]
+138 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\thenify' ]
+139 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\thenify-all' ]
+140 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\tinyglobby' ]
+141 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\ts-interface-checker' ]
+142 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\to-regex-range' ]
+143 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\tree-kill' ]
+144 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\tslib' ]
+145 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\update-browserslist-db' ]
+146 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\util-deprecate' ]
+147 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\vite' ]
+148 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\vite-plugin-full-reload' ]
+149 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\wrap-ansi' ]
+150 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\y18n' ]
+151 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\yargs' ]
+152 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\yargs-parser' ]
+153 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@alloc\\quick-lru' ]
+154 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\android-arm' ]
+155 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\aix-ppc64' ]
+156 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\android-arm64' ]
+157 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\android-x64' ]
+158 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\darwin-arm64' ]
+159 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\darwin-x64' ]
+160 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\freebsd-arm64' ]
+161 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\freebsd-x64' ]
+162 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-arm' ]
+163 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-arm64' ]
+164 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-ia32' ]
+165 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-loong64' ]
+166 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-mips64el' ]
+167 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-ppc64' ]
+168 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-riscv64' ]
+169 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-s390x' ]
+170 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-x64' ]
+171 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\netbsd-arm64' ]
+172 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\netbsd-x64' ]
+173 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\openbsd-arm64' ]
+174 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\openbsd-x64' ]
+175 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\openharmony-arm64' ]
+176 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\sunos-x64' ]
+177 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\win32-arm64' ]
+178 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\win32-ia32' ]
+179 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\win32-x64' ]
+180 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\remapping' ]
+181 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\gen-mapping' ]
+182 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\resolve-uri' ]
+183 silly reify mark retired [
+183 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\sourcemap-codec'
+183 silly reify ]
+184 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\trace-mapping' ]
+185 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\fs.scandir' ]
+186 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\fs.stat' ]
+187 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\fs.walk' ]
+188 silly reify mark retired [
+188 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-android-arm-eabi'
+188 silly reify ]
+189 silly reify mark retired [
+189 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-android-arm64'
+189 silly reify ]
+190 silly reify mark retired [
+190 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-darwin-arm64'
+190 silly reify ]
+191 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-darwin-x64' ]
+192 silly reify mark retired [
+192 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-freebsd-arm64'
+192 silly reify ]
+193 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-freebsd-x64' ]
+194 silly reify mark retired [
+194 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm-gnueabihf'
+194 silly reify ]
+195 silly reify mark retired [
+195 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm-musleabihf'
+195 silly reify ]
+196 silly reify mark retired [
+196 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm64-gnu'
+196 silly reify ]
+197 silly reify mark retired [
+197 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm64-musl'
+197 silly reify ]
+198 silly reify mark retired [
+198 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-loong64-gnu'
+198 silly reify ]
+199 silly reify mark retired [
+199 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-ppc64-gnu'
+199 silly reify ]
+200 silly reify mark retired [
+200 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-riscv64-gnu'
+200 silly reify ]
+201 silly reify mark retired [
+201 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-riscv64-musl'
+201 silly reify ]
+202 silly reify mark retired [
+202 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-s390x-gnu'
+202 silly reify ]
+203 silly reify mark retired [
+203 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-x64-gnu'
+203 silly reify ]
+204 silly reify mark retired [
+204 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-x64-musl'
+204 silly reify ]
+205 silly reify mark retired [
+205 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-openharmony-arm64'
+205 silly reify ]
+206 silly reify mark retired [
+206 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-arm64-msvc'
+206 silly reify ]
+207 silly reify mark retired [
+207 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-ia32-msvc'
+207 silly reify ]
+208 silly reify mark retired [
+208 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-x64-gnu'
+208 silly reify ]
+209 silly reify mark retired [
+209 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-x64-msvc'
+209 silly reify ]
+210 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\forms' ]
+211 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\node' ]
+212 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide' ]
+213 silly reify mark retired [
+213 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-android-arm64'
+213 silly reify ]
+214 silly reify mark retired [
+214 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-darwin-arm64'
+214 silly reify ]
+215 silly reify mark retired [
+215 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-darwin-x64'
+215 silly reify ]
+216 silly reify mark retired [
+216 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-freebsd-x64'
+216 silly reify ]
+217 silly reify mark retired [
+217 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-arm-gnueabihf'
+217 silly reify ]
+218 silly reify mark retired [
+218 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-arm64-gnu'
+218 silly reify ]
+219 silly reify mark retired [
+219 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-arm64-musl'
+219 silly reify ]
+220 silly reify mark retired [
+220 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-x64-gnu'
+220 silly reify ]
+221 silly reify mark retired [
+221 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-x64-musl'
+221 silly reify ]
+222 silly reify mark retired [
+222 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-wasm32-wasi'
+222 silly reify ]
+223 silly reify mark retired [
+223 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-win32-arm64-msvc'
+223 silly reify ]
+224 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\vite' ]
+225 silly reify mark retired [
+225 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-win32-x64-msvc'
+225 silly reify ]
+226 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@types\\estree' ]
+227 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@vue\\reactivity' ]
+228 silly reify mark retired [ 'C:\\laragon\\www\\lara\\node_modules\\@vue\\shared' ]
+229 silly reify moves {
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\alpinejs': 'C:\\laragon\\www\\lara\\node_modules\\.alpinejs-WLz3MMwb',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\ansi-regex': 'C:\\laragon\\www\\lara\\node_modules\\.ansi-regex-qbuMJDb2',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\ansi-styles': 'C:\\laragon\\www\\lara\\node_modules\\.ansi-styles-FUjEh0eo',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\any-promise': 'C:\\laragon\\www\\lara\\node_modules\\.any-promise-l990z82f',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\anymatch': 'C:\\laragon\\www\\lara\\node_modules\\.anymatch-g90auy3P',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\arg': 'C:\\laragon\\www\\lara\\node_modules\\.arg-cYEU4qNw',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\asynckit': 'C:\\laragon\\www\\lara\\node_modules\\.asynckit-yzUFkH3h',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\autoprefixer': 'C:\\laragon\\www\\lara\\node_modules\\.autoprefixer-K0izmC6E',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\axios': 'C:\\laragon\\www\\lara\\node_modules\\.axios-3d3OIHSz',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\baseline-browser-mapping': 'C:\\laragon\\www\\lara\\node_modules\\.baseline-browser-mapping-0GQFm9aS',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\binary-extensions': 'C:\\laragon\\www\\lara\\node_modules\\.binary-extensions-pNMCXQeP',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\braces': 'C:\\laragon\\www\\lara\\node_modules\\.braces-tj47v75u',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\browserslist': 'C:\\laragon\\www\\lara\\node_modules\\.browserslist-KxbAENZX',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\call-bind-apply-helpers': 'C:\\laragon\\www\\lara\\node_modules\\.call-bind-apply-helpers-5y8y08bI',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\camelcase-css': 'C:\\laragon\\www\\lara\\node_modules\\.camelcase-css-deQBNqtU',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\caniuse-lite': 'C:\\laragon\\www\\lara\\node_modules\\.caniuse-lite-AuzTemys',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\chalk': 'C:\\laragon\\www\\lara\\node_modules\\.chalk-VVYE3bhu',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\chokidar': 'C:\\laragon\\www\\lara\\node_modules\\.chokidar-BdThMD6D',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\cliui': 'C:\\laragon\\www\\lara\\node_modules\\.cliui-XBmtK1HF',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\color-convert': 'C:\\laragon\\www\\lara\\node_modules\\.color-convert-FoRmjpi1',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\color-name': 'C:\\laragon\\www\\lara\\node_modules\\.color-name-nXPfeXuZ',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\combined-stream': 'C:\\laragon\\www\\lara\\node_modules\\.combined-stream-pI4fyyz4',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\commander': 'C:\\laragon\\www\\lara\\node_modules\\.commander-Z23t2nyl',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\concurrently': 'C:\\laragon\\www\\lara\\node_modules\\.concurrently-m1ijhDMT',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\cssesc': 'C:\\laragon\\www\\lara\\node_modules\\.cssesc-cSaPz7Kl',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\delayed-stream': 'C:\\laragon\\www\\lara\\node_modules\\.delayed-stream-eek8iWCD',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\detect-libc': 'C:\\laragon\\www\\lara\\node_modules\\.detect-libc-XNnzVES4',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\didyoumean': 'C:\\laragon\\www\\lara\\node_modules\\.didyoumean-fxnPUjdI',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\dlv': 'C:\\laragon\\www\\lara\\node_modules\\.dlv-w4eoLgIF',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\dunder-proto': 'C:\\laragon\\www\\lara\\node_modules\\.dunder-proto-b8egtlVB',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\electron-to-chromium': 'C:\\laragon\\www\\lara\\node_modules\\.electron-to-chromium-YLEufZg8',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\emoji-regex': 'C:\\laragon\\www\\lara\\node_modules\\.emoji-regex-LYQe6jf8',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\enhanced-resolve': 'C:\\laragon\\www\\lara\\node_modules\\.enhanced-resolve-PyrYDJxe',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\es-define-property': 'C:\\laragon\\www\\lara\\node_modules\\.es-define-property-fQhuIQfF',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\es-errors': 'C:\\laragon\\www\\lara\\node_modules\\.es-errors-6zmcowLr',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\es-object-atoms': 'C:\\laragon\\www\\lara\\node_modules\\.es-object-atoms-mTqDh29D',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\es-set-tostringtag': 'C:\\laragon\\www\\lara\\node_modules\\.es-set-tostringtag-9nFbGb0y',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\esbuild': 'C:\\laragon\\www\\lara\\node_modules\\.esbuild-t4lIfKj9',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\escalade': 'C:\\laragon\\www\\lara\\node_modules\\.escalade-dlfNGmqK',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\fast-glob': 'C:\\laragon\\www\\lara\\node_modules\\.fast-glob-Wq7JMEzO',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\fastq': 'C:\\laragon\\www\\lara\\node_modules\\.fastq-kZkfBQNG',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\fill-range': 'C:\\laragon\\www\\lara\\node_modules\\.fill-range-LL9FSabm',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\follow-redirects': 'C:\\laragon\\www\\lara\\node_modules\\.follow-redirects-S5HBUrTb',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\form-data': 'C:\\laragon\\www\\lara\\node_modules\\.form-data-E4xEdwGp',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\fraction.js': 'C:\\laragon\\www\\lara\\node_modules\\.fraction.js-msWKs459',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\fsevents': 'C:\\laragon\\www\\lara\\node_modules\\.fsevents-TatZJARG',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\function-bind': 'C:\\laragon\\www\\lara\\node_modules\\.function-bind-j0OKHDSc',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\get-caller-file': 'C:\\laragon\\www\\lara\\node_modules\\.get-caller-file-hJ6c2zz9',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\get-intrinsic': 'C:\\laragon\\www\\lara\\node_modules\\.get-intrinsic-FBZ1vTmK',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\glob-parent': 'C:\\laragon\\www\\lara\\node_modules\\.glob-parent-hkTUQFMc',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\get-proto': 'C:\\laragon\\www\\lara\\node_modules\\.get-proto-VlSHw9gV',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\graceful-fs': 'C:\\laragon\\www\\lara\\node_modules\\.graceful-fs-MAKQH6HH',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\gopd': 'C:\\laragon\\www\\lara\\node_modules\\.gopd-wtbIW6a0',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\has-flag': 'C:\\laragon\\www\\lara\\node_modules\\.has-flag-Tks2AypG',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\has-symbols': 'C:\\laragon\\www\\lara\\node_modules\\.has-symbols-jNKGRY5f',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\has-tostringtag': 'C:\\laragon\\www\\lara\\node_modules\\.has-tostringtag-gO9apqmy',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\hasown': 'C:\\laragon\\www\\lara\\node_modules\\.hasown-nzl8t9ie',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\is-binary-path': 'C:\\laragon\\www\\lara\\node_modules\\.is-binary-path-rXcNnKkz',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\is-core-module': 'C:\\laragon\\www\\lara\\node_modules\\.is-core-module-qChfa9mK',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\is-extglob': 'C:\\laragon\\www\\lara\\node_modules\\.is-extglob-To4PqONf',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\is-fullwidth-code-point': 'C:\\laragon\\www\\lara\\node_modules\\.is-fullwidth-code-point-521jo39b',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\is-glob': 'C:\\laragon\\www\\lara\\node_modules\\.is-glob-GwVfZUpA',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\jiti': 'C:\\laragon\\www\\lara\\node_modules\\.jiti-DLb2tyI9',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\is-number': 'C:\\laragon\\www\\lara\\node_modules\\.is-number-R1yRoh1i',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\laravel-vite-plugin': 'C:\\laragon\\www\\lara\\node_modules\\.laravel-vite-plugin-mf2drENk',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-Q7xBlwmP',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-android-arm64': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-android-arm64-UWoejyUu',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-darwin-arm64': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-darwin-arm64-U5hW9fT3',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-darwin-x64': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-darwin-x64-cuV8m8wK',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-freebsd-x64': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-freebsd-x64-dKHucygd',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-arm-gnueabihf': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-linux-arm-gnueabihf-2XpX2BKN',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-arm64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-linux-arm64-gnu-4vwJrKmR',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-arm64-musl': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-linux-arm64-musl-jtHquz3z',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-x64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-linux-x64-gnu-eiOdkXfd',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-linux-x64-musl': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-linux-x64-musl-mfuLnJDX',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-win32-arm64-msvc': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-win32-arm64-msvc-9LsIxRw5',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lightningcss-win32-x64-msvc': 'C:\\laragon\\www\\lara\\node_modules\\.lightningcss-win32-x64-msvc-Akc6yJNY',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lilconfig': 'C:\\laragon\\www\\lara\\node_modules\\.lilconfig-QzPCfAT0',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\lines-and-columns': 'C:\\laragon\\www\\lara\\node_modules\\.lines-and-columns-ouTSFOvm',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\magic-string': 'C:\\laragon\\www\\lara\\node_modules\\.magic-string-BwPyXKSN',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\math-intrinsics': 'C:\\laragon\\www\\lara\\node_modules\\.math-intrinsics-oD4HlBCH',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\micromatch': 'C:\\laragon\\www\\lara\\node_modules\\.micromatch-gYN90GQt',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\mime-db': 'C:\\laragon\\www\\lara\\node_modules\\.mime-db-A2pqbrGb',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\merge2': 'C:\\laragon\\www\\lara\\node_modules\\.merge2-aKvWxdYA',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\mime-types': 'C:\\laragon\\www\\lara\\node_modules\\.mime-types-ogPKT6a8',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\mini-svg-data-uri': 'C:\\laragon\\www\\lara\\node_modules\\.mini-svg-data-uri-7qSG9baP',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\mz': 'C:\\laragon\\www\\lara\\node_modules\\.mz-hQnFd0KH',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\node-releases': 'C:\\laragon\\www\\lara\\node_modules\\.node-releases-CR3NltJR',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\nanoid': 'C:\\laragon\\www\\lara\\node_modules\\.nanoid-EEIzmy8c',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\normalize-path': 'C:\\laragon\\www\\lara\\node_modules\\.normalize-path-Mv0i3nd7',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\normalize-range': 'C:\\laragon\\www\\lara\\node_modules\\.normalize-range-TkiuRrUi',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\object-hash': 'C:\\laragon\\www\\lara\\node_modules\\.object-hash-e7xs9DMH',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\object-assign': 'C:\\laragon\\www\\lara\\node_modules\\.object-assign-M1paZyTC',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\picocolors': 'C:\\laragon\\www\\lara\\node_modules\\.picocolors-R27LXJIc',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\path-parse': 'C:\\laragon\\www\\lara\\node_modules\\.path-parse-CMAwQE5U',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\pify': 'C:\\laragon\\www\\lara\\node_modules\\.pify-mLjejzMw',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\pirates': 'C:\\laragon\\www\\lara\\node_modules\\.pirates-ly7BSpJY',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\picomatch': 'C:\\laragon\\www\\lara\\node_modules\\.picomatch-vCcIYDbo',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss-import': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-import-Zq4GWUfF',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-arSwCLSt',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss-js': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-js-j5TSB7cU',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss-load-config': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-load-config-ODh8jP6D',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss-nested': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-nested-5wOsXE5X',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss-value-parser': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-value-parser-UWgZhV5g',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\postcss-selector-parser': 'C:\\laragon\\www\\lara\\node_modules\\.postcss-selector-parser-01QuLeBg',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\proxy-from-env': 'C:\\laragon\\www\\lara\\node_modules\\.proxy-from-env-VwArpwUK',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\queue-microtask': 'C:\\laragon\\www\\lara\\node_modules\\.queue-microtask-UauB0Pxv',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\read-cache': 'C:\\laragon\\www\\lara\\node_modules\\.read-cache-QDMOkV8k',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\readdirp': 'C:\\laragon\\www\\lara\\node_modules\\.readdirp-JfhjPH23',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\require-directory': 'C:\\laragon\\www\\lara\\node_modules\\.require-directory-MNxsA9Jp',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\resolve': 'C:\\laragon\\www\\lara\\node_modules\\.resolve-s950A4up',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\reusify': 'C:\\laragon\\www\\lara\\node_modules\\.reusify-yWwAczs7',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\rollup': 'C:\\laragon\\www\\lara\\node_modules\\.rollup-PINZdtJD',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\run-parallel': 'C:\\laragon\\www\\lara\\node_modules\\.run-parallel-lCos9c3j',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\rxjs': 'C:\\laragon\\www\\lara\\node_modules\\.rxjs-FhQOlT3l',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\shell-quote': 'C:\\laragon\\www\\lara\\node_modules\\.shell-quote-g343YF2R',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\source-map-js': 'C:\\laragon\\www\\lara\\node_modules\\.source-map-js-e5XCwc4u',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\string-width': 'C:\\laragon\\www\\lara\\node_modules\\.string-width-uv2rLJ4t',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\strip-ansi': 'C:\\laragon\\www\\lara\\node_modules\\.strip-ansi-38T5IP0D',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\sucrase': 'C:\\laragon\\www\\lara\\node_modules\\.sucrase-vEk7yUgC',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\supports-color': 'C:\\laragon\\www\\lara\\node_modules\\.supports-color-4ORsrOvr',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\tailwindcss': 'C:\\laragon\\www\\lara\\node_modules\\.tailwindcss-AbtxxcZX',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\supports-preserve-symlinks-flag': 'C:\\laragon\\www\\lara\\node_modules\\.supports-preserve-symlinks-flag-pKzQrqIp',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\tapable': 'C:\\laragon\\www\\lara\\node_modules\\.tapable-VZMwlC4u',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\thenify': 'C:\\laragon\\www\\lara\\node_modules\\.thenify-LmO4jzIV',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\thenify-all': 'C:\\laragon\\www\\lara\\node_modules\\.thenify-all-8sNZ6m5p',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\tinyglobby': 'C:\\laragon\\www\\lara\\node_modules\\.tinyglobby-bXHOLm4i',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\ts-interface-checker': 'C:\\laragon\\www\\lara\\node_modules\\.ts-interface-checker-Q43LKAwH',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\to-regex-range': 'C:\\laragon\\www\\lara\\node_modules\\.to-regex-range-KGo3KE9P',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\tree-kill': 'C:\\laragon\\www\\lara\\node_modules\\.tree-kill-bDv2mdy6',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\tslib': 'C:\\laragon\\www\\lara\\node_modules\\.tslib-9xVOxa2W',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\update-browserslist-db': 'C:\\laragon\\www\\lara\\node_modules\\.update-browserslist-db-FFNEyYG5',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\util-deprecate': 'C:\\laragon\\www\\lara\\node_modules\\.util-deprecate-ADnuiihH',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\vite': 'C:\\laragon\\www\\lara\\node_modules\\.vite-nlUfWQfw',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\vite-plugin-full-reload': 'C:\\laragon\\www\\lara\\node_modules\\.vite-plugin-full-reload-WVI0W3Mi',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\wrap-ansi': 'C:\\laragon\\www\\lara\\node_modules\\.wrap-ansi-DJGsEdL6',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\y18n': 'C:\\laragon\\www\\lara\\node_modules\\.y18n-lWfZbf2d',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\yargs': 'C:\\laragon\\www\\lara\\node_modules\\.yargs-2E0w3PKt',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\yargs-parser': 'C:\\laragon\\www\\lara\\node_modules\\.yargs-parser-ZQ5YIQFB',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@alloc\\quick-lru': 'C:\\laragon\\www\\lara\\node_modules\\@alloc\\.quick-lru-dBO3bpYE',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\android-arm': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.android-arm-j6KrYPYP',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\aix-ppc64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.aix-ppc64-PzPBH6Y8',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\android-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.android-arm64-leIUwGMc',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\android-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.android-x64-XtKH6nWJ',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\darwin-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.darwin-arm64-uYs3v5Sw',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\darwin-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.darwin-x64-9GhW2rgj',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\freebsd-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.freebsd-arm64-wCp2ehvU',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\freebsd-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.freebsd-x64-6vnbw4eh',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-arm': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-arm-3jnUH27K',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-arm64-WiMjQFHy',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-ia32': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-ia32-1ZKopL7B',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-loong64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-loong64-YbSKfU78',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-mips64el': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-mips64el-sfze87DS',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-ppc64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-ppc64-5jXINf0D',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-riscv64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-riscv64-QiozNKlz',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-s390x': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-s390x-Xfo63Uup',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\linux-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.linux-x64-WMgyV9TP',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\netbsd-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.netbsd-arm64-RtePTrnd',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\netbsd-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.netbsd-x64-IyrINW1i',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\openbsd-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.openbsd-arm64-JRIueVIW',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\openbsd-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.openbsd-x64-pIpvHBGq',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\openharmony-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.openharmony-arm64-MeAx98jc',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\sunos-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.sunos-x64-3vHBBTNY',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\win32-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.win32-arm64-tx4kqize',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\win32-ia32': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.win32-ia32-LcPFZHBM',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\win32-x64': 'C:\\laragon\\www\\lara\\node_modules\\@esbuild\\.win32-x64-WdDUhMZZ',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\remapping': 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\.remapping-haUS22A9',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\gen-mapping': 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\.gen-mapping-ZMYnM15h',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\resolve-uri': 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\.resolve-uri-MATs1YWk',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\sourcemap-codec': 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\.sourcemap-codec-mIRxUkKU',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\trace-mapping': 'C:\\laragon\\www\\lara\\node_modules\\@jridgewell\\.trace-mapping-Ywop5ZnW',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\fs.scandir': 'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\.fs.scandir-b0xkWRXl',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\fs.stat': 'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\.fs.stat-G3ZjIMJZ',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\fs.walk': 'C:\\laragon\\www\\lara\\node_modules\\@nodelib\\.fs.walk-QrXRD4M3',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-android-arm-eabi': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-android-arm-eabi-jbtAiX3b',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-android-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-android-arm64-SCl14BBF',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-darwin-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-darwin-arm64-sbUrjPNQ',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-darwin-x64': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-darwin-x64-iNQeUxZ6',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-freebsd-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-freebsd-arm64-SySGwVLh',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-freebsd-x64': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-freebsd-x64-81TzVJVM',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm-gnueabihf': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-arm-gnueabihf-O5RAWpvp',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm-musleabihf': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-arm-musleabihf-L6nuoZL0',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-arm64-gnu-P8KgAlrd',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-arm64-musl': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-arm64-musl-1Qngngkd',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-loong64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-loong64-gnu-Gzswki9S',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-ppc64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-ppc64-gnu-vs9NoOoB',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-riscv64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-riscv64-gnu-d5xeOTlx',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-riscv64-musl': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-riscv64-musl-q04PR2w0',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-s390x-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-s390x-gnu-0WEcI7ya',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-x64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-x64-gnu-x949aP8E',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-linux-x64-musl': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-linux-x64-musl-YKPfF8vM',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-openharmony-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-openharmony-arm64-Vv6P57S8',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-arm64-msvc': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-win32-arm64-msvc-CwWpJG40',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-ia32-msvc': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-win32-ia32-msvc-6wAjSBUw',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-x64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-win32-x64-gnu-yD32Tz3m',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@rollup\\rollup-win32-x64-msvc': 'C:\\laragon\\www\\lara\\node_modules\\@rollup\\.rollup-win32-x64-msvc-XURUUndn',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\forms': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.forms-ls55SVmu',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\node': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.node-oqZ3pvfw',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-AD2IuoOf',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-android-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-android-arm64-dNr3ookn',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-darwin-arm64': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-darwin-arm64-mAP4Z1gS',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-darwin-x64': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-darwin-x64-rmN9BF46',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-freebsd-x64': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-freebsd-x64-SEoLnjNA',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-arm-gnueabihf': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-linux-arm-gnueabihf-bK7AAwra',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-arm64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-linux-arm64-gnu-Zmprf12M',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-arm64-musl': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-linux-arm64-musl-1lfqQNa6',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-x64-gnu': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-linux-x64-gnu-nREl2APf',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-linux-x64-musl': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-linux-x64-musl-LL9SMhJM',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-wasm32-wasi': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-wasm32-wasi-T7JE6vW2',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-win32-arm64-msvc': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-win32-arm64-msvc-lBosUlX8',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\vite': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.vite-20JqMyoN',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\oxide-win32-x64-msvc': 'C:\\laragon\\www\\lara\\node_modules\\@tailwindcss\\.oxide-win32-x64-msvc-sesvDdUN',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@types\\estree': 'C:\\laragon\\www\\lara\\node_modules\\@types\\.estree-rAb6FXkD',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@vue\\reactivity': 'C:\\laragon\\www\\lara\\node_modules\\@vue\\.reactivity-QUdG3vcb',
+229 silly reify   'C:\\laragon\\www\\lara\\node_modules\\@vue\\shared': 'C:\\laragon\\www\\lara\\node_modules\\@vue\\.shared-H0Ep7FwK'
+229 silly reify }
+230 verbose stack Error: EPERM: operation not permitted, rmdir 'C:\laragon\www\lara\node_modules\alpinejs'
+231 error code EPERM
+232 error syscall rmdir
+233 error path C:\laragon\www\lara\node_modules\alpinejs
+234 error errno -4048
+235 error [Error: EPERM: operation not permitted, rmdir 'C:\laragon\www\lara\node_modules\alpinejs'] {
+235 error   errno: -4048,
+235 error   code: 'EPERM',
+235 error   syscall: 'rmdir',
+235 error   path: 'C:\\laragon\\www\\lara\\node_modules\\alpinejs'
+235 error }
+236 error
+236 error The operation was rejected by your operating system.
+236 error It's possible that the file was already in use (by a text editor or antivirus),
+236 error or that you lack permissions to access it.
+236 error
+236 error If you believe this might be a permissions issue, please double-check the
+236 error permissions of the file and its containing directories, or try running
+236 error the command again as root/Administrator.
+237 silly unfinished npm timer reify 1769122247714
+238 silly unfinished npm timer reify:retireShallow 1769122247813
+239 verbose cwd C:\laragon\www\lara
+240 verbose os Windows_NT 10.0.26200
+241 verbose node v22.21.1
+242 verbose npm  v10.9.4
+243 verbose exit -4048
+244 verbose code -4048
+245 error A complete log of this run can be found in: C:\laragon\www\lara\.npm-cache\_logs\2026-01-22T22_50_47_268Z-debug-0.log

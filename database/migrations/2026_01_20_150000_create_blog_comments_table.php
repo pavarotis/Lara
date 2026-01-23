@@ -12,12 +12,12 @@ return new class extends Migration
     {
         Schema::create('blog_comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('content_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('content_id');
             $table->string('author_name')->comment('Comment author name');
             $table->string('author_email')->comment('Comment author email');
             $table->text('body')->comment('Comment body/content');
             $table->enum('status', ['pending', 'approved', 'spam', 'rejected'])->default('pending');
-            $table->foreignId('parent_id')->nullable()->constrained('blog_comments')->nullOnDelete()->comment('Parent comment for replies');
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('Parent comment for replies');
             $table->string('ip_address')->nullable()->comment('Author IP address for moderation');
             $table->string('user_agent')->nullable()->comment('User agent for moderation');
             $table->timestamps();
@@ -27,10 +27,28 @@ return new class extends Migration
             $table->index('parent_id');
             $table->index('created_at');
         });
+
+        // Add foreign keys after table creation
+        Schema::table('blog_comments', function (Blueprint $table) {
+            $table->foreign('content_id')
+                ->references('id')
+                ->on('contents')
+                ->onDelete('cascade');
+
+            $table->foreign('parent_id')
+                ->references('id')
+                ->on('blog_comments')
+                ->onDelete('set null');
+        });
     }
 
     public function down(): void
     {
+        Schema::table('blog_comments', function (Blueprint $table) {
+            $table->dropForeign(['content_id']);
+            $table->dropForeign(['parent_id']);
+        });
+
         Schema::dropIfExists('blog_comments');
     }
 };

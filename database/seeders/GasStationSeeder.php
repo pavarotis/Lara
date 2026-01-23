@@ -7,6 +7,8 @@ namespace Database\Seeders;
 use App\Domain\Businesses\Models\Business;
 use App\Domain\Catalog\Models\Category;
 use App\Domain\Catalog\Models\Product;
+use App\Domain\Content\Models\Content;
+use App\Domain\Content\Models\ContentType;
 use Illuminate\Database\Seeder;
 
 class GasStationSeeder extends Seeder
@@ -169,5 +171,36 @@ class GasStationSeeder extends Seeder
             'is_featured' => false,
             'sort_order' => 2,
         ]);
+
+        // Create home page content
+        $this->createHomePage($business);
+    }
+
+    private function createHomePage(Business $business): void
+    {
+        $pageType = ContentType::where('slug', 'page')->first();
+
+        if (! $pageType) {
+            return; // ContentTypeSeeder should run first
+        }
+
+        Content::firstOrCreate(
+            [
+                'business_id' => $business->id,
+                'slug' => '/',
+            ],
+            [
+                'type' => 'page',
+                'title' => 'Home',
+                'body_json' => [
+                    [
+                        'type' => 'text',
+                        'content' => '<h1>Welcome to '.$business->name.'</h1><p>This is your home page. You can edit it from the admin panel.</p>',
+                    ],
+                ],
+                'status' => 'published',
+                'published_at' => now(),
+            ]
+        );
     }
 }

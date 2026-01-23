@@ -108,6 +108,423 @@ Before creating a new Filament Resource/Page:
 
 ---
 
+## 🔧 Asset Management & Cache Commands
+
+### Πότε χρησιμοποιώ `php artisan filament:assets` και `php artisan optimize:clear`
+
+**1️⃣ `php artisan filament:assets`**
+
+**ΤΙ ΚΑΝΕΙ:**
+- Αντιγράφει / δημοσιεύει τα assets του Filament και τα custom panel assets σου (CSS / JS) στο `public/`
+- **ΔΕΝ** κάνει build Tailwind
+- **ΔΕΝ** επεξεργάζεται `@apply` directives
+
+**ΠΟΤΕ ΤΟ ΤΡΕΧΕΙΣ:**
+
+✅ **ΤΟ ΤΡΕΧΕΙΣ ΚΑΘΕ ΦΟΡΑ ΠΟΥ:**
+- Αλλάζεις ή προσθέτεις `->assets([ Css::make(...) ])` στο PanelProvider
+- Προσθέτεις/αλλάζεις custom CSS αρχείο που φορτώνεται μέσω Filament panel
+- Προσθέτεις/αλλάζεις custom JS asset για Filament
+
+❌ **ΔΕΝ χρειάζεται όταν:**
+- Αλλάζεις μόνο Blade templates
+- Αλλάζεις PHP logic
+- Αλλάζεις Livewire methods
+- Αλλάζεις Filament components config
+
+**Παράδειγμα:**
+```php
+// AdminPanelProvider.php
+->assets([
+    Css::make('backup-restore', resource_path('css/backup-restore.css')),
+])
+```
+
+👉 **Μετά από αυτό ΠΑΝΤΑ:**
+```bash
+php artisan filament:assets
+```
+
+Αλλιώς το νέο CSS δεν θα φορτωθεί ποτέ.
+
+**2️⃣ `php artisan optimize:clear`**
+
+**ΤΙ ΚΑΝΕΙ:**
+Καθαρίζει:
+- View cache
+- Route cache
+- Config cache
+- Event cache
+- Compiled cache
+- Blade icons cache
+- Filament cache
+
+**ΠΟΤΕ ΤΟ ΤΡΕΧΕΙΣ:**
+
+✅ **Το τρέχεις όταν:**
+- Βλέπεις ότι "δεν αλλάζει τίποτα" ενώ άλλαξες Blade / CSS
+- Filament δείχνει παλιά έκδοση
+- Assets φορτώνονται αλλά styles δεν εφαρμόζονται
+- Περίεργα errors "κολλάνε"
+- Μετά από `filament:assets` και hard refresh δεν βλέπεις αλλαγές
+
+⚠️ **ΔΕΝ χρειάζεται πάντα**
+⚠️ **ΜΗΝ** το τρέχεις σε κάθε αλλαγή "by default"
+
+**🧠 ΤΟ ΣΩΣΤΟ WORKFLOW:**
+
+| Αλλαγή | Τι τρέχω |
+|--------|----------|
+| 🔁 Αλλάζεις Blade / PHP | → refresh browser |
+| 🎨 Αλλάζεις custom Filament CSS | `php artisan filament:assets` → hard refresh (Ctrl + F5) |
+| 😵 "Δεν πιάνει τίποτα / βλέπω παλιά styles" | `php artisan filament:assets` + `php artisan optimize:clear` |
+| 🚀 Παραγωγή (deploy) | Και τα δύο |
+
+**❌ ΤΙ ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΚΑΝΕΙΣ:**
+
+- ❌ Να τρέχεις `optimize:clear` κάθε φορά (χάνει χρόνο)
+- ❌ Να περιμένεις ότι `filament:assets` θα κάνει Tailwind compile
+- ❌ Να γράφεις `@apply` σε CSS που φορτώνεται από Filament assets (χρησιμοποίησε pure CSS)
+
+**💡 Pro Tip:**
+
+Αν χρησιμοποιείς custom CSS files με Filament, γράψε **pure CSS** (χωρίς `@apply`). Το `filament:assets` δεν κάνει Tailwind compilation, οπότε τα `@apply` directives θα αγνοηθούν.
+
+**Παράδειγμα - ❌ WRONG:**
+```css
+/* resources/css/backup-restore.css */
+.backup-restore-table {
+    @apply rounded-lg border; /* ΔΕΝ θα λειτουργήσει! */
+}
+```
+
+**Παράδειγμα - ✅ CORRECT:**
+```css
+/* resources/css/backup-restore.css */
+.backup-restore-table {
+    border-radius: 0.5rem;
+    border: 1px solid rgb(229 231 235);
+}
+```
+
+---
+
+## 🧠 Filament Dev Cheat Sheet (ΠΡΑΚΤΙΚΟ)
+
+**🔁 Τι άλλαξα → Τι κάνω**
+
+| Τι άλλαξα | Τι κάνω |
+|-----------|---------|
+| 🧱 **Άλλαξα Blade** (`.blade.php`) | → απλό refresh |
+| 🧠 **Άλλαξα PHP logic**<br>• Page class<br>• Livewire methods<br>• Filament config (όχι assets) | → απλό refresh |
+| 🎨 **Άλλαξα custom CSS για Filament panel**<br>(π.χ. `resources/css/backup-restore.css`) | `php artisan filament:assets`<br>👉 μετά hard refresh (Ctrl + F5) |
+| 🧩 **Πρόσθεσα ή άλλαξα:**<br>• `->assets([ Css::make(...) ])`<br>• νέο CSS / JS asset<br>• path σε asset | `php artisan filament:assets` |
+| 😵 **"Δεν αλλάζει τίποτα / βλέπω παλιά styles"** | `php artisan filament:assets`<br>`php artisan optimize:clear`<br>👉 μετά hard refresh |
+
+**❌ Τι ΔΕΝ κάνει το `filament:assets`:**
+
+- ❌ Δεν κάνει Tailwind build
+- ❌ Δεν καταλαβαίνει `@apply`
+- ❌ Δεν επεξεργάζεται CSS
+- ❌ Δεν κάνει minify Tailwind utilities
+
+👉 **Είναι copy/publish tool, όχι compiler.**
+
+**🧩 Tailwind – ο κανόνας:**
+
+Αν ένα CSS αρχείο φορτώνεται μέσω Filament panel assets:
+
+- ✔ γράφεις καθαρό CSS
+- ❌ όχι `@apply`
+- ❌ όχι Tailwind utilities
+
+Αν θες Tailwind → πρέπει να περάσει από Vite build (άλλο pipeline).
+
+**🛑 Σημάδια ότι κάτι πάει στραβά:**
+
+- `flex`, `gap`, `space-y` δεν δουλεύουν ❌
+- SVG γίνονται τεράστια ❌
+- layout "σπάει" χωρίς λόγο ❌
+
+➡️ **99% γράφεις `@apply` σε CSS που δεν γίνεται compile**
+
+**🧪 10-second debug checklist:**
+
+1. Inspect element
+2. Βλέπω `display: flex;` ή όχι;
+3. Αν όχι → CSS δεν εφαρμόζεται
+4. Έτρεξα `filament:assets`?
+5. Έκανα hard refresh?
+
+**🚀 Production deploy (κανόνας):**
+
+```bash
+php artisan filament:assets
+php artisan optimize
+```
+
+(όχι `optimize:clear`, αλλά `optimize`)
+
+**🧩 Μίνι mantra Filament dev 😄:**
+
+```
+Blade → refresh
+CSS → filament:assets
+Πανικός → optimize:clear
+@apply → ΜΗΝ ΤΟ ΚΑΝΕΙΣ
+```
+
+---
+
+## 🛡️ Bootstrap Safety & Cache Management
+
+### ⚠️ "Target class [config] does not exist" Error Prevention
+
+**Το πρόβλημα:**
+Αυτό το error συμβαίνει όταν:
+- Τρέχεις `php artisan optimize` με corrupted cache files
+- Service Providers καλούν `config()` ή `Log::` πριν το config service είναι διαθέσιμο
+- Cache files (`bootstrap/cache/*.php`) είναι locked ή corrupted
+
+**✅ Προστασία που έχουμε ήδη προσθέσει:**
+
+1. **AppServiceProvider** - Try-catch + config binding check
+2. **PluginRegistryService** - Checks πριν κάθε `config()` call
+3. **Log calls** - Protected με binding checks
+
+**📋 Service Provider Best Practices (Κανόνες):**
+
+**❌ ΜΗΝ ΚΑΝΕΙΣ:**
+```php
+// AppServiceProvider.php - WRONG
+public function boot(): void
+{
+    // ❌ config() χωρίς check
+    $plugins = config('plugins.providers');
+    
+    // ❌ Log:: χωρίς check
+    Log::info('Booting...');
+    
+    // ❌ app('config') χωρίς check
+    $value = app('config')->get('key');
+}
+```
+
+**✅ ΚΑΝΕ ΑΥΤΟ:**
+```php
+// AppServiceProvider.php - CORRECT
+public function boot(): void
+{
+    // ✅ Check αν το config είναι διαθέσιμο
+    try {
+        if (app()->bound('config')) {
+            $plugins = config('plugins.providers');
+            // ... rest of code
+        }
+    } catch (\Exception $e) {
+        // Silently fail during bootstrap
+        // Will work on next request when config is available
+    }
+}
+```
+
+**✅ Pattern για Services που χρησιμοποιούν config:**
+```php
+// PluginRegistryService.php - CORRECT
+public function discover(): array
+{
+    // Check if config service is available
+    if (!app()->bound('config')) {
+        return [];
+    }
+    
+    return config('plugins.providers', []);
+}
+```
+
+**✅ Pattern για Log calls:**
+```php
+// CORRECT
+if (app()->bound('config') && app()->bound('log')) {
+    Log::warning("Plugin class not found: {$pluginClass}");
+}
+```
+
+### 5️⃣ Table Actions Column Alignment (Center/Right)
+
+**Πρόβλημα:** Το Actions column header δεν συγχρονίζεται με τα κουμπιά από κάτω.
+
+**✅ Λύση: Ίδιο Flex Layout στο Header και Body**
+
+**Blade Template:**
+```blade
+<thead>
+    <tr>
+        <th>Filename</th>
+        <th>Type</th>
+        <th>Size</th>
+        <th>Created</th>
+        <th>
+            <div class="backup-restore-actions-header">Actions</div>
+        </th>
+    </tr>
+</thead>
+<tbody>
+    @foreach($items as $item)
+        <tr>
+            <td>...</td>
+            <td>
+                <div class="backup-restore-actions">
+                    <x-filament::button>Download</x-filament::button>
+                    <x-filament::button>Delete</x-filament::button>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+```
+
+**CSS - Center Alignment:**
+```css
+/* Header wrapper - ίδιο flex layout με body */
+.backup-restore-actions-header {
+    display: flex;
+    justify-content: center;  /* ή flex-end για right alignment */
+    align-items: center;
+    width: 100%;
+}
+
+/* Body actions wrapper - ίδιο flex layout */
+.backup-restore-actions {
+    display: flex;
+    justify-content: center;  /* ή flex-end για right alignment */
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+/* Table cells - center alignment */
+.backup-restore-table thead th {
+    text-align: center;
+}
+
+.backup-restore-table tbody td {
+    text-align: center;
+}
+```
+
+**CSS - Right Alignment (Alternative):**
+```css
+/* Για right alignment, αλλάξε justify-content */
+.backup-restore-actions-header {
+    justify-content: flex-end;  /* right alignment */
+}
+
+.backup-restore-actions {
+    justify-content: flex-end;  /* right alignment */
+}
+```
+
+**✅ Βασικές Αρχές:**
+
+1. **Χρησιμοποίησε wrapper div στο header** - Ίδιο class pattern με το body
+2. **Ίδιο flex engine** - `display: flex; justify-content: center/flex-end` και στα δύο
+3. **Μην χρησιμοποιείς `display: flex` στο `<td>`** - Κράτα το `<td>` ως table-cell
+4. **Χρησιμοποίησε `inline-flex` ή `flex` στο wrapper** - Όχι στο cell
+
+**❌ Common Mistakes:**
+
+```css
+/* WRONG - flex στο td σπάει table layout */
+.backup-restore-table tbody td:last-child {
+    display: flex;  /* ❌ */
+    justify-content: flex-end;
+}
+
+/* WRONG - text-align χωρίς wrapper */
+.backup-restore-table thead th:last-child {
+    text-align: right;  /* ❌ Δεν συγχρονίζεται με body */
+}
+```
+
+**✅ Correct Pattern:**
+```css
+/* CORRECT - wrapper με flex */
+.backup-restore-actions-header {
+    display: flex;
+    justify-content: center;  /* ή flex-end */
+}
+
+.backup-restore-actions {
+    display: flex;
+    justify-content: center;  /* ή flex-end */
+}
+```
+
+**🔒 Cache Management Rules:**
+
+**Local Development:**
+- ✅ Χρησιμοποίησε `optimize:clear` όταν κάτι κολλάει
+- ❌ ΜΗΝ τρέχεις `optimize` στο local (δεν είναι απαραίτητο)
+- ✅ Μετά από `filament:assets`, δοκίμασε πρώτα το site πριν τρέξεις `optimize`
+
+**Production:**
+- ✅ Τρέξε `optimize` μόνο μετά από deploy
+- ✅ Πάντα τρέξε `optimize:clear` πριν από `optimize` σε production
+
+**🚨 Αν ξανασυμβεί (Cache Corrupted):**
+
+**Συμπτώματα:**
+- `php artisan` commands δεν δουλεύουν
+- Error: "Target class [config] does not exist"
+- Το site δεν φορτώνει
+
+**Λύση (Step-by-step):**
+
+1. **Κλείσε το Laragon** (Stop All) - ΚΡΙΣΙΜΟ!
+2. **Διέγραψε cache files χειροκίνητα:**
+   - Άνοιξε `bootstrap/cache/`
+   - Διέγραψε: `config.php`, `packages.php`, `services.php` (αν υπάρχουν)
+   - Ή τρέξε: `.\clear-cache.ps1` (αν το Laragon είναι κλειστό)
+3. **Ξαναάνοιξε το Laragon**
+4. **Δοκίμασε το site** - θα πρέπει να δουλεύει
+5. **Μετά τρέξε:** `php artisan optimize:clear` (για να καθαρίσεις τα υπόλοιπα caches)
+
+**⚠️ ΣΗΜΑΝΤΙΚΟ:**
+- Αν τα cache files είναι **locked**, πρέπει να κλείσεις το Laragon ΠΡΙΝ τα διαγράψεις
+- Το `optimize:clear` **ΔΕΝ** θα δουλέψει αν τα cache files είναι corrupted
+- Πρέπει να τα διαγράψεις **χειροκίνητα** πρώτα
+
+**📝 Checklist για νέους Service Providers:**
+
+Όταν γράφεις νέο Service Provider, βεβαιώσου ότι:
+
+- [ ] Δεν καλείς `config()` στο `register()` method
+- [ ] Αν χρειάζεται `config()` στο `boot()`, το τυλίγεις σε `if (app()->bound('config'))`
+- [ ] Αν χρειάζεται `Log::`, ελέγχεις `app()->bound('log')` πρώτα
+- [ ] Χρησιμοποιείς try-catch για critical operations στο `boot()`
+- [ ] Δεν κάνεις heavy operations στο `register()` (μόνο bindings)
+
+**💡 Pro Tip:**
+
+Αν δημιουργείς service που χρειάζεται config, χρησιμοποίησε **deferred loading**:
+
+```php
+// CORRECT - Deferred loading
+public function boot(): void
+{
+    // Register only if config is available
+    $this->app->booted(function () {
+        if (app()->bound('config')) {
+            $this->registerPlugins();
+        }
+    });
+}
+```
+
+---
+
 ## 6. Text Colors and Hover States in Blade Templates
 
 **❌ WRONG:**
@@ -367,7 +784,185 @@ public function panel(Panel $panel): Panel
 
 ---
 
-## 10. Custom Pages (Χωρίς Forms) - Complete Guide
+## 10. Table Actions Column Alignment - Complete Guide
+
+### 🎯 Στόχος
+
+Να συγχρονίζεται το Actions column header με τα κουμπιά από κάτω, είτε με center είτε με right alignment.
+
+### ⚠️ Common Problem
+
+Το Actions header δεν "κάθεται" ακριβώς πάνω από τα κουμπιά:
+- Header: απλό κείμενο "Actions"
+- Body: group κουμπιών με δικό του πλάτος
+- Διαφορετικό alignment engine → δεν συγχρονίζονται
+
+### ✅ Λύση: Ίδιο Flex Layout στο Header και Body
+
+**1️⃣ Blade Template - Προσθήκη Wrapper στο Header:**
+
+```blade
+<thead>
+    <tr>
+        <th>Filename</th>
+        <th>Type</th>
+        <th>Size</th>
+        <th>Created</th>
+        <th>
+            <div class="backup-restore-actions-header">Actions</div>
+        </th>
+    </tr>
+</thead>
+<tbody>
+    @foreach($backups as $backup)
+        <tr>
+            <td>...</td>
+            <td>
+                <div class="backup-restore-actions">
+                    <x-filament::button>Download</x-filament::button>
+                    <x-filament::button>Delete</x-filament::button>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+```
+
+**2️⃣ CSS - Center Alignment (Recommended):**
+
+```css
+/* Header wrapper - ίδιο flex layout με body */
+.backup-restore-actions-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Body actions wrapper - ίδιο flex layout */
+.backup-restore-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+/* Table cells - center alignment */
+.backup-restore-table thead th {
+    text-align: center;
+}
+
+.backup-restore-table tbody td {
+    text-align: center;
+}
+```
+
+**3️⃣ CSS - Right Alignment (Alternative):**
+
+```css
+/* Για right alignment, αλλάξε μόνο το justify-content */
+.backup-restore-actions-header {
+    display: flex;
+    justify-content: flex-end;  /* right alignment */
+    align-items: center;
+    width: 100%;
+}
+
+.backup-restore-actions {
+    display: flex;
+    justify-content: flex-end;  /* right alignment */
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+```
+
+### ✅ Βασικές Αρχές
+
+1. **Χρησιμοποίησε wrapper div στο header** - Ίδιο class pattern με το body
+2. **Ίδιο flex engine** - `display: flex; justify-content: center/flex-end` και στα δύο
+3. **Μην χρησιμοποιείς `display: flex` στο `<td>`** - Κράτα το `<td>` ως table-cell
+4. **Χρησιμοποίησε `flex` στο wrapper** - Όχι στο cell
+
+### ❌ Common Mistakes
+
+**WRONG - Flex στο td σπάει table layout:**
+```css
+.backup-restore-table tbody td:last-child {
+    display: flex;  /* ❌ Σπάει table layout */
+    justify-content: flex-end;
+}
+```
+
+**WRONG - Text-align χωρίς wrapper:**
+```css
+.backup-restore-table thead th:last-child {
+    text-align: right;  /* ❌ Δεν συγχρονίζεται με body */
+}
+```
+
+**WRONG - Double alignment logic:**
+```css
+.backup-restore-table tbody td:last-child {
+    text-align: right;  /* Method 1 */
+}
+
+.backup-restore-actions {
+    margin-left: auto;  /* Method 2 - CONFLICT! */
+}
+```
+
+### ✅ Correct Pattern
+
+```css
+/* Header wrapper */
+.backup-restore-actions-header {
+    display: flex;
+    justify-content: center;  /* ή flex-end */
+    align-items: center;
+    width: 100%;
+}
+
+/* Body wrapper */
+.backup-restore-actions {
+    display: flex;
+    justify-content: center;  /* ή flex-end */
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+/* Table cells - normal table-cell behavior */
+.backup-restore-table tbody td:last-child {
+    padding-right: 1.5rem;
+    vertical-align: middle;
+    /* NO display: flex here */
+}
+```
+
+### 💡 Γιατί Αυτή η Προσέγγιση
+
+1. **Ίδιο flex engine** - Header και body χρησιμοποιούν το ίδιο layout system
+2. **Table layout intact** - Το `<td>` μένει table-cell, δεν σπάει το layout
+3. **Deterministic alignment** - Με `width: 100%` και ίδιο `justify-content`, συγχρονίζονται
+4. **Responsive friendly** - Δουλεύει σε όλα τα screen sizes
+
+### 📋 Checklist
+
+- [ ] Wrapper div στο header με class (π.χ. `backup-restore-actions-header`)
+- [ ] Wrapper div στο body με class (π.χ. `backup-restore-actions`)
+- [ ] Ίδιο `display: flex` και `justify-content` και στα δύο wrappers
+- [ ] `width: 100%` και στα δύο wrappers
+- [ ] Το `<td>` δεν έχει `display: flex` (μένει table-cell)
+- [ ] `text-align: center` στα `th` και `td` για center alignment
+
+---
+
+## 11. Custom Pages (Χωρίς Forms) - Complete Guide
 
 ### 🎯 Στόχος
 
@@ -554,7 +1149,116 @@ public function panel(Panel $panel): Panel
 - Χρησιμοποίησε padding, margin, overflow, flex, width/height για πλήρη έλεγχο
 - Προσάρμοσε χρώματα, fonts, και sizes στο CSS
 
-### 4️⃣ Interactivity & Behavior
+**⚠️ Important - CSS Overrides για Third-Party Components:**
+
+Όταν προσπαθείς να override-άρεις styles από third-party components (π.χ. FilePond στο FileUpload), χρησιμοποίησε:
+
+1. **Filament Semantic Classes** ως base selector για scoping
+2. **Higher Specificity** με duplicate classes (π.χ. `.fi-fo-field.fi-fo-field`)
+3. **Inspect Element** για να βρεις το ακριβές HTML structure
+
+**Παράδειγμα - FileUpload Icon Size Override:**
+
+```css
+/* resources/css/filament-fileupload.css */
+
+/* Scoped στο FileUpload field - χρησιμοποιούμε Filament semantic classes */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--root {
+    --filepond-icon-size: 1.25rem;
+}
+
+/* File icon wrapper - μικρότερα εικονίδια */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-icon-wrapper svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Image preview wrapper - μικρότερα previews */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--image-preview-wrapper {
+    max-height: 120px;
+}
+```
+
+**Σημείωση**: Αν το CSS δεν "πιάνει" ακόμα και με scoped selectors, μπορεί να χρειάζεται:
+- JavaScript-based solution (FilePond initialization hooks)
+- Custom FileUpload view component
+- Alternative component approach
+
+**⚠️ Known Limitation**: Το Filament 4 FileUpload component δεν έχει built-in method για icon size control. Το `imagePreviewHeight()` ελέγχει μόνο image preview height, όχι icon sizes.
+
+### 4️⃣ Table Alignment Best Practices
+
+**⚠️ Common Mistake - Double Alignment Logic:**
+
+Όταν έχεις table cells με actions/buttons, μην συνδυάζεις `text-align: right` στο `<td>` με `margin-left: auto` ή `width: fit-content` στο flex container. Αυτό δημιουργεί "διπλή" λογική στοίχισης και συχνά φαίνεται σαν να μην κάθεται ακριβώς στο ίδιο x-position.
+
+**❌ WRONG - Double Alignment:**
+```css
+.backup-restore-table tbody td:last-child {
+    text-align: right;  /* Alignment method 1 */
+}
+
+.backup-restore-actions {
+    display: flex;
+    margin-left: auto;  /* Alignment method 2 - CONFLICT! */
+    width: fit-content;
+}
+```
+
+**✅ CORRECT - Single Alignment Method (Recommended):**
+
+**Επιλογή A: Flex στο `<td>` (Recommended)**
+
+Κάνε το `<td>` flex container και αφαιρέσε `text-align: right`:
+
+```css
+.backup-restore-table tbody td:last-child {
+    padding-right: 1.5rem;
+    vertical-align: middle;
+    display: flex;
+    justify-content: flex-end;  /* Single alignment method */
+}
+
+.backup-restore-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    /* NO margin-left: auto */
+    /* NO width: fit-content */
+}
+```
+
+**Επιλογή B: Text-align στο `<td>` (Alternative)**
+
+Αν προτιμάς `text-align: right`:
+
+```css
+.backup-restore-table tbody td:last-child {
+    padding-right: 1.5rem;
+    text-align: right;  /* Single alignment method */
+    vertical-align: middle;
+}
+
+.backup-restore-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    /* NO margin-left: auto */
+    /* NO width: fit-content */
+    /* NO justify-content: flex-end */
+}
+```
+
+**✅ Καλές πρακτικές:**
+- Χρησιμοποίησε **ΜΟΝΟ ένα** σύστημα στοίχισης (flex ή text-align)
+- Με Livewire/Filament dynamic rendering, το flex στο `<td>` είναι πιο σταθερό
+- Το `inline-flex` στο actions container είναι καλύτερο από `flex` για να μην πιάνει όλο το πλάτος
+- Αποφύγετε `width: fit-content` + `margin-left: auto` μαζί - δημιουργεί layout shifts
+
+### 5️⃣ Interactivity & Behavior
 
 **Livewire hooks για actions:**
 ```blade
@@ -1249,9 +1953,871 @@ border-color: var(--color-gray-700);  /* #3f3f46 */
 - ❌ **Μην βάζεις hardcoded values** στο HTML - χρησιμοποίησε variables
 - ❌ **Μην σκορπίζεις variables** σε διάφορα `@php` blocks - όλες στο top
 - ❌ **Μην χρησιμοποιείς μόνο CSS classes** - συνδύασε με PHP variables για flexibility
+
+---
+
+## 12. Custom CSS Overrides για Third-Party Components
+
+### 🎯 Στόχος
+
+Να μπορείς να override-άρεις styles από third-party components (π.χ. FilePond στο FileUpload) χρησιμοποιώντας Filament semantic classes και scoped selectors.
+
+### ⚠️ Known Limitations
+
+**FileUpload Component Icon Sizes**: Το Filament 4 FileUpload component δεν έχει built-in method για icon size control. Το `imagePreviewHeight()` ελέγχει μόνο image preview height, όχι icon sizes. Αν χρειάζεσαι μικρότερα icons, χρησιμοποίησε CSS overrides.
+
+### 📋 Best Practices για CSS Overrides
+
+**1. Χρησιμοποίησε Filament Semantic Classes ως Base Selector**
+
+```css
+/* ✅ CORRECT - Scoped με Filament classes */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--root {
+    --filepond-icon-size: 1.25rem;
+}
+
+/* ❌ WRONG - Global selector, επηρεάζει όλα τα FilePond instances */
+.filepond--root {
+    --filepond-icon-size: 1.25rem;
+}
+```
+
+**2. Higher Specificity με Duplicate Classes**
+
+```css
+/* ✅ CORRECT - Higher specificity */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-icon-wrapper svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* ❌ WRONG - Lower specificity, μπορεί να override-αριστεί */
+.fi-fo-file-upload .filepond--file-icon-wrapper svg {
+    width: 1.25rem;
+}
+```
+
+**3. Inspect Element για Ακριβές HTML Structure**
+
+**Βήματα:**
+1. Κάνε inspect στο component στο browser
+2. Βρες το Filament wrapper class (π.χ. `.fi-fo-field`, `.fi-section-content`)
+3. Χρησιμοποίησε αυτό το class ως base selector
+4. Προσθήκη third-party classes (π.χ. `.filepond--root`) για scoping
+
+**Παράδειγμα HTML Structure:**
+```html
+<div class="fi-fo-field" data-field-wrapper="">
+    <div class="fi-fo-field-content-col">
+        <div class="fi-fo-file-upload">
+            <div class="filepond--root">
+                <!-- Third-party component content -->
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+**CSS Selector:**
+```css
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--root {
+    /* Overrides here */
+}
+```
+
+### 🔧 Complete Example - FileUpload Icon Size Override
+
+**Problem**: FileUpload component displays excessively large icons.
+
+**Solution**: CSS override με scoped selectors.
+
+**Step 1: Create CSS File** (`resources/css/filament-fileupload.css`):
+
+```css
+/*
+ * Filament FileUpload Customization
+ * Scoped CSS selectors based on Filament 4 semantic classes.
+ */
+
+/* Scoped στο FileUpload field - μειώνει το μέγεθος των εικονιδίων */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--root {
+    --filepond-icon-size: 1.25rem;
+}
+
+/* File icon wrapper - μικρότερα εικονίδια */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-icon-wrapper svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Image preview wrapper - μικρότερα previews */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--image-preview-wrapper {
+    max-height: 120px;
+}
+
+/* File item panel - horizontal layout με εικονίδια δίπλα στα κείμενα */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file {
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+/* File icon wrapper - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-icon-wrapper {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* File info container - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    min-width: 0; /* Allows text truncation */
+}
+
+/* File name - truncate αν είναι μεγάλο */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-main {
+    font-weight: 500;
+    color: var(--color-gray-900, #18181b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* File size - secondary text */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-sub {
+    font-size: 0.6875rem;
+    color: var(--color-gray-600, #52525b);
+}
+
+/* File status - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-status {
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* File actions - horizontal layout */
+.fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-action-button {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-main {
+        color: var(--color-gray-100, #f4f4f5);
+    }
+    
+    .fi-fo-field.fi-fo-field .fi-fo-file-upload .filepond--file-info-sub {
+        color: var(--color-gray-400, #a1a1aa);
+    }
+}
+```
+
+**Step 2: Add to Panel Config** (`app/Providers/Filament/AdminPanelProvider.php`):
+
+```php
+use Filament\Support\Assets\Css;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->assets([
+            Css::make('fileupload-overrides', base_path('resources/css/filament-fileupload.css')),
+        ]);
+}
+```
+
+**Step 3: Compile Assets**:
+
+```bash
+php artisan filament:assets
+```
+
+**Step 4: Hard Refresh Browser** (Ctrl+Shift+R / Cmd+Shift+R)
+
+### ⚠️ Troubleshooting
+
+**Αν το CSS δεν "πιάνει":**
+
+1. **Verify CSS is loaded**: Check browser Network tab - CSS file should be loaded
+2. **Check specificity**: Use `.fi-fo-field.fi-fo-field` for higher specificity
+3. **Inspect element**: Verify actual HTML structure matches your selectors
+4. **Clear cache**: Hard refresh browser (Ctrl+Shift+R)
+5. **Check for inline styles**: Third-party components may apply inline styles via JavaScript
+
+**Αν ακόμα δεν δουλεύει:**
+
+- Το component μπορεί να χρειάζεται JavaScript-based solution
+- Μπορεί να χρειάζεται custom view component
+- Μπορεί να χρειάζεται alternative component approach
+
+### 📝 Checklist
+
+- ✅ **Χρησιμοποίησε Filament semantic classes** ως base selector
+- ✅ **Higher specificity** με duplicate classes (`.fi-fo-field.fi-fo-field`)
+- ✅ **Scoped selectors** - επηρεάζουν μόνο το συγκεκριμένο component
+- ✅ **Inspect element** για ακριβές HTML structure
+- ✅ **Panel Asset** - φόρτωσε CSS ως Panel Asset, όχι inline
+- ✅ **Compile assets** - τρέξε `php artisan filament:assets`
+- ✅ **Hard refresh** - clear browser cache
+
+### 🚫 Τι ΝΑ ΜΗΝ Κάνεις
+
+- ❌ **Μην χρησιμοποιείς global selectors** (π.χ. `.filepond--root`) - χρησιμοποίησε scoped
+- ❌ **Μην βασίζεσαι μόνο σε third-party classes** - συνδύασε με Filament classes
+- ❌ **Μην χρησιμοποιείς inline styles** στο Blade - χρησιμοποίησε Panel Assets
+- ❌ **Μην χρησιμοποιείς `!important`** - χρησιμοποίησε higher specificity
 - ❌ **Μην ξεχνάς fallback values** σε CSS variables
 
 ---
+
+## 13. SVG Icons Pattern - Filament-Native Style
+
+### 🎯 Στόχος
+Να χρησιμοποιείς SVG icons με **σωστή στοίχιση** και **σταθερό layout** που μοιάζει με Filament's internal components (hints, alerts, info sections).
+
+### ⚠️ Common Problem
+
+**❌ WRONG:**
+```blade
+<div class="flex items-start gap-2">
+    <svg class="w-4 h-4 text-primary-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path ... />
+    </svg>
+    <div>Κείμενο</div>
+</div>
+```
+
+**Προβλήματα:**
+- SVG δεν έχει fixed container
+- `items-start` + multiline text "τραβάει" το icon
+- Όταν το κείμενο μεγαλώνει, το icon δείχνει πιο "ψηλό" απ' όσο πρέπει
+- Δεν είναι consistent με Filament's internal styling
+
+### ✅ CORRECT: Bulletproof Filament-Native Pattern (Custom CSS)
+
+**⚠️ Critical Issues to Prevent:**
+1. **Tailwind classes δεν "τρέχουν"** - τα utility classes που περιμένεις δεν εφαρμόζονται
+2. **Global CSS rules** που κάνουν `svg { width: 100%; height: auto; }` ή `display: block;`
+3. **Typography plugins** (π.χ. prose) που επηρεάζουν SVG μέσα σε content
+4. **Flex layout breaking** από parent overrides
+
+**🎯 Root Cause:**
+Το πρόβλημα δεν είναι το markup (είναι σωστό). Το πρόβλημα είναι ότι τα Tailwind utility classes που περιμένεις δεν "υπάρχουν/τρέχουν", άρα δεν εφαρμόζονται, οπότε το SVG μένει "default huge" και το layout "default block".
+
+**✅ Σωστή Λύση: Custom CSS Classes (Filament Way)**
+
+Μην βασίζεσαι σε Tailwind classes για sizing/layout εδώ. Κλείδωσε το layout με **custom CSS classes** στο Panel Asset (όπως ήδη κάνεις για FileUpload).
+
+**Blade Template:**
+```blade
+<div class="my-info-list">
+    <div class="my-info-row">
+        <span class="my-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                {!! $folderIcon !!}
+            </svg>
+        </span>
+        <div class="my-info-text">
+            <strong>Organize with Folders:</strong>
+            Create folders to organize your files by category, project, or date.
+        </div>
+    </div>
+</div>
+```
+
+**CSS (resources/css/filament-fileupload.css):**
+```css
+/* Info list (About Media Library) */
+.my-info-list {
+    display: grid;
+    gap: 0.75rem; /* 12px */
+}
+
+.my-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem; /* 12px */
+}
+
+.my-info-icon {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    color: rgb(99 102 241); /* περίπου primary-500 */
+}
+
+.my-info-icon svg {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.my-info-text {
+    font-size: 0.875rem;  /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(75 85 99); /* gray-600 */
+}
+
+.my-info-text strong {
+    font-weight: 600;
+    color: rgb(17 24 39); /* gray-900 */
+}
+
+/* Optional: dark mode */
+.dark .my-info-text { color: rgb(156 163 175); } /* gray-400 */
+.dark .my-info-text strong { color: white; }
+```
+
+**⚠️ ΣΗΜΑΝΤΙΚΟ: Explicit SVG Size**
+Το `width: 16px; height: 16px;` στο `.my-info-icon svg` είναι **bulletproof** - αν υπάρχει global CSS που μεγαλώνει SVG, αυτό το κλείδωσε.
+
+**Γιατί αυτό είναι το σωστό root fix:**
+- ✅ Με `width="16" height="16"` attributes + `width: 16px; height: 16px;` στο CSS, το SVG δεν μπορεί να γίνει τεράστιο, ό,τι CSS κι αν υπάρχει
+- ✅ Με `display: flex` στο CSS, το κείμενο δεν μπορεί να πέσει από κάτω
+- ✅ Καθαρό & maintainable (Filament way)
+- ✅ Δεν γεμίζεις inline styles
+- ✅ Reusable classes για όλα τα info rows
+
+**📋 Setup Steps:**
+
+**1. Προσθήκη CSS στο Panel Asset:**
+
+Στο `app/Providers/Filament/AdminPanelProvider.php`:
+```php
+use Filament\Support\Assets\Css;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->assets([
+            Css::make('fileupload-overrides', resource_path('css/filament-fileupload.css')),
+        ]);
+}
+```
+
+**⚠️ ΣΗΜΑΝΤΙΚΟ:** Χρησιμοποίησε `resource_path()` όχι `base_path()` - το Filament περιμένει path από `resources/` directory.
+
+**2. Compile Assets & Clear Cache:**
+```bash
+php artisan filament:assets
+php artisan optimize:clear
+```
+
+**3. Hard Refresh Browser:**
+- Windows/Linux: `Ctrl + F5` ή `Ctrl + Shift + R`
+- Mac: `Cmd + Shift + R`
+
+**4. Verify στο DevTools:**
+- Inspect το `<div class="my-info-row">`
+- Computed → `display` → πρέπει να γράφει `display: flex` ✅
+- Αν γράφει `display: block` ❌, το CSS δεν φορτώνεται (ελέγξε asset path, cache, ή αν είσαι στο σωστό panel)
+
+### 🎯 Τι κερδίζεις με αυτό
+
+- ✔ SVG **πάντα 16px** (width/height attributes - bulletproof)
+- ✔ **ΣΤΑΘΕΡΗ** στοίχιση αριστερά (CSS κλειδώνει το layout)
+- ✔ Κείμενο δίπλα, όχι κάτω (`display: flex` στο CSS)
+- ✔ Δεν επηρεάζεται από Tailwind classes που δεν "τρέχουν"
+- ✔ Δεν επηρεάζεται από global CSS rules
+- ✔ Works perfect με multiline text
+- ✔ Bulletproof σε οποιοδήποτε CSS environment
+- ✔ Καθαρό & maintainable (Filament way)
+
+### 🧠 Γιατί δουλεύει αυτό (σημαντικό)
+
+| Element | Ρόλος |
+|---------|-------|
+| `width="16" height="16"` | **Bulletproof** - δεν αλλάζει από CSS rules |
+| `.my-info-icon svg { display: inline-block; }` | Prevents `display: block` από global CSS |
+| `.my-info-row { display: flex; }` | Ensures horizontal layout, δεν "σπάει" |
+| `.my-info-icon { flex: 0 0 auto; }` | Δεν αφήνει το icon να μικρύνει |
+| `.my-info-icon { margin-top: 2px; }` | Subtle vertical alignment με text |
+| Fixed `width: 20px; height: 20px;` | Σταθερό icon container |
+| `gap: 0.75rem;` | Consistent spacing |
+
+**Αυτό είναι bulletproof pattern που δουλεύει ακόμα και αν τα Tailwind classes δεν "τρέχουν".**
+
+### 🧩 Alternative: Inline Styles (100% σίγουρο)
+
+Αν θες 100% bulletproof χωρίς custom CSS:
+
+```blade
+<div style="display:flex; align-items:flex-start; gap:0.75rem;">
+    <div style="flex:0 0 auto; width:20px; height:20px; display:flex; align-items:center; justify-content:center; margin-top:2px; color: var(--primary-500, #6366f1);">
+        <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            style="display:inline-block;"
+        >
+            {!! $folderIcon !!}
+        </svg>
+    </div>
+
+    <div style="font-size:0.875rem; line-height:1.25rem; color:#4b5563;">
+        <strong style="font-weight:600; color:#111827;">Organize with Folders:</strong>
+        Create folders to organize your files by category, project, or date.
+    </div>
+</div>
+```
+
+**Χρήση:**
+- ✅ 100% σίγουρο - δεν επηρεάζεται από κανένα CSS
+- ❌ Λιγότερο maintainable - inline styles
+- ❌ Δεν είναι "Filament way"
+
+**Συνιστάται:** Custom CSS classes (πιο maintainable, Filament way)
+
+### 📝 Mini Checklist (για ΟΛΑ τα SVG στο admin)
+
+**✔ SVG πάντα:**
+- ✅ `width="16" height="16"` **attributes** στο SVG element (bulletproof)
+- ✅ `width: 16px; height: 16px;` **στο CSS** για το `.my-info-icon svg` (extra bulletproof)
+- ✅ Custom CSS classes για layout (Filament way) - **χρησιμοποίησε `resource_path()` στο AdminPanelProvider**
+- ✅ `display: flex` στο CSS για horizontal layout
+- ✅ `flex: 0 0 auto` στο icon wrapper (δεν μικρύνει)
+- ✅ Fixed `width: 20px; height: 20px;` στο icon container
+- ✅ `display: inline-block` στο SVG (prevents `display: block`)
+- ✅ **Compile assets:** `php artisan filament:assets`
+- ✅ **Clear cache:** `php artisan optimize:clear`
+- ✅ **Hard refresh browser:** `Ctrl + F5`
+
+**❌ ΠΟΤΕ:**
+- ❌ SVG μόνο του (χωρίς wrapper)
+- ❌ Χωρίς `width/height` attributes (θα επηρεαστεί από global CSS)
+- ❌ Χωρίς `width: 16px; height: 16px;` στο CSS (αν υπάρχει global rule)
+- ❌ Βασίζεσαι μόνο σε Tailwind classes (μπορεί να μην "τρέχουν")
+- ❌ Χωρίς `display: flex` στο CSS (το layout θα "σπάσει")
+- ❌ Χωρίς fixed icon container size (θα επηρεαστεί από content)
+- ❌ `base_path()` αντί για `resource_path()` στο AdminPanelProvider
+
+### 🔍 Complete Example (Custom CSS - Filament Way)
+
+**Blade Template:**
+```blade
+@php
+    // SVG Icons stored in PHP variables
+    $folderIcon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />';
+    $imageIcon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />';
+    $variantIcon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />';
+@endphp
+
+<div class="my-info-list">
+    <div class="my-info-row">
+        <span class="my-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                {!! $folderIcon !!}
+            </svg>
+        </span>
+        <div class="my-info-text">
+            <strong>Organize with Folders:</strong>
+            Create folders to organize your files by category, project, or date.
+        </div>
+    </div>
+    
+    <div class="my-info-row">
+        <span class="my-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                {!! $imageIcon !!}
+            </svg>
+        </span>
+        <div class="my-info-text">
+            <strong>Use in Content:</strong>
+            Uploaded images can be used in content blocks, products, categories, and more.
+        </div>
+    </div>
+    
+    <div class="my-info-row">
+        <span class="my-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                {!! $variantIcon !!}
+            </svg>
+        </span>
+        <div class="my-info-text">
+            <strong>Automatic Variants:</strong>
+            Images are automatically resized into thumbnails and different sizes for optimal performance.
+        </div>
+    </div>
+</div>
+```
+
+**CSS (resources/css/filament-fileupload.css):**
+```css
+/* Info list (About Media Library) */
+.my-info-list {
+    display: grid;
+    gap: 0.75rem; /* 12px */
+}
+
+.my-info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem; /* 12px */
+}
+
+.my-info-icon {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    color: rgb(99 102 241); /* περίπου primary-500 */
+}
+
+.my-info-icon svg {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.my-info-text {
+    font-size: 0.875rem;  /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(75 85 99); /* gray-600 */
+}
+
+.my-info-text strong {
+    font-weight: 600;
+    color: rgb(17 24 39); /* gray-900 */
+}
+
+/* Optional: dark mode */
+.dark .my-info-text { color: rgb(156 163 175); } /* gray-400 */
+.dark .my-info-text strong { color: white; }
+```
+
+**⚠️ ΣΗΜΑΝΤΙΚΟ: Explicit SVG Size**
+Το `width: 16px; height: 16px;` στο `.my-info-icon svg` είναι **bulletproof** - αν υπάρχει global CSS που μεγαλώνει SVG, αυτό το κλείδωσε.
+
+### 🚫 Τι ΝΑ ΜΗΝ Κάνεις
+
+- ❌ **Μην βάζεις SVG μόνο του** - πάντα μέσα σε wrapper
+- ❌ **Μην ξεχνάς `width/height` attributes** - χωρίς αυτά, global CSS θα το αλλάξει
+- ❌ **Μην ξεχνάς `width: 16px; height: 16px;` στο CSS** - extra bulletproof για global rules
+- ❌ **Μην βασίζεσαι μόνο σε Tailwind classes** - μπορεί να μην "τρέχουν", χρησιμοποίησε custom CSS
+- ❌ **Μην ξεχνάς `display: flex` στο CSS** - χωρίς αυτό, το layout θα "σπάσει"
+- ❌ **Μην ξεχνάς fixed icon container size** - χωρίς αυτό, θα επηρεαστεί από content
+- ❌ **Μην χρησιμοποιείς `display: block` στο SVG** - χρησιμοποίησε `inline-block`
+- ❌ **Μην χρησιμοποιείς `base_path()`** - χρησιμοποίησε `resource_path()` στο AdminPanelProvider
+- ❌ **Μην ξεχνάς να compile assets** - `php artisan filament:assets` μετά από κάθε CSS change
+- ❌ **Μην ξεχνάς hard refresh** - `Ctrl + F5` για να δεις τις αλλαγές
+
+### 🔧 Development & Extension Guide
+
+#### 1. Προσθήκη Νέου Row
+
+**Step 1:** Προσθήκη SVG icon στο `@php` block:
+```blade
+@php
+    // Existing icons...
+    $folderIcon = '<path ... />';
+    $imageIcon = '<path ... />';
+    
+    // New icon
+    $newIcon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M..."/>';
+@endphp
+```
+
+**Step 2:** Προσθήκη row στο template:
+```blade
+<div class="my-info-list">
+    <!-- Existing rows... -->
+    
+    <!-- New row -->
+    <div class="my-info-row">
+        <span class="my-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                {!! $newIcon !!}
+            </svg>
+        </span>
+        <div class="my-info-text">
+            <strong>New Feature:</strong>
+            Description of the new feature goes here.
+        </div>
+    </div>
+</div>
+```
+
+**Step 3:** Compile assets:
+```bash
+php artisan filament:assets
+```
+
+**✅ Done!** Δεν χρειάζεται CSS change - οι classes είναι reusable.
+
+---
+
+#### 2. Αλλαγή Icon Colors
+
+**Option A: Global Color Change (όλα τα icons)**
+
+Στο CSS (`resources/css/filament-fileupload.css`):
+```css
+.my-info-icon {
+    /* Change from primary-500 to success-500 */
+    color: rgb(16 185 129); /* green-500 */
+}
+```
+
+**Option B: Specific Icon Color (μόνο ένα icon)**
+
+**Step 1:** Προσθήκη custom class στο Blade:
+```blade
+<div class="my-info-row">
+    <span class="my-info-icon my-info-icon-success">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            {!! $successIcon !!}
+        </svg>
+    </span>
+    <div class="my-info-text">
+        <strong>Success Message:</strong>
+        This icon will be green.
+    </div>
+</div>
+```
+
+**Step 2:** Προσθήκη CSS:
+```css
+.my-info-icon-success {
+    color: rgb(16 185 129); /* green-500 */
+}
+```
+
+**Step 3:** Compile assets:
+```bash
+php artisan filament:assets
+```
+
+---
+
+#### 3. Αλλαγή Text Styling
+
+**Option A: Global Text Change**
+
+Στο CSS:
+```css
+.my-info-text {
+    font-size: 1rem; /* Change from 0.875rem to 1rem */
+    line-height: 1.5rem; /* Change from 1.25rem to 1.5rem */
+    color: rgb(55 65 81); /* Change from gray-600 to gray-700 */
+}
+```
+
+**Option B: Specific Row Text**
+
+**Step 1:** Προσθήκη custom class:
+```blade
+<div class="my-info-row">
+    <span class="my-info-icon">...</span>
+    <div class="my-info-text my-info-text-large">
+        <strong>Large Text:</strong>
+        This text will be larger.
+    </div>
+</div>
+```
+
+**Step 2:** Προσθήκη CSS:
+```css
+.my-info-text-large {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5rem; /* 24px */
+}
+```
+
+---
+
+#### 4. Αλλαγή Spacing/Gap
+
+**Global Gap Change:**
+
+Στο CSS:
+```css
+.my-info-list {
+    gap: 1rem; /* Change from 0.75rem (12px) to 1rem (16px) */
+}
+
+.my-info-row {
+    gap: 1rem; /* Change from 0.75rem (12px) to 1rem (16px) */
+}
+```
+
+**Row-Specific Gap:**
+
+**Step 1:** Προσθήκη inline style (bulletproof):
+```blade
+<div class="my-info-row" style="gap: 1rem;">
+    <!-- content -->
+</div>
+```
+
+---
+
+#### 5. Reusable Component (Advanced)
+
+**Step 1:** Δημιουργία component (`resources/views/components/info-row.blade.php`):
+```blade
+@props(['icon', 'title', 'description', 'iconColor' => 'rgb(99 102 241)'])
+
+<div class="my-info-row">
+    <span class="my-info-icon" style="color: {{ $iconColor }};">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            {!! $icon !!}
+        </svg>
+    </span>
+    <div class="my-info-text">
+        <strong>{{ $title }}</strong>
+        {{ $description }}
+    </div>
+</div>
+```
+
+**Step 2:** Χρήση στο template:
+```blade
+@php
+    $folderIcon = '<path ... />';
+@endphp
+
+<div class="my-info-list">
+    <x-info-row 
+        :icon="$folderIcon"
+        title="Organize with Folders:"
+        description="Create folders to organize your files by category, project, or date."
+        icon-color="rgb(99 102 241)"
+    />
+    
+    <x-info-row 
+        :icon="$imageIcon"
+        title="Use in Content:"
+        description="Uploaded images can be used in content blocks, products, categories, and more."
+        icon-color="rgb(16 185 129)"
+    />
+</div>
+```
+
+**✅ Benefits:**
+- DRY (Don't Repeat Yourself)
+- Easy to maintain
+- Consistent structure
+- Parameterizable
+
+---
+
+#### 6. Επέκταση σε Άλλα Pages
+
+**Step 1:** Αντιγραφή CSS classes στο `filament-fileupload.css` (ή δημιουργία νέου CSS file)
+
+**Step 2:** Προσθήκη στο AdminPanelProvider (αν χρησιμοποιείς νέο file):
+```php
+->assets([
+    Css::make('fileupload-overrides', resource_path('css/filament-fileupload.css')),
+    Css::make('custom-info-list', resource_path('css/custom-info-list.css')), // New file
+])
+```
+
+**Step 3:** Χρήση στο νέο page:
+```blade
+<!-- Same structure, same classes -->
+<div class="my-info-list">
+    <div class="my-info-row">
+        <!-- ... -->
+    </div>
+</div>
+```
+
+**✅ Classes are reusable across all pages!**
+
+---
+
+#### 7. Troubleshooting
+
+**Problem: CSS changes δεν εφαρμόζονται**
+
+**Solution:**
+1. Verify CSS file path στο AdminPanelProvider (`resource_path()`)
+2. Compile assets: `php artisan filament:assets`
+3. Clear cache: `php artisan optimize:clear`
+4. Hard refresh browser: `Ctrl + F5`
+5. Check DevTools → Network tab → verify CSS file loads
+6. Check DevTools → Computed → verify `display: flex` applies
+
+**Problem: Icon color δεν αλλάζει**
+
+**Solution:**
+1. Verify CSS specificity - χρησιμοποίησε `.my-info-icon { color: ... }` (not nested)
+2. Check for dark mode overrides - verify `.dark .my-info-icon` rules
+3. Use inline style for testing: `style="color: rgb(16 185 129);"`
+
+**Problem: Layout "σπάει" (text κάτω από icon)**
+
+**Solution:**
+1. Verify `.my-info-row { display: flex; }` exists στο CSS
+2. Check DevTools → Computed → `display` should be `flex`
+3. Verify `flex: 0 0 auto;` στο `.my-info-icon`
+4. Check for parent CSS overrides
+
+**Problem: SVG size είναι μεγάλο**
+
+**Solution:**
+1. Verify `width="16" height="16"` attributes στο SVG
+2. Verify `.my-info-icon svg { width: 16px; height: 16px; }` στο CSS
+3. Check for global CSS rules: `svg { width: 100%; }` - το explicit CSS θα το override
+
+---
+
+#### 8. Best Practices για Maintenance
+
+**✅ DO:**
+- Κράτα όλα τα SVG icons στο `@php` block (centralized)
+- Χρησιμοποίησε consistent naming: `$folderIcon`, `$imageIcon`, etc.
+- Document custom CSS classes με comments
+- Test σε light & dark mode
+- Verify με DevTools μετά από κάθε change
+
+**❌ DON'T:**
+- Μην βάζεις inline styles εκτός αν είναι absolutely necessary
+- Μην duplicate CSS classes - reuse existing
+- Μην ξεχνάς να compile assets μετά από CSS changes
+- Μην χρησιμοποιείς Tailwind classes για critical layout
+
+---
+
+#### 9. Quick Reference: Common Customizations
+
+| Customization | CSS Change | Blade Change |
+|---------------|------------|--------------|
+| **Icon color (global)** | `.my-info-icon { color: ... }` | None |
+| **Icon color (specific)** | `.my-info-icon-custom { color: ... }` | Add class to `<span>` |
+| **Text size (global)** | `.my-info-text { font-size: ... }` | None |
+| **Text size (specific)** | `.my-info-text-large { font-size: ... }` | Add class to `<div>` |
+| **Gap (global)** | `.my-info-list { gap: ... }` | None |
+| **Gap (row-specific)** | None | `style="gap: ..."` on row |
+| **Add new row** | None | Copy existing row structure |
+| **Dark mode color** | `.dark .my-info-text { color: ... }` | None |
+
+---
+
+## 🔍 How to Verify
 
 ## 🔍 How to Verify
 

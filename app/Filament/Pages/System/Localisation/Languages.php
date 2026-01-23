@@ -6,9 +6,9 @@ use Filament\Pages\Page;
 
 class Languages extends Page
 {
-    protected static string|\UnitEnum|null $navigationGroup = 'System';
+    protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 4;
 
     protected string $view = 'filament.pages.system.localisation.languages';
 

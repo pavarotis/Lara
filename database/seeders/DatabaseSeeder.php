@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             SettingsSeeder::class,
+            // Users (after roles)
+            UserSeeder::class,
             // v2 Content Module
             ContentTypeSeeder::class,
             // Demo Cafe (default)
