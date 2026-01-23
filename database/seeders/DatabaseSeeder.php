@@ -36,6 +36,10 @@ class DatabaseSeeder extends Seeder
             // Additional businesses
             GasStationSeeder::class,
             BakerySeeder::class,
+            // CMS Variables (after businesses)
+            VariablesSeeder::class,
+            DynamicVariablesSeeder::class,
+            CompleteVariablesSeeder::class,
         ]);
     }
 }

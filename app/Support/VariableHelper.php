@@ -4,54 +4,38 @@ declare(strict_types=1);
 
 namespace App\Support;
 
-use App\Domain\Variables\Models\Variable;
-use Illuminate\Support\Facades\Cache;
+use App\Domain\Variables\Services\VariableService;
+use Illuminate\Support\Facades\App;
 
 /**
  * VariableHelper
  *
- * Helper class for accessing variables in templates.
- * Usage: {{ App\Support\VariableHelper::get('key', $business) }}
+ * Global helper functions for accessing variables easily.
+ * Usage: variable('site_name') or variable('theme_colors', [])
  */
-class VariableHelper
-{
-    /**
-     * Get variable value for business
-     */
-    public static function get(string $key, ?\App\Domain\Businesses\Models\Business $business = null, mixed $default = null): mixed
+if (! function_exists('variable')) {
+    function variable(string $key, mixed $default = null): mixed
     {
-        if (! $business) {
-            $business = \App\Domain\Businesses\Models\Business::active()->first();
-        }
+        $service = App::make(VariableService::class);
 
-        if (! $business) {
-            return $default;
-        }
-
-        $cacheKey = "variable:{$business->id}:{$key}";
-
-        return Cache::remember($cacheKey, 3600, function () use ($business, $key, $default) {
-            $variable = Variable::forBusiness($business->id)
-                ->where('key', $key)
-                ->first();
-
-            if (! $variable) {
-                return $default;
-            }
-
-            return $variable->getTypedValue();
-        });
+        return $service->get($key, $default);
     }
+}
 
-    /**
-     * Clear variable cache for business
-     */
-    public static function clearCache(?int $businessId = null): void
+if (! function_exists('site_config')) {
+    function site_config(): array
     {
-        if ($businessId) {
-            Cache::tags(["variables:{$businessId}"])->flush();
-        } else {
-            Cache::tags(['variables'])->flush();
-        }
+        $service = App::make(VariableService::class);
+
+        return $service->getSiteConfig();
+    }
+}
+
+if (! function_exists('theme_css')) {
+    function theme_css(): string
+    {
+        $themeService = App::make(\App\Domain\Variables\Services\ThemeService::class);
+
+        return $themeService->getCssStyleTag();
     }
 }

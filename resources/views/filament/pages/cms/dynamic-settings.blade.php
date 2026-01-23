@@ -15,7 +15,7 @@
                 color="primary"
                 size="lg"
             >
-                Save Options Settings
+                Save All Settings
             </x-filament::button>
         </div>
     </div>

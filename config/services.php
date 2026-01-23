@@ -35,4 +35,33 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Fonts API
+    |--------------------------------------------------------------------------
+    |
+    | API key for Google Fonts API (optional but recommended).
+    |
+    | ✅ COST: FREE - No billing required, no credit card needed
+    | ✅ RATE LIMITS: Very generous (with cache, you'll never hit them)
+    |
+    | Get your API key from: https://console.cloud.google.com/apis/credentials
+    |
+    | Steps:
+    | 1. Go to Google Cloud Console
+    | 2. Create a new project or select existing
+    | 3. Enable "Web Fonts Developer API"
+    | 4. Create credentials (API Key)
+    | 5. Add the key to your .env file as GOOGLE_FONTS_API_KEY
+    |
+    | Note: The API works without a key but may have rate limits.
+    |       With API key: Better rate limits, more reliable
+    |       Without API key: Still works, but may have restrictions
+    |
+    */
+
+    'google_fonts' => [
+        'api_key' => env('GOOGLE_FONTS_API_KEY'),
+    ],
+
 ];

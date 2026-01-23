@@ -21,6 +21,7 @@ class Variable extends Model
         'key',
         'value',
         'type',
+        'category',
         'description',
     ];
 

@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use App\Domain\Plugins\Services\PluginRegistryService;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +11,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register VariableService as singleton
+        $this->app->singleton(\App\Domain\Variables\Services\VariableService::class);
+        $this->app->singleton(\App\Domain\Variables\Services\ThemeService::class);
     }
 
     /**
@@ -23,70 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register response macros
-        $this->registerResponseMacros();
-
-        // Define default API rate limiter
-        RateLimiter::for('api', function (Request $request) {
-            $key = $request->header('X-API-Key') ?: $request->ip();
-
-            return Limit::perMinute(120)->by($key);
-        });
-
-        // Register plugins from config
-        // Wrap in try-catch to prevent bootstrap issues if config is not available
-        try {
-            if (app()->bound('config')) {
-                app(PluginRegistryService::class)->registerAll();
-            }
-        } catch (\Exception $e) {
-            // Silently fail during bootstrap - plugins will be registered on next request
-            // This prevents "config does not exist" errors during cache clearing
-        }
-    }
-
-    /**
-     * Register custom response macros
-     */
-    protected function registerResponseMacros(): void
-    {
-        // Success response macro
-        \Illuminate\Support\Facades\Response::macro('success', function ($data = null, string $message = 'Operation successful', int $status = 200) {
-            return response()->json([
-                'success' => true,
-                'data' => $data,
-                'message' => $message,
-            ], $status);
-        });
-
-        // Error response macro
-        \Illuminate\Support\Facades\Response::macro('error', function (string $message, array $errors = [], int $status = 400) {
-            return response()->json([
-                'success' => false,
-                'message' => $message,
-                'errors' => $errors,
-            ], $status);
-        });
-
-        // Paginated response macro
-        \Illuminate\Support\Facades\Response::macro('paginated', function ($paginator, string $message = 'Data retrieved successfully') {
-            return response()->json([
-                'success' => true,
-                'data' => $paginator->items(),
-                'message' => $message,
-                'meta' => [
-                    'current_page' => $paginator->currentPage(),
-                    'per_page' => $paginator->perPage(),
-                    'total' => $paginator->total(),
-                    'last_page' => $paginator->lastPage(),
-                ],
-                'links' => [
-                    'first' => $paginator->url(1),
-                    'last' => $paginator->url($paginator->lastPage()),
-                    'prev' => $paginator->previousPageUrl(),
-                    'next' => $paginator->nextPageUrl(),
-                ],
-            ]);
-        });
+        // Load helper file
+        require_once base_path('app/Support/VariableHelper.php');
     }
 }

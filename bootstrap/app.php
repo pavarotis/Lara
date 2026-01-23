@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'api.rate_limit' => \App\Http\Middleware\ApiRateLimitMiddleware::class,
         ]);
 
+        // Inject variables into all views (before theme middleware)
+        $middleware->web(append: [
+            \App\Http\Middleware\InjectVariables::class,
+        ]);
+
         // Apply theme tokens to public routes (after business is set)
         // Note: This runs after SetCurrentBusiness middleware (which is applied via route middleware)
         $middleware->web(append: [

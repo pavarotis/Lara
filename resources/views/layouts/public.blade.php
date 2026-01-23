@@ -7,9 +7,50 @@
 
         <title>{{ $title ?? config('app.name', 'LaraShop') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=outfit:300,400,500,600,700&display=swap" rel="stylesheet" />
+        <!-- Fonts from CMS Variables -->
+        @php
+            $business = $currentBusiness ?? null;
+            $locale = app()->getLocale();
+            
+            if ($business) {
+                $typographyService = app(\App\Domain\Variables\Services\GetTypographyFontsService::class);
+                $typography = $typographyService->getFonts($business, $locale);
+                $googleFontsLink = $typography['google_fonts_link'] ?? null;
+                $fonts = $typography['fonts'] ?? [];
+            } else {
+                $googleFontsLink = null;
+                $fonts = [];
+            }
+        @endphp
+        
+        @if($googleFontsLink)
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="{{ $googleFontsLink }}" rel="stylesheet" />
+        @else
+            <!-- Fallback: Default fonts -->
+            <link rel="preconnect" href="https://fonts.bunny.net">
+            <link href="https://fonts.bunny.net/css?family=outfit:300,400,500,600,700&display=swap" rel="stylesheet" />
+        @endif
+        
+        @if(!empty($fonts))
+            <style>
+                :root {
+                    @if(isset($fonts['primary']))
+                        --font-primary: '{{ $fonts['primary'] }}', sans-serif;
+                    @endif
+                    @if(isset($fonts['secondary']))
+                        --font-secondary: '{{ $fonts['secondary'] }}', sans-serif;
+                    @endif
+                    @if(isset($fonts['heading']))
+                        --font-heading: '{{ $fonts['heading'] }}', sans-serif;
+                    @endif
+                    @if(isset($fonts['body']))
+                        --font-body: '{{ $fonts['body'] }}', sans-serif;
+                    @endif
+                }
+            </style>
+        @endif
 
         <!-- Base CSS (always loaded) -->
         @vite(['resources/css/app.css'])
